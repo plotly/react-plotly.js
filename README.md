@@ -28,6 +28,15 @@ render () {
 }
 ```
 
+## Development
+
+To get started:
+
+```bash
+$ npm install
+$ npm start
+```
+
 ## License
 
 &copy; 2017 Plotly, Inc. MIT License
