@@ -1,0 +1,50 @@
+{
+  "name": "plotly-react",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "A React component for plotly.js charts",
+  "author": "Plotly, Inc.",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/plotly/plotlyjs-react.git"
+  },
+  "bugs": {
+    "url": "https://github.com/plotly/plotlyjs-react/issues"
+  },
+  "scripts": {
+    "start": "budo example/src/index.js --dir example/src --live --host localhost -- -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/src/assets/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs",
+    "build:example:html": "cp example/src/index.html example/dist/index.html",
+    "build:example:js": "browserify example/src/index.js -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/dist/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs -g [ envify --NODE_ENV production ] -g uglifyify -p bundle-collapser/plugin | uglifyjs --compress --mangle > example/dist/index.js",
+    "build:example:assets": "rm -rf example/dist/assets && cp -r example/src/assets example/dist/assets",
+    "build:example": "rm -rf example/dist && mkdir -p example/dist && npm run build:example:html && npm run build:example:js && npm run build:example:assets",
+    "prepublish": "mkdir -p dist && browserify src/index.js -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] > dist/index.js"
+  },
+  "keywords": [
+    "graphing",
+    "plotting",
+    "data",
+    "visualization",
+    "plotly",
+    "react"
+  ],
+  "devDependencies": {
+    "autoprefixer": "^7.1.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babelify": "^7.3.0",
+    "brfs": "^1.4.3",
+    "browserify": "^14.4.0",
+    "budo": "^10.0.4",
+    "bundle-collapser": "^1.2.1",
+    "css-modulesify": "^0.28.0",
+    "envify": "^4.1.0",
+    "plotly.js": "^1.29.2",
+    "react": "^15.6.1",
+    "react-codemirror": "^1.0.0",
+    "react-dom": "^15.6.1",
+    "uglify-js": "^3.0.26",
+    "uglifyify": "^4.0.3"
+  }
+}

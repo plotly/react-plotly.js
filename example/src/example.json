@@ -1,0 +1,9 @@
+{
+  "data": [{
+    "x": [1, 2, 3, 4],
+    "y": [1, 3, 2, 5]
+  }],
+  "layout": {
+    "title": "a plotly.js react component"
+  }
+}

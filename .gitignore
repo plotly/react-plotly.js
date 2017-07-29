@@ -1,0 +1,13 @@
+node_modules
+
+npm-debug.log*
+*.sublime*
+
+.*
+!.gitignore
+!.npmignore
+!.eslintrc
+!.eslintignore
+
+dist
+example/dist
