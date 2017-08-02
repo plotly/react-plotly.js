@@ -10,6 +10,4 @@ npm-debug.log*
 !.eslintrc
 !.eslintignore
 
-build
-lib
 example/dist
