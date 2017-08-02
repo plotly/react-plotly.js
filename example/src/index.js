@@ -6,26 +6,48 @@ var fs = require('fs');
 import path from 'path'
 import styles from './index.css'
 import Dat, { DatNumber, DatBoolean } from 'react-dat-gui'
-
+import DatSelect from './components/DatSelect.jsx'
+import beautify from 'json-beautify'
 
 const initialData = fs.readFileSync(__dirname + '/example.json', 'utf8');
 
 class App extends React.Component {
     state = {
         value: initialData,
-        data: JSON.parse(initialData),
+        data: '',
         valid: true,
         config: {
+            width: 0,
+            height: 0,
             fit: true
         },
+        mocks: []
     }
 
-    handleChangeData = str => {
+    componentDidMount () {
+        this.handleCode(initialData);
+
+        fetch('https://api.github.com/repositories/45646037/contents/test/image/mocks').then((data) => {
+            data.json().then(mocks => {
+                this.setState({
+                    mocks: [{label: '- Select -', value: ''}].concat(mocks.map(m => ({
+                        label: m.name,
+                        value: m.download_url
+                    })))
+                });
+            });
+        });
+    }
+
+    handleCode = str => {
         try {
+            var parsed = JSON.parse(str);
+            var beautified = beautify(parsed, null, 2, 30);
+
             this.setState({
                 valid: true,
-                value: str,
-                data: JSON.parse(str)
+                value: beautified,
+                data: parsed
             });
         } catch (e) {
             this.setState({valid: false});
@@ -33,11 +55,33 @@ class App extends React.Component {
     }
 
     handleConfig = (data) => {
-        this.setState(Object.assign(this.state.config, {
+        const update = {
             width: !!data.width ? data.width : undefined,
             height: !!data.height ? data.height : undefined,
             fit: data.fit,
-        }));
+        }
+
+        this.setState(Object.assign(this.state.config, update));
+
+        var input = Object.assign({}, this.state.data);
+        input.layout = input.layout || {};
+        input.layout.width = update.width
+        input.layout.height = update.height
+
+        if (this.state.config.fit && !update.fit) {
+            delete input.layout.width
+            delete input.layout.height
+        }
+
+        this.handleCode(JSON.stringify(input));
+    }
+
+    selectMock = url => {
+        fetch(url).then(data => {
+            data.text().then(str => {
+                this.handleCode(str)
+            });
+        });
     }
 
     render () {
@@ -54,7 +98,7 @@ class App extends React.Component {
                     <Code
                         value={this.state.value}
                         valid={this.state.valid}
-                        onChange={this.handleChangeData}
+                        onChange={this.handleCode}
                     />
                     <Dat
                         data={this.state.config}
@@ -64,6 +108,7 @@ class App extends React.Component {
                         <DatBoolean path="fit" label="Fit"/>
                         <DatNumber path="width" min={0} max={1024} step={1} label="Width" />
                         <DatNumber path="height" min={0} max={1024} step={1} label="Height" />
+                        <DatSelect path="mock" label="mock" items={this.state.mocks} onUpdate={this.selectMock}/>
                     </Dat>
                 </div>
             </div>

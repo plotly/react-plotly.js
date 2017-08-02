@@ -1,5 +1,5 @@
 {
-  "name": "plotly-react",
+  "name": "plotlyjs-react",
   "version": "1.0.0",
   "license": "MIT",
   "description": "A React component for plotly.js charts",
@@ -13,17 +13,19 @@
     "url": "https://github.com/plotly/plotlyjs-react/issues"
   },
   "scripts": {
-    "start": "budo example/src/index.js --dir example/src --open --live --host localhost -- -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/src/assets/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs",
+    "start": "budo example/src/index.js --dir example/src --dir example --open --live --host localhost -- -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/assets/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs",
     "example:build:html": "cp example/src/index.html example/dist/index.html",
     "example:build:js": "browserify example/src/index.js -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/dist/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs -g [ envify --NODE_ENV production ] -g uglifyify -p bundle-collapser/plugin | uglifyjs --compress --mangle > example/dist/index.js",
-    "example:build:assets": "rm -rf example/dist/assets && cp -r example/src/assets example/dist/assets",
+    "example:build:assets": "rm -rf example/dist/assets && cp -r example/assets example/dist/assets",
     "example:build": "rm -rf example/dist && mkdir -p example/dist && npm run example:build:html && npm run example:build:js && npm run example:build:assets",
     "example:deploy": "netlify deploy example/dist",
     "make:lib": "mkdir -p lib && babel src/plotlyjs-react.jsx -o lib/plotlyjs-react.js --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports",
     "make:build": "mkdir -p build && browserify src/plotlyjs-react.jsx -o ./build/plotlyjs-react.js -t [ babelify --presets [ es2015 react ] ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./build/plotlyjs-react.js --compress --mangle --output ./build/plotlyjs-react.min.js --source-map filename=build/plotlyjs-react.min.js.map",
     "prepublish": "npm run make:lib && npm run make:build",
-    "lint": "prettier --trailing-comma es5 --write \"src/**/*.{js,jsx}\"",
-    "precommit": "lint-staged"
+    "lint": "prettier --trailing-comma es5 --write \"{src,example/src/components}/**/*.{js,jsx}\"",
+    "precommit": "lint-staged",
+    "test": "jest",
+    "watch-test": "jest --watch"
   },
   "keywords": [
     "graphing",
@@ -34,6 +36,7 @@
     "react"
   ],
   "devDependencies": {
+    "@skidding/react-codemirror": "^1.0.1",
     "autoprefixer": "^7.1.2",
     "babel-cli": "^6.24.1",
     "babel-plugin-add-module-exports": "^0.2.1",
@@ -48,16 +51,24 @@
     "bundle-collapser": "^1.2.1",
     "css-modulesify": "^0.28.0",
     "envify": "^4.1.0",
+    "enzyme": "^2.9.1",
+    "event-emitter": "^0.3.5",
+    "gl": "^4.0.4",
     "husky": "^0.14.3",
     "insert-css": "^2.0.0",
+    "jest": "^20.0.4",
+    "json-beautify": "^1.0.1",
     "lint-staged": "^4.0.2",
     "netlify-cli": "^1.2.2",
+    "onetime": "^1.1.0",
     "plotly.js": "^1.29.2",
     "prettier": "^1.5.3",
     "react": "^15.6.1",
-    "react-codemirror": "^1.0.0",
+    "react-addons-test-utils": "^15.6.0",
+    "react-codemirror": "@skidding/react-codemirror",
     "react-dat-gui": "0.0.13",
     "react-dom": "^15.6.1",
+    "react-test-renderer": "^15.6.1",
     "uglify-js": "^3.0.26",
     "uglifyify": "^4.0.3"
   },
@@ -65,7 +76,7 @@
     "react": "React"
   },
   "lint-staged": {
-    "src/**/.jsx": [
+    "{src,example/src}/**/*.{js,jsx}": [
       "prettier --write --trailing-comma es5",
       "git add"
     ]
@@ -73,6 +84,7 @@
   "dependencies": {
     "fast-isnumeric": "^1.1.1",
     "object-assign": "^4.1.1",
-    "prop-types": "^15.5.10"
+    "prop-types": "^15.5.10",
+    "recursive-diff": "^0.12.0"
   }
 }

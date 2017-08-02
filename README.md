@@ -40,10 +40,11 @@ The only requirement is that plotly.js is loaded before you inject it. You may n
 | `layout` | `Object` | `undefined` | layout object |
 | `config` | `Object` | `undefined` | config object |
 | `frames` | `Array` | `undefined` | list of frame objects |
-| `fit` | `Boolean` | `false` | When true, fits plot to its parent container and updates on window resize |
-| `width` | `Number` | `undefined` | Width of the plot; overrides `fit` |
-| `height` | `Number` | `undefined` | Heigh of the plot; overrides `fit` |
+| `fit` | `Boolean` | `false` | When true, disregards `layout.width` and `layout.height` and fits to the parent div size, updating on `window.resize` |
 | `debug` | `Boolean` | `false` | Assign the graph div to `window.gd` for debugging |
+| `onInitialized | `Function` | null | Callback executed once after plot is initialized |
+| `onUpdate | `Function` | null | Callback executed when a plotly.js API method is invoked |
+| `onError | `Function` | null | Callback executed when a plotly.js API method rejects |
 
 ### Event handler props
 

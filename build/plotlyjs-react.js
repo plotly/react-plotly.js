@@ -1262,7 +1262,7 @@ function createPlotlyComponent(Plotly) {
         this.p = this.p.then(function () {
           return Plotly.plot(_this2.el, {
             data: _this2.props.data,
-            layout: _this2.applySize(_this2.props.layout),
+            layout: _this2.sizeAdjustedLayout(_this2.props.layout),
             config: _this2.props.config,
             frames: _this2.props.frames
           });
@@ -1279,7 +1279,7 @@ function createPlotlyComponent(Plotly) {
         this.p = this.p.then(function () {
           return (hasReactAPIMethod ? Plotly.react : Plotly.newPlot)(_this3.el, {
             data: nextProps.data,
-            layout: _this3.applySize(nextProps.layout),
+            layout: _this3.sizeAdjustedLayout(nextProps.layout),
             config: nextProps.config,
             frames: nextProps.frames
           }).then(function () {
@@ -1314,6 +1314,7 @@ function createPlotlyComponent(Plotly) {
               });
             };
             window.addEventListener("resize", this.resizeHandler);
+            this.resizeHandler();
           }
         } else if (!props.fit && this.resizeHandler) {
           window.removeEventListener('resize', this.resizeHandler);
@@ -1354,8 +1355,8 @@ function createPlotlyComponent(Plotly) {
         }
       }
     }, {
-      key: "applySize",
-      value: function applySize(layout) {
+      key: "sizeAdjustedLayout",
+      value: function sizeAdjustedLayout(layout) {
         var size = this.getSize();
 
         // Shallow-clone the layout so that we don't have to

@@ -17,6 +17,7 @@ body {
   right: 0;
   top: 0;
   height: 50%;
+  overflow: scroll;
 }
 ._example_src_components_code__codeContainer {
   position: absolute;

@@ -3,6 +3,10 @@ import PropTypes from "prop-types";
 import isNumeric from "fast-isnumeric";
 import objectAssign from "object-assign";
 
+function constructUpdate(diff) {
+  var keys = Object.keys(diff);
+}
+
 // The naming convention is:
 //   - events are attached as `'plotly_' + eventName.toLowerCase()`
 //   - react props are `'on' + eventName`
@@ -38,7 +42,7 @@ const eventNames = [
 // breaks unnecessarily if you try to use it server-side.
 const isBrowser = typeof window !== "undefined";
 
-export default function createPlotlyComponent (Plotly) {
+export default function createPlotlyComponent(Plotly) {
   const hasReactAPIMethod = !!Plotly.react;
 
   class PlotlyComponent extends Component {
@@ -57,31 +61,52 @@ export default function createPlotlyComponent (Plotly) {
     componentDidMount() {
       this.p = this.p
         .then(() => {
-          return Plotly.plot(this.el, {
+          return Plotly.newPlot(this.el, {
             data: this.props.data,
-            layout: this.applySize(this.props.layout),
+            layout: this.sizeAdjustedLayout(this.props.layout),
             config: this.props.config,
             frames: this.props.frames,
           });
         })
-        .then(() => {
-          this.syncWindowResize()
-          this.syncEventHandlers()
-        });
+        .then(() => this.syncWindowResize(null, false))
+        .then(() => this.syncEventHandlers())
+        .then(
+          () => {
+            this.props.onInitialized && this.props.onInitialized();
+          },
+          () => {
+            this.props.onError && this.props.onError();
+          }
+        );
     }
 
     componentWillReceiveProps(nextProps) {
-      this.p = this.p.then(() => {
-        return (hasReactAPIMethod ? Plotly.react : Plotly.newPlot)(this.el, {
-          data: nextProps.data,
-          layout: this.applySize(nextProps.layout),
-          config: nextProps.config,
-          frames: nextProps.frames,
-        }).then(() => {
-          this.syncEventHandlers(nextProps)
-          this.syncWindowResize(nextProps)
+      let dataDiff, layoutDiff, configDiff;
+      let nextLayout = this.sizeAdjustedLayout(nextProps.layout);
+
+      this.p = this.p
+        .then(() => {
+          if (hasReactAPIMethod) {
+            return Plotly.react(this.el, {
+              data: nextProps.data,
+              layout: nextLayout,
+              config: nextProps.config,
+              frames: nextProps.frames,
+            });
+          } else {
+            return Plotly.newPlot(this.el, {
+              data: nextProps.data,
+              layout: nextLayout,
+              config: nextProps.config,
+              frames: nextProps.frames,
+            });
+          }
+        })
+        .then(() => this.syncEventHandlers(nextProps))
+        .then(() => this.syncWindowResize(nextProps))
+        .then(() => {
+          nextProps.onUpdate && nextProps.onUpdate();
         });
-      });
     }
 
     componentWillUnmount() {
@@ -93,21 +118,21 @@ export default function createPlotlyComponent (Plotly) {
       Plotly.purge(this.el);
     }
 
-    syncWindowResize (props) {
+    syncWindowResize(props, invoke) {
       props = props || this.props;
       if (!isBrowser) return;
 
       if (props.fit && !this.resizeHandler) {
         if (!this.resizeHandler) {
           this.resizeHandler = () => {
-            this.p = this.p.then(() => {
-              return Plotly.relayout(this.el, this.getSize());
-            });
+            return Plotly.relayout(this.el, this.getSize());
           };
           window.addEventListener("resize", this.resizeHandler);
+
+          if (invoke) return this.resizeHandler();
         }
       } else if (!props.fit && this.resizeHandler) {
-        window.removeEventListener('resize', this.resizeHandler);
+        window.removeEventListener("resize", this.resizeHandler);
         this.resizeHandler = null;
       }
     }
@@ -131,9 +156,7 @@ export default function createPlotlyComponent (Plotly) {
         const hasHandler = !!this.handlers[eventName];
 
         if (prop && !hasHandler) {
-          let handler = (this.handlers[eventName] = props[
-            "on" + eventName
-          ]);
+          let handler = (this.handlers[eventName] = props["on" + eventName]);
           this.el.on("plotly_" + eventName.toLowerCase(), handler);
         } else if (!prop && hasHandler) {
           // Needs to be removed:
@@ -146,28 +169,33 @@ export default function createPlotlyComponent (Plotly) {
       }
     }
 
-    applySize(layout) {
-      const size = this.getSize();
+    sizeAdjustedLayout(layout) {
+      if (this.props.fit) {
+        layout = objectAssign({}, layout);
+        objectAssign(layout, this.getSize());
+      }
 
-      // Shallow-clone the layout so that we don't have to
-      // modify the original object:
-      layout = objectAssign({}, layout);
-      objectAssign(layout, this.getSize());
       return layout;
+    }
+
+    getParentSize() {
+      return this.el.parentElement.getBoundingClientRect();
     }
 
     getSize() {
       let rect;
-      const hasWidth = isNumeric(this.props.width);
-      const hasHeight = isNumeric(this.props.height);
+      const layoutWidth = this.props.layout ? this.props.layout.width : null;
+      const layoutHeight = this.props.layout ? this.props.layout.height : null;
+      const hasWidth = isNumeric(layoutWidth);
+      const hasHeight = isNumeric(layoutHeight);
 
       if (!hasWidth || !hasHeight) {
-        rect = this.el.parentElement.getBoundingClientRect();
+        rect = this.getParentSize();
       }
 
       return {
-        width: hasWidth ? parseInt(this.props.width) : rect.width,
-        height: hasHeight ? parseInt(this.props.height) : rect.height,
+        width: hasWidth ? parseInt(layoutWidth) : rect.width,
+        height: hasHeight ? parseInt(layoutHeight) : rect.height,
       };
     }
 
@@ -178,12 +206,11 @@ export default function createPlotlyComponent (Plotly) {
 
   PlotlyComponent.propTypes = {
     fit: PropTypes.bool,
-    width: PropTypes.number,
-    height: PropTypes.number,
     data: PropTypes.arrayOf(PropTypes.object),
     config: PropTypes.object,
     layout: PropTypes.object,
     frames: PropTypes.arrayOf(PropTypes.object),
+    onInitialized: PropTypes.func,
   };
 
   for (let i = 0; i < eventNames.length; i++) {
@@ -193,8 +220,6 @@ export default function createPlotlyComponent (Plotly) {
   PlotlyComponent.defaultProps = {
     fit: false,
     data: [],
-    width: null,
-    height: null,
   };
 
   return PlotlyComponent;
