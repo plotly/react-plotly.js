@@ -48,15 +48,12 @@
     "bundle-collapser": "^1.2.1",
     "css-modulesify": "^0.28.0",
     "envify": "^4.1.0",
-    "fast-isnumeric": "^1.1.1",
     "husky": "^0.14.3",
     "insert-css": "^2.0.0",
     "lint-staged": "^4.0.2",
     "netlify-cli": "^1.2.2",
-    "object-assign": "^4.1.1",
     "plotly.js": "^1.29.2",
     "prettier": "^1.5.3",
-    "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-codemirror": "^1.0.0",
     "react-dat-gui": "0.0.13",
@@ -72,5 +69,10 @@
       "prettier --write --trailing-comma es5",
       "git add"
     ]
+  },
+  "dependencies": {
+    "fast-isnumeric": "^1.1.1",
+    "object-assign": "^4.1.1",
+    "prop-types": "^15.5.10"
   }
 }
