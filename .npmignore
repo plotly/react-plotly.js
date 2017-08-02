@@ -1,9 +1,3 @@
-build/*
-!build/plotcss.js
-!build/ploticon.js
-!build/README.md
-
-devtools
 test
 src
 
@@ -12,8 +6,6 @@ bower.json
 
 .ackrc
 .agignore
-.eslintignore
-.eslintrc
 
 npm-debug.log
 
