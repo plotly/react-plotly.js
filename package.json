@@ -21,7 +21,9 @@
     "example:deploy": "netlify deploy example/dist",
     "make:lib": "mkdir -p lib && babel src/plotlyjs-react.jsx -o lib/plotlyjs-react.js --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports",
     "make:build": "mkdir -p build && browserify src/plotlyjs-react.jsx -o ./build/plotlyjs-react.js -t [ babelify --presets [ es2015 react ] ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./build/plotlyjs-react.js --compress --mangle --output ./build/plotlyjs-react.min.js --source-map filename=build/plotlyjs-react.min.js.map",
-    "prepublish": "npm run make:lib && npm run make:build"
+    "prepublish": "npm run make:lib && npm run make:build",
+    "lint": "prettier --trailing-comma es5 --write \"src/**/*.{js,jsx}\"",
+    "precommit": "lint-staged"
   },
   "keywords": [
     "graphing",
@@ -47,9 +49,12 @@
     "css-modulesify": "^0.28.0",
     "envify": "^4.1.0",
     "fast-isnumeric": "^1.1.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.0.2",
     "netlify-cli": "^1.2.2",
     "object-assign": "^4.1.1",
     "plotly.js": "^1.29.2",
+    "prettier": "^1.5.3",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-codemirror": "^1.0.0",
@@ -59,5 +64,11 @@
   },
   "browserify-global-shim": {
     "react": "React"
+  },
+  "lint-staged": {
+    "*src/**/.jsx": [
+      "prettier --write --trailing-comma es5",
+      "git add"
+    ]
   }
 }
