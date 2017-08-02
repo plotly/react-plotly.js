@@ -64,8 +64,10 @@ export default function createPlotlyComponent (Plotly) {
             frames: this.props.frames,
           });
         })
-        .then(this.syncWindowResize)
-        .then(this.syncEventHandlers);
+        .then(() => {
+          this.syncWindowResize()
+          this.syncEventHandlers()
+        });
     }
 
     componentWillReceiveProps(nextProps) {
