@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import isNumeric from 'fast-isnumeric'
+import objectAssign from 'object-assign'
 
 // The naming convention is:
 //   - events are attached as `'plotly_' + eventName.toLowerCase()`
@@ -132,8 +133,8 @@ export default function (Plotly) {
 
             // Shallow-clone the layout so that we don't have to
             // modify the original object:
-            layout = Object.assign({}, layout);
-            Object.assign(layout, this.getSize());
+            layout = objectAssign({}, layout);
+            objectAssign(layout, this.getSize());
             return layout;
 
         }
