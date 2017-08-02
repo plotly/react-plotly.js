@@ -1,2 +1,3 @@
 example/**/* linguist-documentation
-example/dist/**/* linguist-generated
+example/src/assets/codemirror.css linguist-vendored
+example/src/assets/plotly-basic.min.js linguist-vendored
