@@ -12,7 +12,7 @@ $ npm install plotlyjs-react
 
 ## Usage
 
-The component definition is created by dependency injection so that you can use whichever version of plotly.js you'd like, including the CDN versions.
+The component definition is created by dependency injection so that you can use whichever version of plotly.js you'd like, including the [CDN versions](https://plot.ly/javascript/getting-started/#plotlyjs-cdn).
 
 ```javascript
 const createPlotlyComponent = require('plotlyjs-react');
@@ -27,6 +27,8 @@ render () {
   />
 }
 ```
+
+The only requirement is that plotly.js is loaded before you inject it. You may need to use a module like [load-script](https://www.npmjs.com/package/load-script) to ensure it's available.
 
 ## API
 
