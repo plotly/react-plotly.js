@@ -4,7 +4,7 @@
   "license": "MIT",
   "description": "A React component for plotly.js charts",
   "author": "Plotly, Inc.",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/plotly/plotlyjs-react.git"
@@ -14,11 +14,12 @@
   },
   "scripts": {
     "start": "budo example/src/index.js --dir example/src --open --live --host localhost -- -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/src/assets/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs",
-    "build:example:html": "cp example/src/index.html example/dist/index.html",
-    "build:example:js": "browserify example/src/index.js -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/dist/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs -g [ envify --NODE_ENV production ] -g uglifyify -p bundle-collapser/plugin | uglifyjs --compress --mangle > example/dist/index.js",
-    "build:example:assets": "rm -rf example/dist/assets && cp -r example/src/assets example/dist/assets",
-    "build:example": "rm -rf example/dist && mkdir -p example/dist && npm run build:example:html && npm run build:example:js && npm run build:example:assets",
-    "prepublish": "mkdir -p dist && browserify src/index.js -t [ babelify --presets [ es2015 react ] ] > dist/index.js"
+    "example:build:html": "cp example/src/index.html example/dist/index.html",
+    "example:build:js": "browserify example/src/index.js -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/dist/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs -g [ envify --NODE_ENV production ] -g uglifyify -p bundle-collapser/plugin | uglifyjs --compress --mangle > example/dist/index.js",
+    "example:build:assets": "rm -rf example/dist/assets && cp -r example/src/assets example/dist/assets",
+    "example:build": "rm -rf example/dist && mkdir -p example/dist && npm run example:build:html && npm run example:build:js && npm run example:build:assets",
+    "example:deploy": "netlify deploy example/dist",
+    "prepublish": "mkdir -p dist && babel src/index.js --presets=es2015,react > dist/index.js"
   },
   "keywords": [
     "graphing",
@@ -30,6 +31,7 @@
   ],
   "devDependencies": {
     "autoprefixer": "^7.1.2",
+    "babel-cli": "^6.24.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
@@ -41,6 +43,7 @@
     "css-modulesify": "^0.28.0",
     "envify": "^4.1.0",
     "fast-isnumeric": "^1.1.1",
+    "netlify-cli": "^1.2.2",
     "plotly.js": "^1.29.2",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
