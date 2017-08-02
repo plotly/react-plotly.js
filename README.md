@@ -1,6 +1,6 @@
 # plotlyjs-react
 
-> A React component for plotly.js charts
+> A React component for plotly.js charts <a href="https://z8tgespzmd63w51brzdh360ryvgt3m1ho.netlify.com/">&rarr; See demo</a>
 
 ## Installation
 
