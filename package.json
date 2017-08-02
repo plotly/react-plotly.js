@@ -4,7 +4,7 @@
   "license": "MIT",
   "description": "A React component for plotly.js charts",
   "author": "Plotly, Inc.",
-  "main": "src/index.js",
+  "main": "dist/plotlyjs-react.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/plotly/plotlyjs-react.git"
@@ -19,7 +19,7 @@
     "example:build:assets": "rm -rf example/dist/assets && cp -r example/src/assets example/dist/assets",
     "example:build": "rm -rf example/dist && mkdir -p example/dist && npm run example:build:html && npm run example:build:js && npm run example:build:assets",
     "example:deploy": "netlify deploy example/dist",
-    "prepublish": "mkdir -p dist && babel src/index.js -o dist/plotlyjs-react.js --presets=es2015,react --source-maps"
+    "prepublish": "mkdir -p dist && babel src/plotlyjs-react.jsx -o dist/plotlyjs-react.js --presets=es2015,react --source-maps"
   },
   "keywords": [
     "graphing",

@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './plot.css'
 
-import createPlotly from '../../../src'
+import createPlotly from '../../../'
 const PlotlyComponent = createPlotly(Plotly)
 
 
