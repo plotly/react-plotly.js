@@ -73,10 +73,12 @@ export default function createPlotlyComponent (Plotly) {
       this.p = this.p.then(() => {
         return (hasReactAPIMethod ? Plotly.react : Plotly.newPlot)(this.el, {
           data: nextProps.data,
-          layout: this.applySize(this.props.layout),
-          config: this.props.config,
-          frames: this.props.frames,
-        }).then(this.syncEventHandlers);
+          layout: this.applySize(nextProps.layout),
+          config: nextProps.config,
+          frames: nextProps.frames,
+        }).then(() => {
+          this.syncEventHandlers(nextProps)
+        });
       });
     }
 
@@ -112,14 +114,17 @@ export default function createPlotlyComponent (Plotly) {
     }
 
     // Attach and remove event handlers as they're added or removed from props:
-    syncEventHandlers() {
+    syncEventHandlers(props) {
+      // Allow use of nextProps if passed explicitly:
+      props = props || this.props;
+
       for (let i = 0; i < eventNames.length; i++) {
         const eventName = eventNames[i];
-        const prop = this.props["on" + eventName];
+        const prop = props["on" + eventName];
         const hasHandler = !!this.handlers[eventName];
 
         if (prop && !hasHandler) {
-          let handler = (this.handlers[eventName] = this.props[
+          let handler = (this.handlers[eventName] = props[
             "on" + eventName
           ]);
           this.el.on("plotly_" + eventName.toLowerCase(), handler);
