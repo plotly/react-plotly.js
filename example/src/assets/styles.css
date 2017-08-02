@@ -3,6 +3,14 @@ body {
   margin: 0;
   overflow: hidden
 }
+
+._example_src_index__container {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 ._example_src_components_plot__container {
   position: absolute;
   left: 0;
@@ -15,7 +23,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 50%;
+  top: 0;
 
   padding: 2px;
 }

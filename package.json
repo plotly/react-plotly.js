@@ -58,6 +58,7 @@
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-codemirror": "^1.0.0",
+    "react-dat-gui": "0.0.13",
     "react-dom": "^15.6.1",
     "uglify-js": "^3.0.26",
     "uglifyify": "^4.0.3"

@@ -49,8 +49,7 @@ export default function createPlotlyComponent (Plotly) {
       this.resizeHandler = null;
       this.handlers = {};
 
-      this.attachWindowResize = this.attachWindowResize.bind(this);
-      this.detachWindowResize = this.detachWindowResize.bind(this);
+      this.syncWindowResize = this.syncWindowResize.bind(this);
       this.syncEventHandlers = this.syncEventHandlers.bind(this);
       this.getRef = this.getRef.bind(this);
     }
@@ -65,7 +64,7 @@ export default function createPlotlyComponent (Plotly) {
             frames: this.props.frames,
           });
         })
-        .then(this.attachWindowResize)
+        .then(this.syncWindowResize)
         .then(this.syncEventHandlers);
     }
 
@@ -78,6 +77,7 @@ export default function createPlotlyComponent (Plotly) {
           frames: nextProps.frames,
         }).then(() => {
           this.syncEventHandlers(nextProps)
+          this.syncWindowResize(nextProps)
         });
       });
     }
@@ -91,21 +91,23 @@ export default function createPlotlyComponent (Plotly) {
       Plotly.purge(this.el);
     }
 
-    attachWindowResize() {
-      if (this.props.fit && isBrowser && !this.resizeHandler) {
-        this.resizeHandler = () => {
-          this.p = this.p.then(() => {
-            return Plotly.relayout(this.el, this.getSize());
-          });
-        };
-        window.addEventListener("resize", this.resizeHandler);
-      }
-    }
+    syncWindowResize (props) {
+      props = props || this.props;
+      if (!isBrowser) return;
 
-    detachWindowResize() {
-      if (this.resizeHandler && isBrowser) {
-        window.removeEventListener("resize", this.resizeHandler);
+      if (props.fit && !this.resizeHandler) {
+        if (!this.resizeHandler) {
+          this.resizeHandler = () => {
+            this.p = this.p.then(() => {
+              return Plotly.relayout(this.el, this.getSize());
+            });
+          };
+          window.addEventListener("resize", this.resizeHandler);
+        }
+      } else if (!props.fit && this.resizeHandler) {
+        window.removeEventListener('resize', this.resizeHandler);
         this.resizeHandler = null;
+
       }
     }
 
