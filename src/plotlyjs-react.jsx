@@ -38,7 +38,7 @@ const eventNames = [
 // breaks unnecessarily if you try to use it server-side.
 const isBrowser = typeof window !== "undefined";
 
-export default function(Plotly) {
+export default function createPlotlyComponent (Plotly) {
   const hasReactAPIMethod = !!Plotly.react;
 
   class PlotlyComponent extends Component {
