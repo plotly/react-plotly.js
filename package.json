@@ -4,7 +4,7 @@
   "license": "MIT",
   "description": "A React component for plotly.js charts",
   "author": "Plotly, Inc.",
-  "main": "dist/plotlyjs-react.js",
+  "main": "lib/plotlyjs-react.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/plotly/plotlyjs-react.git"
@@ -19,7 +19,9 @@
     "example:build:assets": "rm -rf example/dist/assets && cp -r example/src/assets example/dist/assets",
     "example:build": "rm -rf example/dist && mkdir -p example/dist && npm run example:build:html && npm run example:build:js && npm run example:build:assets",
     "example:deploy": "netlify deploy example/dist",
-    "prepublish": "mkdir -p dist && babel src/plotlyjs-react.jsx -o dist/plotlyjs-react.js --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports"
+    "make:lib": "mkdir -p lib && babel src/plotlyjs-react.js -o lib/plotlyjs-react.js --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports",
+    "make:build": "mkdir -p build && browserify src/plotlyjs-react.js -o ./build/plotlyjs-react.js -t [ babelify --presets [ es2015 react ] ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./build/plotlyjs-react.js --compress --mangle --output ./build/plotlyjs-react.min.js --source-map filename=build/plotlyjs-react.min.js.map",
+    "prepublish": "npm run make:lib && npm run make:build"
   },
   "keywords": [
     "graphing",
@@ -39,6 +41,7 @@
     "babelify": "^7.3.0",
     "brfs": "^1.4.3",
     "browserify": "^14.4.0",
+    "browserify-global-shim": "^1.0.3",
     "budo": "^10.0.4",
     "bundle-collapser": "^1.2.1",
     "css-modulesify": "^0.28.0",
@@ -52,5 +55,8 @@
     "react-dom": "^15.6.1",
     "uglify-js": "^3.0.26",
     "uglifyify": "^4.0.3"
+  },
+  "browserify-global-shim": {
+    "react": "React"
   }
 }
