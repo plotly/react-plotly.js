@@ -4,6 +4,13 @@ require('../../../node_modules/codemirror/mode/javascript/javascript')
 
 import styles from './code.css'
 
+require('insert-css')(`
+.ReactCodeMirror,
+.CodeMirror {
+    height: 100%;
+}
+`)
+
 export default class Code extends Component {
     render () {
         const classes = [styles.codeContainer]

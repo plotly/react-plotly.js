@@ -107,12 +107,15 @@ export default function createPlotlyComponent (Plotly) {
       } else if (!props.fit && this.resizeHandler) {
         window.removeEventListener('resize', this.resizeHandler);
         this.resizeHandler = null;
-
       }
     }
 
     getRef(el) {
       this.el = el;
+
+      if (this.props.debug && isBrowser) {
+        window.gd = this.el;
+      }
     }
 
     // Attach and remove event handlers as they're added or removed from props:

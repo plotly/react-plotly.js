@@ -24,6 +24,7 @@ export default class Plot extends React.Component {
                     onClick={e => console.log('plotly_click:', e)}
                     onHover={e => console.log('plotly_hover:', e)}
                     onUnhover={e => console.log('plotly_unhover:', e)}
+                    debug
                 />
             </div>
         );

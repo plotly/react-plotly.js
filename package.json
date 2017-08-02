@@ -50,6 +50,7 @@
     "envify": "^4.1.0",
     "fast-isnumeric": "^1.1.1",
     "husky": "^0.14.3",
+    "insert-css": "^2.0.0",
     "lint-staged": "^4.0.2",
     "netlify-cli": "^1.2.2",
     "object-assign": "^4.1.1",

@@ -43,6 +43,7 @@ The only requirement is that plotly.js is loaded before you inject it. You may n
 | `fit` | `Boolean` | `false` | When true, fits plot to its parent container and updates on window resize |
 | `width` | `Number` | `undefined` | Width of the plot; overrides `fit` |
 | `height` | `Number` | `undefined` | Heigh of the plot; overrides `fit` |
+| `debug` | `Boolean` | `false` | Assign the graph div to `window.gd` for debugging |
 
 ### Event handler props
 
