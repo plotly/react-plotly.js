@@ -22,7 +22,7 @@
     "make:lib": "mkdir -p lib && babel src/plotlyjs-react.jsx -o lib/plotlyjs-react.js --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports",
     "make:build": "mkdir -p build && browserify src/plotlyjs-react.jsx -o ./build/plotlyjs-react.js -t [ babelify --presets [ es2015 react ] ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./build/plotlyjs-react.js --compress --mangle --output ./build/plotlyjs-react.min.js --source-map filename=build/plotlyjs-react.min.js.map",
     "prepublish": "npm run make:lib && npm run make:build",
-    "lint": "prettier --trailing-comma es5 --write \"{src,example/src/components}/**/*.{js,jsx}\"",
+    "lint": "prettier --trailing-comma es5 --write \"{src,example/src}/**/*.{js,jsx}\"",
     "precommit": "lint-staged",
     "test": "jest",
     "watch-test": "jest --watch"
@@ -77,6 +77,10 @@
   },
   "lint-staged": {
     "{src,example/src}/**/*.{js,jsx}": [
+      "prettier --write --trailing-comma es5",
+      "git add"
+    ],
+    "{src,example/src}/*.{js,jsx}": [
       "prettier --write --trailing-comma es5",
       "git add"
     ]
