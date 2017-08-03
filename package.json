@@ -79,10 +79,6 @@
     "{src,example/src}/**/*.{js,jsx}": [
       "prettier --write --trailing-comma es5",
       "git add"
-    ],
-    "{src,example/src}/*.{js,jsx}": [
-      "prettier --write --trailing-comma es5",
-      "git add"
     ]
   },
   "dependencies": {

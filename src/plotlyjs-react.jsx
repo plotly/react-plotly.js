@@ -106,6 +106,9 @@ export default function createPlotlyComponent(Plotly) {
         .then(() => this.syncWindowResize(nextProps))
         .then(() => {
           nextProps.onUpdate && nextProps.onUpdate();
+        })
+        .catch(err => {
+          this.props.onError && this.props.onError(err);
         });
     }
 
@@ -123,14 +126,12 @@ export default function createPlotlyComponent(Plotly) {
       if (!isBrowser) return;
 
       if (props.fit && !this.resizeHandler) {
-        if (!this.resizeHandler) {
-          this.resizeHandler = () => {
-            return Plotly.relayout(this.el, this.getSize());
-          };
-          window.addEventListener("resize", this.resizeHandler);
+        this.resizeHandler = () => {
+          return Plotly.relayout(this.el, this.getSize());
+        };
+        window.addEventListener("resize", this.resizeHandler);
 
-          if (invoke) return this.resizeHandler();
-        }
+        if (invoke) return this.resizeHandler();
       } else if (!props.fit && this.resizeHandler) {
         window.removeEventListener("resize", this.resizeHandler);
         this.resizeHandler = null;
@@ -172,7 +173,7 @@ export default function createPlotlyComponent(Plotly) {
     sizeAdjustedLayout(layout) {
       if (this.props.fit) {
         layout = objectAssign({}, layout);
-        objectAssign(layout, this.getSize());
+        objectAssign(layout, this.getSize(layout));
       }
 
       return layout;
@@ -182,10 +183,11 @@ export default function createPlotlyComponent(Plotly) {
       return this.el.parentElement.getBoundingClientRect();
     }
 
-    getSize() {
+    getSize(layout) {
       let rect;
-      const layoutWidth = this.props.layout ? this.props.layout.width : null;
-      const layoutHeight = this.props.layout ? this.props.layout.height : null;
+      layout = layout || this.props.layout;
+      const layoutWidth = layout ? layout.width : null;
+      const layoutHeight = layout ? layout.height : null;
       const hasWidth = isNumeric(layoutWidth);
       const hasHeight = isNumeric(layoutHeight);
 
