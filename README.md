@@ -91,6 +91,10 @@ To build the dist version:
 $ npm run prepublish
 ```
 
+## See also
+
+- [plotly-react-editor](https://github.com/plotly/plotly-react-editor)
+
 ## License
 
 &copy; 2017 Plotly, Inc. MIT License.
