@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import CodeMirror from "@skidding/react-codemirror";
+import CodeMirror from "react-codemirror2";
 require("../../../node_modules/codemirror/mode/javascript/javascript");
 
 import styles from "./code.css";
@@ -20,7 +20,7 @@ export default class Code extends Component {
       <div className={classes.join(" ")}>
         <CodeMirror
           value={this.props.value}
-          onChange={this.props.onChange}
+          onValueChange={this.props.onChange}
           options={{
             mode: {
               name: "javascript",

@@ -25,7 +25,7 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    this.handleCode(initialData);
+    this.handleCode(null, null, initialData);
 
     fetch(
       "https://api.github.com/repositories/45646037/contents/test/image/mocks"
@@ -43,7 +43,7 @@ class App extends React.Component {
     });
   }
 
-  handleCode = str => {
+  handleCode = (editor, metadata, str) => {
     try {
       var parsed = JSON.parse(str);
       var beautified = beautify(parsed, null, 2, 30);
@@ -77,13 +77,13 @@ class App extends React.Component {
       delete input.layout.height;
     }
 
-    this.handleCode(JSON.stringify(input));
+    this.handleCode(null, null, JSON.stringify(input));
   };
 
   selectMock = url => {
     fetch(url).then(data => {
       data.text().then(str => {
-        this.handleCode(str);
+        this.handleCode(null, null, str);
       });
     });
   };

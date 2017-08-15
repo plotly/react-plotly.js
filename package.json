@@ -36,7 +36,6 @@
     "react"
   ],
   "devDependencies": {
-    "@skidding/react-codemirror": "^1.0.1",
     "autoprefixer": "^7.1.2",
     "babel-cli": "^6.24.1",
     "babel-plugin-add-module-exports": "^0.2.1",
@@ -65,7 +64,7 @@
     "prettier": "^1.5.3",
     "react": "^15.6.1",
     "react-addons-test-utils": "^15.6.0",
-    "react-codemirror": "@skidding/react-codemirror",
+    "react-codemirror2": "0.0.13",
     "react-dat-gui": "0.0.13",
     "react-dom": "^15.6.1",
     "react-test-renderer": "^15.6.1",
@@ -84,7 +83,6 @@
   "dependencies": {
     "fast-isnumeric": "^1.1.1",
     "object-assign": "^4.1.1",
-    "prop-types": "^15.5.10",
-    "recursive-diff": "^0.12.0"
+    "prop-types": "^15.5.10"
   }
 }
