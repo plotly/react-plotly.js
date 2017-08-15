@@ -1,6 +1,6 @@
 import React from "react";
 import { mount, shallow } from "enzyme";
-import createComponent from "../plotlyjs-react";
+import createComponent from "../plotly.js-react";
 import once from "onetime";
 
 describe("<Plotly/>", () => {

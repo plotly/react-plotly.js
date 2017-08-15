@@ -1,16 +1,16 @@
 {
-  "name": "plotlyjs-react",
+  "name": "plotly.js-react",
   "version": "1.0.0",
   "license": "MIT",
   "description": "A React component for plotly.js charts",
   "author": "Plotly, Inc.",
-  "main": "lib/plotlyjs-react.js",
+  "main": "lib/plotly.js-react.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/plotly/plotlyjs-react.git"
+    "url": "https://github.com/plotly/plotly.js-react.git"
   },
   "bugs": {
-    "url": "https://github.com/plotly/plotlyjs-react/issues"
+    "url": "https://github.com/plotly/plotly.js-react/issues"
   },
   "scripts": {
     "start": "budo example/src/index.js --dir example/src --dir example --open --live --host localhost -- -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/assets/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs",
@@ -19,8 +19,8 @@
     "example:build:assets": "rm -rf example/dist/assets && cp -r example/assets example/dist/assets",
     "example:build": "rm -rf example/dist && mkdir -p example/dist && npm run example:build:html && npm run example:build:js && npm run example:build:assets",
     "example:deploy": "netlify deploy example/dist",
-    "make:lib": "mkdir -p lib && babel src/plotlyjs-react.jsx -o lib/plotlyjs-react.js --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports",
-    "make:build": "mkdir -p build && browserify src/plotlyjs-react.jsx -o ./build/plotlyjs-react.js -t [ babelify --presets [ es2015 react ] ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./build/plotlyjs-react.js --compress --mangle --output ./build/plotlyjs-react.min.js --source-map filename=build/plotlyjs-react.min.js.map",
+    "make:lib": "mkdir -p lib && babel src/plotly.js-react.jsx -o lib/plotly.js-react.js --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports",
+    "make:build": "mkdir -p build && browserify src/plotly.js-react.jsx -o ./build/plotly.js-react.js -t [ babelify --presets [ es2015 react ] ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./build/plotly.js-react.js --compress --mangle --output ./build/plotly.js-react.min.js --source-map filename=build/plotly.js-react.min.js.map",
     "prepublish": "npm run make:lib && npm run make:build",
     "lint": "prettier --trailing-comma es5 --write \"{src,example/src}/**/*.{js,jsx}\"",
     "precommit": "lint-staged",

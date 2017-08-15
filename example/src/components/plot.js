@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./plot.css";
 
-import createPlotly from "../../../src/plotlyjs-react.jsx";
+import createPlotly from "../../../src/plotly.js-react.jsx";
 const PlotlyComponent = createPlotly(Plotly);
 
 export default class Plot extends React.Component {

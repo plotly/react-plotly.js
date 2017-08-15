@@ -1,4 +1,4 @@
-# plotlyjs-react
+# plotly.js-react
 
 > A React component for plotly.js charts <a href="https://z8tgespzmd63w51brzdh360ryvgt3m1ho.netlify.com/">&rarr; See demo</a>
 
@@ -7,7 +7,7 @@
 Not yet published
 
 ```bash
-$ npm install plotlyjs-react
+$ npm install plotly.js-react
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ $ npm install plotlyjs-react
 The component definition is created by dependency injection so that you can use whichever version of plotly.js you'd like, including the [CDN versions](https://plot.ly/javascript/getting-started/#plotlyjs-cdn).
 
 ```javascript
-const createPlotlyComponent = require('plotlyjs-react');
+const createPlotlyComponent = require('plotly.js-react');
 const PlotlyComponent = createPlotlyComponent(Plotly);
 
 render () {
