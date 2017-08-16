@@ -1330,7 +1330,7 @@ function constructUpdate(diff) {
 //   - react props are `'on' + eventName`
 var eventNames = ["AfterExport", "AfterPlot", "Animated", "AnimatingFrame", "AnimationInterrupted", "AutoSize", "BeforeExport", "ButtonClicked", "Click", "ClickAnnotation", "Deselect", "DoubleClick", "Framework", "Hover", "Relayout", "Restyle", "Redraw", "Selected", "Selecting", "SliderChange", "SliderEnd", "SliderStart", "Transitioning", "TransitionInterrupted", "Unhover"];
 
-var updateEvents = ['plotly_restyle', 'plotly_redraw', 'plotly_relayout', 'plotly_doubleclick', 'plotly_animated'];
+var updateEvents = ["plotly_restyle", "plotly_redraw", "plotly_relayout", "plotly_doubleclick", "plotly_animated"];
 
 // Check if a window is available since SSR (server-side rendering)
 // breaks unnecessarily if you try to use it server-side.
@@ -1437,7 +1437,6 @@ function createPlotlyComponent(Plotly) {
       value: function attachUpdateEvents() {
         for (var i = 0; i < updateEvents.length; i++) {
           this.el.on(updateEvents[i], this.handleUpdate);
-          console.log('on', updateEvents[i]);
         }
       }
     }, {
@@ -1453,7 +1452,7 @@ function createPlotlyComponent(Plotly) {
       key: "handleUpdate",
       value: function handleUpdate(props) {
         props = props || this.props;
-        if (props.onUpdate && typeof props.onUpdate === 'function') {
+        if (props.onUpdate && typeof props.onUpdate === "function") {
           props.onUpdate(this.el);
         }
       }
