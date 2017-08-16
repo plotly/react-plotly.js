@@ -19,13 +19,14 @@
     "example:build:assets": "rm -rf example/dist/assets && cp -r example/assets example/dist/assets",
     "example:build": "rm -rf example/dist && mkdir -p example/dist && npm run example:build:html && npm run example:build:js && npm run example:build:assets",
     "example:deploy": "netlify deploy example/dist",
-    "make:lib": "mkdir -p lib && babel src/plotly.js-react.jsx -o lib/plotly.js-react.js --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports",
-    "make:build": "mkdir -p build && browserify src/plotly.js-react.jsx -o ./build/plotly.js-react.js -t [ babelify --presets [ es2015 react ] ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./build/plotly.js-react.js --compress --mangle --output ./build/plotly.js-react.min.js --source-map filename=build/plotly.js-react.min.js.map",
+    "make:lib": "mkdir -p lib && babel src/plotly.js-react.js -o lib/plotly.js-react.js --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports",
+    "make:build": "mkdir -p build && browserify src/plotly.js-react.js -o ./build/plotly.js-react.js -t [ babelify --presets [ es2015 react ] ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./build/plotly.js-react.js --compress --mangle --output ./build/plotly.js-react.min.js --source-map filename=build/plotly.js-react.min.js.map",
     "prepublish": "npm run make:lib && npm run make:build",
-    "lint": "prettier --trailing-comma es5 --write \"{src,example/src}/**/*.{js,jsx}\"",
+    "lint": "prettier --trailing-comma es5 --write \"{src,example/src}/**/*.js\"",
     "precommit": "lint-staged",
     "test": "jest",
-    "watch-test": "jest --watch"
+    "watch-test": "jest --watch",
+    "watch": "nodemon --exec \"npm run prepublish\" --watch src --ext js"
   },
   "keywords": [
     "graphing",
@@ -59,6 +60,7 @@
     "json-beautify": "^1.0.1",
     "lint-staged": "^4.0.2",
     "netlify-cli": "^1.2.2",
+    "nodemon": "^1.11.0",
     "onetime": "^1.1.0",
     "plotly.js": "^1.29.2",
     "prettier": "^1.5.3",
