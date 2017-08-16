@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import isNumeric from "fast-isnumeric";
 import objectAssign from "object-assign";
+import throttle from "throttle-debounce/throttle";
 
 function constructUpdate(diff) {
   var keys = Object.keys(diff);
@@ -38,6 +39,14 @@ const eventNames = [
   "Unhover",
 ];
 
+const updateEvents = [
+  "plotly_restyle",
+  "plotly_redraw",
+  "plotly_relayout",
+  "plotly_doubleclick",
+  "plotly_animated",
+];
+
 // Check if a window is available since SSR (server-side rendering)
 // breaks unnecessarily if you try to use it server-side.
 const isBrowser = typeof window !== "undefined";
@@ -55,7 +64,10 @@ export default function createPlotlyComponent(Plotly) {
 
       this.syncWindowResize = this.syncWindowResize.bind(this);
       this.syncEventHandlers = this.syncEventHandlers.bind(this);
+      this.attachUpdateEvents = this.attachUpdateEvents.bind(this);
       this.getRef = this.getRef.bind(this);
+
+      this.handleUpdate = throttle(20, this.handleUpdate.bind(this));
     }
 
     componentDidMount() {
@@ -68,6 +80,7 @@ export default function createPlotlyComponent(Plotly) {
             frames: this.props.frames,
           });
         })
+        .then(this.attachUpdateEvents)
         .then(() => this.syncWindowResize(null, false))
         .then(() => this.syncEventHandlers())
         .then(
@@ -104,9 +117,7 @@ export default function createPlotlyComponent(Plotly) {
         })
         .then(() => this.syncEventHandlers(nextProps))
         .then(() => this.syncWindowResize(nextProps))
-        .then(() => {
-          nextProps.onUpdate && nextProps.onUpdate();
-        })
+        .then(() => () => this.handleUpdate(nextProps))
         .catch(err => {
           this.props.onError && this.props.onError(err);
         });
@@ -118,7 +129,30 @@ export default function createPlotlyComponent(Plotly) {
         this.resizeHandler = null;
       }
 
+      this.removeUpdateEvents();
+
       Plotly.purge(this.el);
+    }
+
+    attachUpdateEvents() {
+      for (let i = 0; i < updateEvents.length; i++) {
+        this.el.on(updateEvents[i], this.handleUpdate);
+      }
+    }
+
+    removeUpdateEvents() {
+      if (!this.el || !this.el.off) return;
+
+      for (let i = 0; i < updateEvents.length; i++) {
+        this.el.off(updateEvents[i], this.handleUpdate);
+      }
+    }
+
+    handleUpdate(props) {
+      props = props || this.props;
+      if (props.onUpdate && typeof props.onUpdate === "function") {
+        props.onUpdate(this.el);
+      }
     }
 
     syncWindowResize(props, invoke) {

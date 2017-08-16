@@ -1190,6 +1190,99 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 module.exports = ReactPropTypesSecret;
 
 },{}],12:[function(require,module,exports){
+/* eslint-disable no-undefined,no-param-reassign,no-shadow */
+
+/**
+ * Throttle execution of a function. Especially useful for rate limiting
+ * execution of handlers on events like resize and scroll.
+ *
+ * @param  {Number}    delay          A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
+ * @param  {Boolean}   noTrailing     Optional, defaults to false. If noTrailing is true, callback will only execute every `delay` milliseconds while the
+ *                                    throttled-function is being called. If noTrailing is false or unspecified, callback will be executed one final time
+ *                                    after the last throttled-function call. (After the throttled-function has not been called for `delay` milliseconds,
+ *                                    the internal counter is reset)
+ * @param  {Function}  callback       A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
+ *                                    to `callback` when the throttled-function is executed.
+ * @param  {Boolean}   debounceMode   If `debounceMode` is true (at begin), schedule `clear` to execute after `delay` ms. If `debounceMode` is false (at end),
+ *                                    schedule `callback` to execute after `delay` ms.
+ *
+ * @return {Function}  A new, throttled, function.
+ */
+module.exports = function ( delay, noTrailing, callback, debounceMode ) {
+
+	// After wrapper has stopped being called, this timeout ensures that
+	// `callback` is executed at the proper times in `throttle` and `end`
+	// debounce modes.
+	var timeoutID;
+
+	// Keep track of the last time `callback` was executed.
+	var lastExec = 0;
+
+	// `noTrailing` defaults to falsy.
+	if ( typeof noTrailing !== 'boolean' ) {
+		debounceMode = callback;
+		callback = noTrailing;
+		noTrailing = undefined;
+	}
+
+	// The `wrapper` function encapsulates all of the throttling / debouncing
+	// functionality and when executed will limit the rate at which `callback`
+	// is executed.
+	function wrapper () {
+
+		var self = this;
+		var elapsed = Number(new Date()) - lastExec;
+		var args = arguments;
+
+		// Execute `callback` and update the `lastExec` timestamp.
+		function exec () {
+			lastExec = Number(new Date());
+			callback.apply(self, args);
+		}
+
+		// If `debounceMode` is true (at begin) this is used to clear the flag
+		// to allow future `callback` executions.
+		function clear () {
+			timeoutID = undefined;
+		}
+
+		if ( debounceMode && !timeoutID ) {
+			// Since `wrapper` is being called for the first time and
+			// `debounceMode` is true (at begin), execute `callback`.
+			exec();
+		}
+
+		// Clear any existing timeout.
+		if ( timeoutID ) {
+			clearTimeout(timeoutID);
+		}
+
+		if ( debounceMode === undefined && elapsed > delay ) {
+			// In throttle mode, if `delay` time has been exceeded, execute
+			// `callback`.
+			exec();
+
+		} else if ( noTrailing !== true ) {
+			// In trailing throttle mode, since `delay` time has not been
+			// exceeded, schedule `callback` to execute `delay` ms after most
+			// recent execution.
+			//
+			// If `debounceMode` is true (at begin), schedule `clear` to execute
+			// after `delay` ms.
+			//
+			// If `debounceMode` is false (at end), schedule `callback` to
+			// execute after `delay` ms.
+			timeoutID = setTimeout(debounceMode ? clear : exec, debounceMode === undefined ? delay - elapsed : delay);
+		}
+
+	}
+
+	// Return the wrapper function.
+	return wrapper;
+
+};
+
+},{}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1216,6 +1309,10 @@ var _objectAssign = require("object-assign");
 
 var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
+var _throttle = require("throttle-debounce/throttle");
+
+var _throttle2 = _interopRequireDefault(_throttle);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1232,6 +1329,8 @@ function constructUpdate(diff) {
 //   - events are attached as `'plotly_' + eventName.toLowerCase()`
 //   - react props are `'on' + eventName`
 var eventNames = ["AfterExport", "AfterPlot", "Animated", "AnimatingFrame", "AnimationInterrupted", "AutoSize", "BeforeExport", "ButtonClicked", "Click", "ClickAnnotation", "Deselect", "DoubleClick", "Framework", "Hover", "Relayout", "Restyle", "Redraw", "Selected", "Selecting", "SliderChange", "SliderEnd", "SliderStart", "Transitioning", "TransitionInterrupted", "Unhover"];
+
+var updateEvents = ['plotly_restyle', 'plotly_redraw', 'plotly_relayout', 'plotly_doubleclick', 'plotly_animated'];
 
 // Check if a window is available since SSR (server-side rendering)
 // breaks unnecessarily if you try to use it server-side.
@@ -1254,7 +1353,10 @@ function createPlotlyComponent(Plotly) {
 
       _this.syncWindowResize = _this.syncWindowResize.bind(_this);
       _this.syncEventHandlers = _this.syncEventHandlers.bind(_this);
+      _this.attachUpdateEvents = _this.attachUpdateEvents.bind(_this);
       _this.getRef = _this.getRef.bind(_this);
+
+      _this.handleUpdate = (0, _throttle2.default)(20, _this.handleUpdate.bind(_this));
       return _this;
     }
 
@@ -1270,7 +1372,7 @@ function createPlotlyComponent(Plotly) {
             config: _this2.props.config,
             frames: _this2.props.frames
           });
-        }).then(function () {
+        }).then(this.attachUpdateEvents).then(function () {
           return _this2.syncWindowResize(null, false);
         }).then(function () {
           return _this2.syncEventHandlers();
@@ -1311,7 +1413,9 @@ function createPlotlyComponent(Plotly) {
         }).then(function () {
           return _this3.syncWindowResize(nextProps);
         }).then(function () {
-          nextProps.onUpdate && nextProps.onUpdate();
+          return function () {
+            return _this3.handleUpdate(nextProps);
+          };
         }).catch(function (err) {
           _this3.props.onError && _this3.props.onError(err);
         });
@@ -1324,7 +1428,34 @@ function createPlotlyComponent(Plotly) {
           this.resizeHandler = null;
         }
 
+        this.removeUpdateEvents();
+
         Plotly.purge(this.el);
+      }
+    }, {
+      key: "attachUpdateEvents",
+      value: function attachUpdateEvents() {
+        for (var i = 0; i < updateEvents.length; i++) {
+          this.el.on(updateEvents[i], this.handleUpdate);
+          console.log('on', updateEvents[i]);
+        }
+      }
+    }, {
+      key: "removeUpdateEvents",
+      value: function removeUpdateEvents() {
+        if (!this.el || !this.el.off) return;
+
+        for (var i = 0; i < updateEvents.length; i++) {
+          this.el.off(updateEvents[i], this.handleUpdate);
+        }
+      }
+    }, {
+      key: "handleUpdate",
+      value: function handleUpdate(props) {
+        props = props || this.props;
+        if (props.onUpdate && typeof props.onUpdate === 'function') {
+          props.onUpdate(this.el);
+        }
       }
     }, {
       key: "syncWindowResize",
@@ -1444,5 +1575,5 @@ function createPlotlyComponent(Plotly) {
   return PlotlyComponent;
 }
 
-},{"fast-isnumeric":1,"object-assign":5,"prop-types":10}]},{},[12])(12)
+},{"fast-isnumeric":1,"object-assign":5,"prop-types":10,"throttle-debounce/throttle":12}]},{},[13])(13)
 });

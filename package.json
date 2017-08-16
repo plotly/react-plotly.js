@@ -70,6 +70,7 @@
     "react-dat-gui": "0.0.13",
     "react-dom": "^15.6.1",
     "react-test-renderer": "^15.6.1",
+    "throttle-debounce": "^1.0.1",
     "uglify-js": "^3.0.26",
     "uglifyify": "^4.0.3"
   },
