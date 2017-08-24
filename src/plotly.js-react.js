@@ -67,7 +67,8 @@ export default function createPlotlyComponent(Plotly) {
       this.attachUpdateEvents = this.attachUpdateEvents.bind(this);
       this.getRef = this.getRef.bind(this);
 
-      this.handleUpdate = throttle(20, this.handleUpdate.bind(this));
+      //this.handleUpdate = throttle(0, this.handleUpdate.bind(this));
+      this.handleUpdate = this.handleUpdate.bind(this);
     }
 
     componentDidMount() {
@@ -83,14 +84,9 @@ export default function createPlotlyComponent(Plotly) {
         .then(this.attachUpdateEvents)
         .then(() => this.syncWindowResize(null, false))
         .then(() => this.syncEventHandlers())
-        .then(
-          () => {
-            this.props.onInitialized && this.props.onInitialized();
-          },
-          () => {
-            this.props.onError && this.props.onError();
-          }
-        );
+        .then(this.handleUpdate, () => {
+          this.props.onError && this.props.onError();
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -236,7 +232,15 @@ export default function createPlotlyComponent(Plotly) {
     }
 
     render() {
-      return <div ref={this.getRef} />;
+      return (
+        <div
+          style={{
+            position: "relative",
+            display: "inline-block",
+          }}
+          ref={this.getRef}
+        />
+      );
     }
   }
 
@@ -254,6 +258,7 @@ export default function createPlotlyComponent(Plotly) {
   }
 
   PlotlyComponent.defaultProps = {
+    debug: true,
     fit: false,
     data: [],
   };

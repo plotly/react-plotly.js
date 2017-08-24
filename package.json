@@ -26,7 +26,7 @@
     "precommit": "lint-staged",
     "test": "jest",
     "watch-test": "jest --watch",
-    "watch": "nodemon --exec \"npm run prepublish\" --watch src --ext js"
+    "watch": "nodemon --exec \"npm run make:lib\" -w src"
   },
   "keywords": [
     "graphing",
