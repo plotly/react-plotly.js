@@ -35,7 +35,7 @@ render () {
 
 ### With external `plotly.js`
 
-If you wish to use a version of `plotly.js` that is not bundled with the rest of your project, whether a [CDN versions](https://plot.ly/javascript/getting-started/#plotlyjs-cdn) or through a [static distribution bundle](https://github.com/plotly/plotly.js/tree/master/dist), you may skip installing `plotly.js` and ignore the peer dependency warning.
+If you wish to use a version of `plotly.js` that is not bundled with the rest of your project, whether a [CDN version](https://plot.ly/javascript/getting-started/#plotlyjs-cdn) or through a [static distribution bundle](https://github.com/plotly/plotly.js/tree/master/dist), you may skip installing `plotly.js` and ignore the peer dependency warning.
 
 ```bash
 $ npm install -S react-plotly.js
