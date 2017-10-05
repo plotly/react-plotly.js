@@ -84,9 +84,14 @@ export default function createPlotlyComponent(Plotly) {
         .then(this.attachUpdateEvents)
         .then(() => this.syncWindowResize(null, false))
         .then(() => this.syncEventHandlers())
-        .then(this.handleUpdate, () => {
-          this.props.onError && this.props.onError();
-        });
+        .then(
+          () => {
+            this.props.onInitialized && this.props.onInitialized();
+          },
+          () => {
+            this.props.onError && this.props.onError();
+          }
+        );
     }
 
     componentWillReceiveProps(nextProps) {
@@ -113,7 +118,7 @@ export default function createPlotlyComponent(Plotly) {
         })
         .then(() => this.syncEventHandlers(nextProps))
         .then(() => this.syncWindowResize(nextProps))
-        .then(() => () => this.handleUpdate(nextProps))
+        .then(() => this.handleUpdate(nextProps))
         .catch(err => {
           this.props.onError && this.props.onError(err);
         });

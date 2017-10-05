@@ -1,15 +1,21 @@
 import React from "react";
 import { mount, shallow } from "enzyme";
-import createComponent from "../plotly.js-react";
+import createComponent from "../react-plotly";
 import once from "onetime";
 
 describe("<Plotly/>", () => {
-  let Plotly, Plot;
+  let Plotly, PlotComponent;
 
   function createPlot(props) {
     return new Promise((resolve, reject) => {
       const plot = mount(
-        <Plot {...props} onInitialized={() => resolve(plot)} onError={reject} />
+        <PlotComponent
+          {...props}
+          onInitialized={() => {
+            resolve(plot);
+          }}
+          onError={reject}
+        />
       );
     });
   }
@@ -32,10 +38,13 @@ describe("<Plotly/>", () => {
   describe("with mocked plotly.js", () => {
     beforeEach(() => {
       Plotly = require.requireMock("../__mocks__/plotly.js").default;
-      Plot = createComponent(Plotly);
+      PlotComponent = createComponent(Plotly);
 
       // Override the parent element size:
-      Plot.prototype.getParentSize = () => ({ width: 123, height: 456 });
+      PlotComponent.prototype.getParentSize = () => ({
+        width: 123,
+        height: 456,
+      });
     });
 
     describe("initialization", function() {
@@ -44,7 +53,9 @@ describe("<Plotly/>", () => {
           .then(() => {
             expect(Plotly.newPlot).toHaveBeenCalled();
           })
-          .catch(err => done.fail(err))
+          .catch(err => {
+            done.fail(err);
+          })
           .then(done);
       });
 

@@ -1356,7 +1356,8 @@ function createPlotlyComponent(Plotly) {
       _this.attachUpdateEvents = _this.attachUpdateEvents.bind(_this);
       _this.getRef = _this.getRef.bind(_this);
 
-      _this.handleUpdate = (0, _throttle2.default)(20, _this.handleUpdate.bind(_this));
+      //this.handleUpdate = throttle(0, this.handleUpdate.bind(this));
+      _this.handleUpdate = _this.handleUpdate.bind(_this);
       return _this;
     }
 
@@ -1413,9 +1414,7 @@ function createPlotlyComponent(Plotly) {
         }).then(function () {
           return _this3.syncWindowResize(nextProps);
         }).then(function () {
-          return function () {
-            return _this3.handleUpdate(nextProps);
-          };
+          return _this3.handleUpdate(nextProps);
         }).catch(function (err) {
           _this3.props.onError && _this3.props.onError(err);
         });
@@ -1546,7 +1545,13 @@ function createPlotlyComponent(Plotly) {
     }, {
       key: "render",
       value: function render() {
-        return _react2.default.createElement("div", { ref: this.getRef });
+        return _react2.default.createElement("div", {
+          style: {
+            position: "relative",
+            display: "inline-block"
+          },
+          ref: this.getRef
+        });
       }
     }]);
 
@@ -1567,6 +1572,7 @@ function createPlotlyComponent(Plotly) {
   }
 
   PlotlyComponent.defaultProps = {
+    debug: true,
     fit: false,
     data: []
   };
