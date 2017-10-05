@@ -19,7 +19,7 @@
     "example:build:assets": "rm -rf example/dist/assets && cp -r example/assets example/dist/assets",
     "example:build": "rm -rf example/dist && mkdir -p example/dist && npm run example:build:html && npm run example:build:js && npm run example:build:assets",
     "example:deploy": "netlify deploy example/dist",
-    "make:lib": "babel src/*.js --out-dir=./ --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports",
+    "make:lib": "mkdir -p lib && babel src --out-dir=lib --ignore=__tests__,__mocks__ --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports && mv lib/* ./ && rmdir lib",
     "make:build": "mkdir -p build && browserify src/react-plotly.js -o ./build/react-plotly.js -t [ babelify --presets [ es2015 react ] ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./build/react-plotly.js --compress --mangle --output ./build/react-plotly.js.min.js --source-map filename=build/react-plotly.js.min.js.map",
     "clean": "rm -rf build lib",
     "prepublishOnly": "npm run make:lib && npm run make:build",

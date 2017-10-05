@@ -11,3 +11,6 @@ npm-debug.log*
 !.eslintignore
 
 example/dist
+
+*.js
+*.js.map
