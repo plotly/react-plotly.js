@@ -1,5 +1,5 @@
 import React from "react";
-import { mount, shallow } from "enzyme";
+import { mount } from "enzyme";
 import createComponent from "../react-plotly";
 import once from "onetime";
 
@@ -141,7 +141,6 @@ describe("<Plotly/>", () => {
     describe("responding to window events", () => {
       describe("with fit: true", () => {
         test("does not call relayout on initialization", done => {
-          let relayoutCnt = 0;
           createPlot({
             fit: true,
             onRelayout: () => done.fail("Unexpected relayout event"),
@@ -172,7 +171,6 @@ describe("<Plotly/>", () => {
 
       describe("with fit: false", () => {
         test("does not call relayout on init", done => {
-          let relayoutCnt = 0;
           createPlot({
             fit: false,
             onRelayout: () => done.fail("Unexpected relayout event"),
@@ -184,7 +182,6 @@ describe("<Plotly/>", () => {
         });
 
         test("does not call relayout on window resize", done => {
-          let relayoutCnt = 0;
           createPlot({
             fit: false,
             onRelayout: () => done.fail("Unexpected relayout event"),

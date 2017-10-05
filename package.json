@@ -15,7 +15,7 @@
   "scripts": {
     "start": "budo example/src/index.js --dir example/src --dir example --open --live --host localhost -- -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/assets/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs",
     "example:build:html": "cp example/src/index.html example/dist/index.html",
-    "example:build:js": "browserify example/src/index.js -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/dist/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs -g [ envify --NODE_ENV production ] -g uglifyify -p bundle-collapser/plugin | uglifyjs --compress --mangle > example/dist/index.js",
+    "example:build:js": "browserify example/src/index.js -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/dist/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs -g [ envify --NODE_ENV production ] -p bundle-collapser/plugin | uglifyjs --compress --mangle > example/dist/index.js",
     "example:build:assets": "rm -rf example/dist/assets && cp -r example/assets example/dist/assets",
     "example:build": "rm -rf example/dist && mkdir -p example/dist && npm run example:build:html && npm run example:build:js && npm run example:build:assets",
     "example:deploy": "netlify deploy example/dist",
@@ -56,6 +56,7 @@
     "envify": "^4.1.0",
     "enzyme": "^2.9.1",
     "eslint": "^4.8.0",
+    "eslint-plugin-react": "^7.4.0",
     "event-emitter": "^0.3.5",
     "gl": "^4.0.4",
     "husky": "^0.14.3",
@@ -66,7 +67,6 @@
     "netlify-cli": "^1.2.2",
     "nodemon": "^1.11.0",
     "onetime": "^1.1.0",
-    "plotly.js": "^1.29.2",
     "prettier": "^1.5.3",
     "react": "^15.6.1",
     "react-addons-test-utils": "^15.6.0",
@@ -75,8 +75,10 @@
     "react-dom": "^15.6.1",
     "react-test-renderer": "^15.6.1",
     "throttle-debounce": "^1.0.1",
-    "uglify-js": "^3.0.26",
-    "uglifyify": "^4.0.3"
+    "uglify-js": "^3.0.26"
+  },
+  "peerDependencies": {
+    "plotly.js": ">1.0.0"
   },
   "browserify-global-shim": {
     "react": "React"

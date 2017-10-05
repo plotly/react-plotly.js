@@ -2,11 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import isNumeric from "fast-isnumeric";
 import objectAssign from "object-assign";
-import throttle from "throttle-debounce/throttle";
-
-function constructUpdate(diff) {
-  var keys = Object.keys(diff);
-}
+// import throttle from "throttle-debounce/throttle";
 
 // The naming convention is:
 //   - events are attached as `'plotly_' + eventName.toLowerCase()`
@@ -95,7 +91,6 @@ export default function createPlotlyComponent(Plotly) {
     }
 
     componentWillReceiveProps(nextProps) {
-      let dataDiff, layoutDiff, configDiff;
       let nextLayout = this.sizeAdjustedLayout(nextProps.layout);
 
       this.p = this.p
@@ -256,6 +251,9 @@ export default function createPlotlyComponent(Plotly) {
     layout: PropTypes.object,
     frames: PropTypes.arrayOf(PropTypes.object),
     onInitialized: PropTypes.func,
+    onError: PropTypes.func,
+    onUpdate: PropTypes.func,
+    debug: PropTypes.bool,
   };
 
   for (let i = 0; i < eventNames.length; i++) {
@@ -263,7 +261,7 @@ export default function createPlotlyComponent(Plotly) {
   }
 
   PlotlyComponent.defaultProps = {
-    debug: true,
+    debug: false,
     fit: false,
     data: [],
   };
