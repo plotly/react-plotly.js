@@ -63,7 +63,7 @@ render () {
 }
 ```
 
-You must ensure `Plotly` is available before your React app tries to render the component. That could mean perhaps using script tag (without `async` or `defer`) or a utility like [load-script](https://www.npmjs.com/package/load-script).
+**Note**: You must ensure `Plotly` is available before your React app tries to render the component. That could mean perhaps using script tag (without `async` or `defer`) or a utility like [load-script](https://www.npmjs.com/package/load-script).
 
 
 ## API
