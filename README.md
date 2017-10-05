@@ -1,6 +1,6 @@
 # react-plotly.js
 
-> A [plotly.js](https://github.com/plotly/plotly.js) react component from [Plotly](https://plot.ly/)
+> A [plotly.js](https://github.com/plotly/plotly.js) React component from [Plotly](https://plot.ly/)
 
 ## Installation
 
@@ -65,7 +65,6 @@ render () {
 
 **Note**: You must ensure `Plotly` is available before your React app tries to render the component. That could mean perhaps using script tag (without `async` or `defer`) or a utility like [load-script](https://www.npmjs.com/package/load-script).
 
-
 ## API
 
 ### Props
@@ -113,6 +112,10 @@ Event handlers for [`plotly.js` events](https://plot.ly/javascript/plotlyjs-even
 | `onTransitioning` | `Function` | `plotly_transitioning` |
 | `onTransitionInterrupted` | `Function` | `plotly_transitioninterrupted` |
 | `onUnhover` | `Function` | `plotly_unhover` |
+
+## Roadmap
+
+This component currently creates a new plot every time the input changes. That makes it stable and good enough for production use, but `plotly.js` will soon gain react-style support for computing and drawing changes incrementally. What does that mean for you? That means you can expect to keep using this component with little or no modification but that the plotting will simply happen much faster when you upgrade to the first version of `plotly.js` to support this feature. If this component requires any significant changes, a new major version will be released at the same time to ensure stability.
 
 ## Development
 
