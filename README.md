@@ -126,7 +126,7 @@ $ npm install
 $ npm start
 ```
 
-To build the dist version:
+To transpile from ES2015 + JSX into the ES5 npm-distributed version:
 
 ```bash
 $ npm run prepublishOnly
