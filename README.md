@@ -78,9 +78,9 @@ render () {
 | `frames` | `Array` | `undefined` | list of frame objects |
 | `fit` | `Boolean` | `false` | When true, disregards `layout.width` and `layout.height` and fits to the parent div size, updating on `window.resize` |
 | `debug` | `Boolean` | `false` | Assign the graph div to `window.gd` for debugging |
-| `onInitialized` | `Function` | null | Callback executed once after plot is initialized |
-| `onUpdate` | `Function` | null | Callback executed when a plotly.js API method is invoked |
-| `onError` | `Function` | null | Callback executed when a plotly.js API method rejects |
+| `onInitialized` | `Function` | `undefined` | Callback executed once after plot is initialized |
+| `onUpdate` | `Function` | `undefined` | Callback executed when a plotly.js API method is invoked |
+| `onError` | `Function` | `undefined` | Callback executed when a plotly.js API method rejects |
 
 ### Event handler props
 
