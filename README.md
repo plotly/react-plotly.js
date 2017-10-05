@@ -12,7 +12,7 @@ $ npm install react-plotly.js plotly.js
 
 ### With bundled `plotly.js`
 
-[`plotly.js`](https://github.com/plotly/plotly.js) is a peer dependency of `react-plotly.js`. If you would like to bundle `plotly.js` with the rest of your project, you must install it separately.
+[`plotly.js`](https://github.com/plotly/plotly.js) is a peer dependency of `react-plotly.js`. If you would like to bundle `plotly.js` with the rest of your project and use it in this component, you must install it separately.
 
 ```bash
 $ npm install -S react-plotly.js plotly.js
