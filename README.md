@@ -1,25 +1,30 @@
-# plotly.js-react
+# react-plotly.js
 
-> A React component for plotly.js charts <a href="https://z8tgespzmd63w51brzdh360ryvgt3m1ho.netlify.com/">&rarr; See demo</a>
+> A [plotly.js](https://github.com/plotly/plotly.js) react component from [Plotly](https://plot.ly/)
 
 ## Installation
 
-Not yet published
-
 ```bash
-$ npm install plotly.js-react
+$ npm install react-plotly.js plotly.js
 ```
 
 ## Usage
 
-The component definition is created by dependency injection so that you can use whichever version of plotly.js you'd like, including the [CDN versions](https://plot.ly/javascript/getting-started/#plotlyjs-cdn).
+### With bundled `plotly.js`
+
+[`plotly.js`](https://github.com/plotly/plotly.js) is a peer dependency of `react-plotly.js`. If you would like to bundle `plotly.js` with the rest of your project, you must install it separately.
+
+```bash
+$ npm install -S react-plotly.js plotly.js
+```
+
+Since `plotly.js` is a peer dependency, you do not need to require it separately to use it.
 
 ```javascript
-const createPlotlyComponent = require('plotly.js-react');
-const PlotlyComponent = createPlotlyComponent(Plotly);
+import Plot from 'react-plotly.js'
 
 render () {
-  <PlotlyComponent
+  return <Plot 
     data={...}
     layout={...}
     frames={...}
@@ -28,7 +33,38 @@ render () {
 }
 ```
 
-The only requirement is that plotly.js is loaded before you inject it. You may need to use a module like [load-script](https://www.npmjs.com/package/load-script) to ensure it's available.
+### With external `plotly.js`
+
+If you wish to use a version of `plotly.js` that is not bundled with the rest of your project, whether a [CDN versions](https://plot.ly/javascript/getting-started/#plotlyjs-cdn) or through a [static distribution bundle](https://github.com/plotly/plotly.js/tree/master/dist), you may skip installing `plotly.js` and ignore the peer dependency warning.
+
+```bash
+$ npm install -S react-plotly.js
+```
+
+Given perhaps a script tag that has loaded a CDN version of plotly.js,
+
+```html
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+```
+
+you may then inject Plotly and use the returned React component:
+
+```javascript
+import plotComponentFactory from 'react-plotly.js/factory'
+const Plot = plotComponentFactory(Plotly);
+
+render () {
+  return <Plot
+    data={...}
+    layout={...}
+    frames={...}
+    config={...}
+  />
+}
+```
+
+You must ensure `Plotly` is available before your React app tries to render the component. That could mean perhaps using script tag (without `async` or `defer`) or a utility like [load-script](https://www.npmjs.com/package/load-script).
+
 
 ## API
 
@@ -47,6 +83,8 @@ The only requirement is that plotly.js is loaded before you inject it. You may n
 | `onError` | `Function` | null | Callback executed when a plotly.js API method rejects |
 
 ### Event handler props
+
+Event handlers for [`plotly.js` events](https://plot.ly/javascript/plotlyjs-events/) may be attached through the following props.
 
 | Prop | Type | Plotly Event |
 | ---- | ---- | ----------- |
@@ -88,12 +126,14 @@ $ npm start
 To build the dist version:
 
 ```bash
-$ npm run prepublish
+$ npm run prepublishOnly
 ```
 
-## See also
+To run the tests:
 
-- [plotly-react-editor](https://github.com/plotly/plotly-react-editor)
+```bash
+$ npm run test
+```
 
 ## License
 
