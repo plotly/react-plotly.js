@@ -2,7 +2,7 @@
   "name": "react-plotly.js",
   "version": "1.0.0",
   "license": "MIT",
-  "description": "A React component for plotly.js charts",
+  "description": "A plotly.js react component from Plotly",
   "author": "Plotly, Inc.",
   "main": "lib/react-plotly.js",
   "repository": {
