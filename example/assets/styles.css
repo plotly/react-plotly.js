@@ -11,6 +11,14 @@ body {
   right: 0;
   bottom: 0;
 }
+._example_src_components_plot__container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 50%;
+  overflow: scroll;
+}
 ._example_src_components_code__codeContainer {
   position: absolute;
   left: 0;
@@ -34,12 +42,4 @@ body {
 ._example_src_components_code__codeContainer--invalid {
   border: 2px solid red;
   padding: 0;
-}
-._example_src_components_plot__container {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 50%;
-  overflow: scroll;
 }
