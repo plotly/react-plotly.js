@@ -19,7 +19,7 @@
     "example:build:assets": "rm -rf example/dist/assets && cp -r example/assets example/dist/assets",
     "example:build": "rm -rf example/dist && mkdir -p example/dist && npm run example:build:html && npm run example:build:js && npm run example:build:assets",
     "make:lib": "mkdir -p lib && babel src --out-dir=lib --ignore __tests__/*.js,__mocks__/*.js --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports && mv lib/* ./ && rmdir lib",
-    "clean": "rm -rf lib",
+    "clean": "rm -rf lib react-plotly.js react-plotly.js.map factory.js factory.js.map",
     "prepublishOnly": "npm run make:lib",
     "lint": "prettier --trailing-comma es5 --write \"{src,example/src}/**/*.js\" && eslint src",
     "precommit": "lint-staged",

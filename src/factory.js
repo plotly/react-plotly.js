@@ -82,7 +82,7 @@ export default function plotComponentFactory(Plotly) {
         .then(() => this.syncEventHandlers())
         .then(
           () => {
-            this.props.onInitialized && this.props.onInitialized();
+            this.props.onInitialized && this.props.onInitialized(this.el);
           },
           () => {
             this.props.onError && this.props.onError();
