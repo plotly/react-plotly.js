@@ -71,6 +71,16 @@ function plotComponentFactory(Plotly) {
     }
 
     _createClass(PlotlyComponent, [{
+      key: "shouldComponentUpdate",
+      value: function shouldComponentUpdate(nextProps) {
+        if ((0, _fastIsnumeric2.default)(nextProps.revision) && (0, _fastIsnumeric2.default)(this.props.revision)) {
+          // If revision is numeric, then increment only if revision has increased:
+          return nextProps.revision > this.props.revision;
+        } else {
+          return true;
+        }
+      }
+    }, {
       key: "componentDidMount",
       value: function componentDidMount() {
         var _this2 = this;
@@ -82,19 +92,18 @@ function plotComponentFactory(Plotly) {
             config: _this2.props.config,
             frames: _this2.props.frames
           });
-        }).then(this.attachUpdateEvents).then(function () {
+        }).then(function () {
           return _this2.syncWindowResize(null, false);
-        }).then(function () {
-          return _this2.syncEventHandlers();
-        }).then(function () {
-          _this2.props.onInitialized && _this2.props.onInitialized(_this2.el);
-        }, function () {
-          _this2.props.onError && _this2.props.onError();
+        }).then(this.syncEventHandlers).then(this.attachUpdateEvents).then(function () {
+          return _this2.props.onInitialized && _this2.props.onInitialized(_this2.el);
+        }).catch(function (e) {
+          console.error("Error while plotting:", e);
+          return _this2.props.onError && _this2.props.onError();
         });
       }
     }, {
-      key: "componentWillReceiveProps",
-      value: function componentWillReceiveProps(nextProps) {
+      key: "componentWillUpdate",
+      value: function componentWillUpdate(nextProps) {
         var _this3 = this;
 
         var nextLayout = this.sizeAdjustedLayout(nextProps.layout);
@@ -119,9 +128,10 @@ function plotComponentFactory(Plotly) {
           return _this3.syncEventHandlers(nextProps);
         }).then(function () {
           return _this3.syncWindowResize(nextProps);
-        }).then(function () {
+        }).then(this.attachUpdateEvents).then(function () {
           return _this3.handleUpdate(nextProps);
         }).catch(function (err) {
+          console.error("Error while plotting:", err);
           _this3.props.onError && _this3.props.onError(err);
         });
       }
@@ -140,8 +150,12 @@ function plotComponentFactory(Plotly) {
     }, {
       key: "attachUpdateEvents",
       value: function attachUpdateEvents() {
+        var _this4 = this;
+
         for (var i = 0; i < updateEvents.length; i++) {
-          this.el.on(updateEvents[i], this.handleUpdate);
+          this.el.on(updateEvents[i], function () {
+            _this4.handleUpdate();
+          });
         }
       }
     }, {
@@ -164,14 +178,14 @@ function plotComponentFactory(Plotly) {
     }, {
       key: "syncWindowResize",
       value: function syncWindowResize(props, invoke) {
-        var _this4 = this;
+        var _this5 = this;
 
         props = props || this.props;
         if (!isBrowser) return;
 
         if (props.fit && !this.resizeHandler) {
           this.resizeHandler = function () {
-            return Plotly.relayout(_this4.el, _this4.getSize());
+            return Plotly.relayout(_this5.el, _this5.getSize());
           };
           window.addEventListener("resize", this.resizeHandler);
 
@@ -185,6 +199,10 @@ function plotComponentFactory(Plotly) {
       key: "getRef",
       value: function getRef(el) {
         this.el = el;
+
+        if (this.props.onGraphDiv) {
+          this.props.onGraphDiv(el);
+        }
 
         if (this.props.debug && isBrowser) {
           window.gd = this.el;
@@ -273,7 +291,8 @@ function plotComponentFactory(Plotly) {
     onInitialized: _propTypes2.default.func,
     onError: _propTypes2.default.func,
     onUpdate: _propTypes2.default.func,
-    debug: _propTypes2.default.bool
+    debug: _propTypes2.default.bool,
+    onGraphDiv: _propTypes2.default.func
   };
 
   for (var i = 0; i < eventNames.length; i++) {

@@ -67,6 +67,15 @@ export default function plotComponentFactory(Plotly) {
       this.handleUpdate = this.handleUpdate.bind(this);
     }
 
+    shouldComponentUpdate(nextProps) {
+      if (isNumeric(nextProps.revision) && isNumeric(this.props.revision)) {
+        // If revision is numeric, then increment only if revision has increased:
+        return nextProps.revision > this.props.revision;
+      } else {
+        return true;
+      }
+    }
+
     componentDidMount() {
       this.p = this.p
         .then(() => {
@@ -77,20 +86,19 @@ export default function plotComponentFactory(Plotly) {
             frames: this.props.frames,
           });
         })
-        .then(this.attachUpdateEvents)
         .then(() => this.syncWindowResize(null, false))
-        .then(() => this.syncEventHandlers())
+        .then(this.syncEventHandlers)
+        .then(this.attachUpdateEvents)
         .then(
-          () => {
-            this.props.onInitialized && this.props.onInitialized(this.el);
-          },
-          () => {
-            this.props.onError && this.props.onError();
-          }
-        );
+          () => this.props.onInitialized && this.props.onInitialized(this.el)
+        )
+        .catch(e => {
+          console.error("Error while plotting:", e);
+          return this.props.onError && this.props.onError();
+        });
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillUpdate(nextProps) {
       let nextLayout = this.sizeAdjustedLayout(nextProps.layout);
 
       this.p = this.p
@@ -113,8 +121,10 @@ export default function plotComponentFactory(Plotly) {
         })
         .then(() => this.syncEventHandlers(nextProps))
         .then(() => this.syncWindowResize(nextProps))
+        .then(this.attachUpdateEvents)
         .then(() => this.handleUpdate(nextProps))
         .catch(err => {
+          console.error("Error while plotting:", err);
           this.props.onError && this.props.onError(err);
         });
     }
@@ -132,7 +142,9 @@ export default function plotComponentFactory(Plotly) {
 
     attachUpdateEvents() {
       for (let i = 0; i < updateEvents.length; i++) {
-        this.el.on(updateEvents[i], this.handleUpdate);
+        this.el.on(updateEvents[i], () => {
+          this.handleUpdate();
+        });
       }
     }
 
@@ -170,6 +182,10 @@ export default function plotComponentFactory(Plotly) {
 
     getRef(el) {
       this.el = el;
+
+      if (this.props.onGraphDiv) {
+        this.props.onGraphDiv(el);
+      }
 
       if (this.props.debug && isBrowser) {
         window.gd = this.el;
@@ -254,6 +270,7 @@ export default function plotComponentFactory(Plotly) {
     onError: PropTypes.func,
     onUpdate: PropTypes.func,
     debug: PropTypes.bool,
+    onGraphDiv: PropTypes.func,
   };
 
   for (let i = 0; i < eventNames.length; i++) {
