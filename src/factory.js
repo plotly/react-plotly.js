@@ -2,11 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import isNumeric from "fast-isnumeric";
 import objectAssign from "object-assign";
-import throttle from "throttle-debounce/throttle";
-
-function constructUpdate(diff) {
-  var keys = Object.keys(diff);
-}
+// import throttle from "throttle-debounce/throttle";
 
 // The naming convention is:
 //   - events are attached as `'plotly_' + eventName.toLowerCase()`
@@ -51,7 +47,7 @@ const updateEvents = [
 // breaks unnecessarily if you try to use it server-side.
 const isBrowser = typeof window !== "undefined";
 
-export default function createPlotlyComponent(Plotly) {
+export default function plotComponentFactory(Plotly) {
   const hasReactAPIMethod = !!Plotly.react;
 
   class PlotlyComponent extends Component {
@@ -71,6 +67,15 @@ export default function createPlotlyComponent(Plotly) {
       this.handleUpdate = this.handleUpdate.bind(this);
     }
 
+    shouldComponentUpdate(nextProps) {
+      if (isNumeric(nextProps.revision) && isNumeric(this.props.revision)) {
+        // If revision is numeric, then increment only if revision has increased:
+        return nextProps.revision > this.props.revision;
+      } else {
+        return true;
+      }
+    }
+
     componentDidMount() {
       this.p = this.p
         .then(() => {
@@ -81,16 +86,19 @@ export default function createPlotlyComponent(Plotly) {
             frames: this.props.frames,
           });
         })
-        .then(this.attachUpdateEvents)
         .then(() => this.syncWindowResize(null, false))
-        .then(() => this.syncEventHandlers())
-        .then(this.handleUpdate, () => {
-          this.props.onError && this.props.onError();
+        .then(this.syncEventHandlers)
+        .then(this.attachUpdateEvents)
+        //.then(
+        //() => this.props.onInitialized && this.props.onInitialized(this.el)
+        //)
+        .catch(e => {
+          console.error("Error while plotting:", e);
+          return this.props.onError && this.props.onError();
         });
     }
 
-    componentWillReceiveProps(nextProps) {
-      let dataDiff, layoutDiff, configDiff;
+    componentWillUpdate(nextProps) {
       let nextLayout = this.sizeAdjustedLayout(nextProps.layout);
 
       this.p = this.p
@@ -113,8 +121,10 @@ export default function createPlotlyComponent(Plotly) {
         })
         .then(() => this.syncEventHandlers(nextProps))
         .then(() => this.syncWindowResize(nextProps))
-        .then(() => () => this.handleUpdate(nextProps))
+        .then(this.attachUpdateEvents)
+        .then(() => this.handleUpdate(nextProps))
         .catch(err => {
+          console.error("Error while plotting:", err);
           this.props.onError && this.props.onError(err);
         });
     }
@@ -132,7 +142,9 @@ export default function createPlotlyComponent(Plotly) {
 
     attachUpdateEvents() {
       for (let i = 0; i < updateEvents.length; i++) {
-        this.el.on(updateEvents[i], this.handleUpdate);
+        this.el.on(updateEvents[i], () => {
+          this.handleUpdate();
+        });
       }
     }
 
@@ -170,6 +182,10 @@ export default function createPlotlyComponent(Plotly) {
 
     getRef(el) {
       this.el = el;
+
+      if (this.props.onInitialized) {
+        this.props.onInitialized(el);
+      }
 
       if (this.props.debug && isBrowser) {
         window.gd = this.el;
@@ -251,6 +267,10 @@ export default function createPlotlyComponent(Plotly) {
     layout: PropTypes.object,
     frames: PropTypes.arrayOf(PropTypes.object),
     onInitialized: PropTypes.func,
+    onError: PropTypes.func,
+    onUpdate: PropTypes.func,
+    debug: PropTypes.bool,
+    //onGraphDiv: PropTypes.func,
   };
 
   for (let i = 0; i < eventNames.length; i++) {
@@ -258,7 +278,7 @@ export default function createPlotlyComponent(Plotly) {
   }
 
   PlotlyComponent.defaultProps = {
-    debug: true,
+    debug: false,
     fit: false,
     data: [],
   };

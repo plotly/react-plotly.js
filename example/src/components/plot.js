@@ -1,8 +1,7 @@
 import React from "react";
 import styles from "./plot.css";
 
-import createPlotly from "../../../src/plotly.js-react.js";
-const PlotlyComponent = createPlotly(Plotly);
+import PlotComponent from "../../../src/react-plotly.js";
 
 export default class Plot extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -12,7 +11,7 @@ export default class Plot extends React.Component {
   render() {
     return (
       <div className={styles.container}>
-        <PlotlyComponent
+        <PlotComponent
           data={this.props.data.data}
           layout={this.props.data.layout}
           config={this.props.data.config}

@@ -31,7 +31,7 @@ export default {
     }, ASYNC_DELAY);
   }),
   update: jest.fn(),
-  purge: jest.fn(gd => {
+  purge: jest.fn(() => {
     state.gd = nll;
   }),
 };

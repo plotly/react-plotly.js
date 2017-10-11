@@ -1,25 +1,30 @@
-# plotly.js-react
+# react-plotly.js
 
-> A React component for plotly.js charts <a href="https://z8tgespzmd63w51brzdh360ryvgt3m1ho.netlify.com/">&rarr; See demo</a>
+> A [plotly.js](https://github.com/plotly/plotly.js) React component from [Plotly](https://plot.ly/)
 
 ## Installation
 
-Not yet published
-
 ```bash
-$ npm install plotly.js-react
+$ npm install react-plotly.js plotly.js
 ```
 
 ## Usage
 
-The component definition is created by dependency injection so that you can use whichever version of plotly.js you'd like, including the [CDN versions](https://plot.ly/javascript/getting-started/#plotlyjs-cdn).
+### With bundled `plotly.js`
+
+[`plotly.js`](https://github.com/plotly/plotly.js) is a peer dependency of `react-plotly.js`. If you would like to bundle `plotly.js` with the rest of your project and use it in this component, you must install it separately.
+
+```bash
+$ npm install -S react-plotly.js plotly.js
+```
+
+Since `plotly.js` is a peer dependency, you do not need to require it separately to use it.
 
 ```javascript
-const createPlotlyComponent = require('plotly.js-react');
-const PlotlyComponent = createPlotlyComponent(Plotly);
+import Plot from 'react-plotly.js'
 
 render () {
-  <PlotlyComponent
+  return <Plot 
     data={...}
     layout={...}
     frames={...}
@@ -28,7 +33,37 @@ render () {
 }
 ```
 
-The only requirement is that plotly.js is loaded before you inject it. You may need to use a module like [load-script](https://www.npmjs.com/package/load-script) to ensure it's available.
+### With external `plotly.js`
+
+If you wish to use a version of `plotly.js` that is not bundled with the rest of your project, whether a [CDN version](https://plot.ly/javascript/getting-started/#plotlyjs-cdn) or through a [static distribution bundle](https://github.com/plotly/plotly.js/tree/master/dist), you may skip installing `plotly.js` and ignore the peer dependency warning.
+
+```bash
+$ npm install -S react-plotly.js
+```
+
+Given perhaps a script tag that has loaded a CDN version of plotly.js,
+
+```html
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+```
+
+you may then inject Plotly and use the returned React component:
+
+```javascript
+import plotComponentFactory from 'react-plotly.js/factory'
+const Plot = plotComponentFactory(Plotly);
+
+render () {
+  return <Plot
+    data={...}
+    layout={...}
+    frames={...}
+    config={...}
+  />
+}
+```
+
+**Note**: You must ensure `Plotly` is available before your React app tries to render the component. That could mean perhaps using script tag (without `async` or `defer`) or a utility like [load-script](https://www.npmjs.com/package/load-script).
 
 ## API
 
@@ -42,11 +77,13 @@ The only requirement is that plotly.js is loaded before you inject it. You may n
 | `frames` | `Array` | `undefined` | list of frame objects |
 | `fit` | `Boolean` | `false` | When true, disregards `layout.width` and `layout.height` and fits to the parent div size, updating on `window.resize` |
 | `debug` | `Boolean` | `false` | Assign the graph div to `window.gd` for debugging |
-| `onInitialized | `Function` | null | Callback executed once after plot is initialized |
-| `onUpdate | `Function` | null | Callback executed when a plotly.js API method is invoked |
-| `onError | `Function` | null | Callback executed when a plotly.js API method rejects |
+| `onInitialized` | `Function` | `undefined` | Callback executed once after plot is initialized |
+| `onUpdate` | `Function` | `undefined` | Callback executed when a plotly.js API method is invoked |
+| `onError` | `Function` | `undefined` | Callback executed when a plotly.js API method rejects |
 
 ### Event handler props
+
+Event handlers for [`plotly.js` events](https://plot.ly/javascript/plotlyjs-events/) may be attached through the following props.
 
 | Prop | Type | Plotly Event |
 | ---- | ---- | ----------- |
@@ -76,6 +113,10 @@ The only requirement is that plotly.js is loaded before you inject it. You may n
 | `onTransitionInterrupted` | `Function` | `plotly_transitioninterrupted` |
 | `onUnhover` | `Function` | `plotly_unhover` |
 
+## Roadmap
+
+This component currently creates a new plot every time the input changes. That makes it stable and good enough for production use, but `plotly.js` will soon gain react-style support for computing and drawing changes incrementally. What does that mean for you? That means you can expect to keep using this component with little or no modification but that the plotting will simply happen much faster when you upgrade to the first version of `plotly.js` to support this feature. If this component requires any significant changes, a new major version will be released at the same time to ensure stability.
+
 ## Development
 
 To get started:
@@ -85,15 +126,17 @@ $ npm install
 $ npm start
 ```
 
-To build the dist version:
+To transpile from ES2015 + JSX into the ES5 npm-distributed version:
 
 ```bash
-$ npm run prepublish
+$ npm run prepublishOnly
 ```
 
-## See also
+To run the tests:
 
-- [plotly-react-editor](https://github.com/plotly/plotly-react-editor)
+```bash
+$ npm run test
+```
 
 ## License
 
