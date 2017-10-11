@@ -94,9 +94,11 @@ function plotComponentFactory(Plotly) {
           });
         }).then(function () {
           return _this2.syncWindowResize(null, false);
-        }).then(this.syncEventHandlers).then(this.attachUpdateEvents).then(function () {
-          return _this2.props.onInitialized && _this2.props.onInitialized(_this2.el);
-        }).catch(function (e) {
+        }).then(this.syncEventHandlers).then(this.attachUpdateEvents)
+        //.then(
+        //() => this.props.onInitialized && this.props.onInitialized(this.el)
+        //)
+        .catch(function (e) {
           console.error("Error while plotting:", e);
           return _this2.props.onError && _this2.props.onError();
         });
@@ -200,8 +202,8 @@ function plotComponentFactory(Plotly) {
       value: function getRef(el) {
         this.el = el;
 
-        if (this.props.onGraphDiv) {
-          this.props.onGraphDiv(el);
+        if (this.props.onInitialized) {
+          this.props.onInitialized(el);
         }
 
         if (this.props.debug && isBrowser) {
@@ -291,8 +293,8 @@ function plotComponentFactory(Plotly) {
     onInitialized: _propTypes2.default.func,
     onError: _propTypes2.default.func,
     onUpdate: _propTypes2.default.func,
-    debug: _propTypes2.default.bool,
-    onGraphDiv: _propTypes2.default.func
+    debug: _propTypes2.default.bool
+    //onGraphDiv: PropTypes.func,
   };
 
   for (var i = 0; i < eventNames.length; i++) {

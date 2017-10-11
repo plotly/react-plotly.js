@@ -89,9 +89,9 @@ export default function plotComponentFactory(Plotly) {
         .then(() => this.syncWindowResize(null, false))
         .then(this.syncEventHandlers)
         .then(this.attachUpdateEvents)
-        .then(
-          () => this.props.onInitialized && this.props.onInitialized(this.el)
-        )
+        //.then(
+        //() => this.props.onInitialized && this.props.onInitialized(this.el)
+        //)
         .catch(e => {
           console.error("Error while plotting:", e);
           return this.props.onError && this.props.onError();
@@ -183,8 +183,8 @@ export default function plotComponentFactory(Plotly) {
     getRef(el) {
       this.el = el;
 
-      if (this.props.onGraphDiv) {
-        this.props.onGraphDiv(el);
+      if (this.props.onInitialized) {
+        this.props.onInitialized(el);
       }
 
       if (this.props.debug && isBrowser) {
@@ -270,7 +270,7 @@ export default function plotComponentFactory(Plotly) {
     onError: PropTypes.func,
     onUpdate: PropTypes.func,
     debug: PropTypes.bool,
-    onGraphDiv: PropTypes.func,
+    //onGraphDiv: PropTypes.func,
   };
 
   for (let i = 0; i < eventNames.length; i++) {
