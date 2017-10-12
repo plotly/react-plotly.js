@@ -11,3 +11,5 @@ npm-debug.log*
 !.eslintignore
 
 example/dist
+
+package-lock.json.*
