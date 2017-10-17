@@ -63,6 +63,7 @@
     "json-beautify": "^1.0.1",
     "lint-staged": "^4.0.2",
     "mkdirp": "^0.5.1",
+    "mv": "^2.1.1",
     "nodemon": "^1.11.0",
     "onetime": "^1.1.0",
     "prettier": "^1.5.3",
