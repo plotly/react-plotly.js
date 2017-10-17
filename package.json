@@ -49,6 +49,7 @@
     "browserify-global-shim": "^1.0.3",
     "budo": "^10.0.4",
     "bundle-collapser": "^1.2.1",
+    "cash-mv": "^0.2.0",
     "css-modulesify": "^0.28.0",
     "dependency-check": "^2.9.1",
     "envify": "^4.1.0",
