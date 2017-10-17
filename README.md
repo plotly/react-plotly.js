@@ -8,7 +8,59 @@
 $ npm install react-plotly.js plotly.js
 ```
 
+## Quick start
+
+The easiest way to use this component is to import and pass data to a plot component. To import the component,
+
+```javascript
+import Plot from 'react-plotly.js'
+```
+
+Then to render a plot,
+
+```javascript
+render () {
+  return (
+    <Plot
+      data={[
+        {
+          type: 'scatter',
+          mode: 'lines+points',
+          x: [1, 2, 3],
+          y: [2, 6, 3],
+          marker: {color: 'red'}
+        },
+        {
+          type: 'bar',
+          x: [1, 2, 3],
+          y: [2, 5, 3]
+        }
+      ]}
+
+      layout={{
+        width: 320,
+        height: 240,
+        title: 'A Fancy Plot'
+      }}
+    />
+  );
+}
+```
+
+You should see a plot like this:
+
+<p align="center">
+  <img src="docs/example.png" alt="Example plot" width="320" height="240">
+</p>
+
+For a full description of Plotly chart types and attributes see the following resources:
+
+- [Plotly JavaScript API documentation](https://plot.ly/javascript/)
+- [Full plotly.js attribute listing](https://plot.ly/javascript/reference/)
+
 ## Usage
+
+Using this component inside a larger application may require some additional considerations in addition to the simple usage example above. The following sections detail two basic use-cases.
 
 ### With bundled `plotly.js`
 
@@ -76,6 +128,7 @@ render () {
 | `config` | `Object` | `undefined` | config object |
 | `frames` | `Array` | `undefined` | list of frame objects |
 | `fit` | `Boolean` | `false` | When true, disregards `layout.width` and `layout.height` and fits to the parent div size, updating on `window.resize` |
+| `revision` | `Number` | `undefined` | When provided, causes the plot to update *only* when the revision is incremented. |
 | `debug` | `Boolean` | `false` | Assign the graph div to `window.gd` for debugging |
 | `onInitialized` | `Function` | `undefined` | Callback executed once after plot is initialized |
 | `onUpdate` | `Function` | `undefined` | Callback executed when a plotly.js API method is invoked |

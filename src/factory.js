@@ -89,9 +89,9 @@ export default function plotComponentFactory(Plotly) {
         .then(() => this.syncWindowResize(null, false))
         .then(this.syncEventHandlers)
         .then(this.attachUpdateEvents)
-        //.then(
-        //() => this.props.onInitialized && this.props.onInitialized(this.el)
-        //)
+        .then(
+          () => this.props.onInitialized && this.props.onInitialized(this.el)
+        )
         .catch(e => {
           console.error("Error while plotting:", e);
           return this.props.onError && this.props.onError();
@@ -266,6 +266,7 @@ export default function plotComponentFactory(Plotly) {
     config: PropTypes.object,
     layout: PropTypes.object,
     frames: PropTypes.arrayOf(PropTypes.object),
+    revision: PropTypes.number,
     onInitialized: PropTypes.func,
     onError: PropTypes.func,
     onUpdate: PropTypes.func,
