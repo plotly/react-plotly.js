@@ -1,0 +1,45 @@
+body {
+  padding: 0;
+  margin: 0;
+  overflow: hidden
+}
+
+._example_src_index__container {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+._example_src_components_plot__container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 50%;
+  overflow: scroll;
+}
+._example_src_components_code__codeContainer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+
+  padding: 2px;
+}
+
+._example_src_components_code__codeContainer:before {
+  content: ' ';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 1px;
+  height: 0px;
+  border-top: 1px solid #ccc;
+}
+
+._example_src_components_code__codeContainer--invalid {
+  border: 2px solid red;
+  padding: 0;
+}

@@ -9,10 +9,9 @@ npm-debug.log*
 !.npmignore
 !.eslintrc
 !.eslintignore
-!dist
 
-example/dist
 dist
+!example/dist
 
 package-lock.json.*
 
