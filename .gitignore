@@ -12,6 +12,7 @@ npm-debug.log*
 !dist
 
 example/dist
+dist
 
 package-lock.json.*
 
