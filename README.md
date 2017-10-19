@@ -2,6 +2,12 @@
 
 > A [plotly.js](https://github.com/plotly/plotly.js) React component from [Plotly](https://plot.ly/)
 
+#### 📢 Announcement!
+#### Seats are still available for a 2 day, Plotly.js & React master class in NYC, November 18-19.
+#### [Registration here](https://plotcon.plot.ly/workshops) 🎨 📈 🗽
+
+***
+
 ## Installation
 
 ```bash
