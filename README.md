@@ -168,7 +168,7 @@ Event handlers for [`plotly.js` events](https://plot.ly/javascript/plotlyjs-even
 
 ## Roadmap
 
-This component currently creates a new plot every time the input changes. That makes it stable and good enough for production use, but `plotly.js` will soon gain react-style support for computing and drawing changes incrementally. What does that mean for you? That means you can expect to keep using this component with little or no modification but that the plotting will simply happen much faster when you upgrade to the first version of `plotly.js` to support this feature. If this component requires any significant changes, a new major version will be released at the same time to ensure stability.
+This component currently creates a new plot every time the input changes. That makes it stable and good enough for production use, but `plotly.js` will soon gain react-style support for computing and drawing changes incrementally. What does that mean for you? That means you can expect to keep using this component with little modification but that the plotting will simply happen much faster when you upgrade to the first version of `plotly.js` to support this feature. If this component requires any significant changes, a new major version will be released at the same time to ensure stability. See [plotly/react-plotly.js#2](https://github.com/plotly/react-plotly.js/issues/2) for more information about this feature.
 
 ## Development
 
