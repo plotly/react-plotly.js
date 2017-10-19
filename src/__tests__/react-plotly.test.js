@@ -11,9 +11,7 @@ describe("<Plotly/>", () => {
       const plot = mount(
         <PlotComponent
           {...props}
-          onInitialized={() => {
-            resolve(plot);
-          }}
+          onInitialized={() => resolve(plot)}
           onError={reject}
         />
       );
@@ -133,6 +131,50 @@ describe("<Plotly/>", () => {
         })
           .then(plot => {
             plot.setProps({ layout: { title: "test test" } });
+          })
+          .catch(err => done.fail(err));
+      });
+
+      test("revision counter", done => {
+        var callCnt = 0;
+        createPlot({
+          fit: false,
+          revision: 0,
+          onUpdate: () => {
+            callCnt++;
+
+            // Should only get one update. Make it asynchronous in order
+            // to make sure we haven't accidentally ended the test before
+            // we've checked the third and fourth calls:
+            if (callCnt === 2) {
+              setTimeout(() => {
+                expect(Plotly.newPlot).not.toHaveBeenCalledTimes(2);
+                done();
+              }, 100);
+            }
+          },
+        })
+          .then(plot => {
+            // Update with and without revision bumps:
+            setTimeout(
+              () => plot.setProps({ layout: { title: "test test" } }),
+              10
+            );
+            setTimeout(
+              () =>
+                plot.setProps({ revision: 1, layout: { title: "test test" } }),
+              20
+            );
+            setTimeout(
+              () =>
+                plot.setProps({ revision: 1, layout: { title: "test test" } }),
+              30
+            );
+            setTimeout(
+              () =>
+                plot.setProps({ revision: 2, layout: { title: "test test" } }),
+              40
+            );
           })
           .catch(err => done.fail(err));
       });
