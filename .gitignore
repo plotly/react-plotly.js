@@ -9,7 +9,13 @@ npm-debug.log*
 !.npmignore
 !.eslintrc
 !.eslintignore
+!dist
 
 example/dist
 
 package-lock.json.*
+
+factory.js
+factory.js.map
+react-plotly.js
+react-plotly.js.map
