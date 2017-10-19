@@ -163,8 +163,8 @@ You can see an example of this method in action [here](https://codepen.io/rsreus
 | `fit` | `Boolean` | `false` | When true, disregards `layout.width` and `layout.height` and fits to the parent div size, updating on `window.resize` |
 | `revision` | `Number` | `undefined` | When provided, causes the plot to update *only* when the revision is incremented. |
 | `debug` | `Boolean` | `false` | Assign the graph div to `window.gd` for debugging |
-| `onInitialized` | `Function` | `undefined` | Callback executed once after plot is initialized |
-| `onUpdate` | `Function` | `undefined` | Callback executed when a plotly.js API method is invoked |
+| `onInitialized` | `Function` | `undefined` | Callback executed after plot is initialized |
+| `onUpdate` | `Function` | `undefined` | Callback executed when a plotly.js API method resolves |
 | `onError` | `Function` | `undefined` | Callback executed when a plotly.js API method rejects |
 
 ### Event handler props
