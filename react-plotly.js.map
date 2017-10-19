@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/react-plotly.js"],"names":["PlotComponent"],"mappings":";;;;;;AAAA;;;;AACA;;;;;;AAEA,IAAMA,gBAAgB,wCAAtB;;kBAEeA,a","file":"react-plotly.js","sourcesContent":["import plotComponentFactory from \"./factory\";\nimport Plotly from \"plotly.js\";\n\nconst PlotComponent = plotComponentFactory(Plotly);\n\nexport default PlotComponent;\n"]}
