@@ -129,6 +129,25 @@ render () {
 
 For quick one-off demos on [CodePen](https://codepen.io/) or [JSFiddle](https://jsfiddle.net/), you may wish to just load the component directly as a script tag. We don't host the bundle directly, so you should never rely on this to work forever or in production, but you can use a third-party service to load the factory version of the component from, for example, [https://unpkg.com/react-plotly.js@latest/dist/create-plotly-component.js](https://unpkg.com/react-plotly.js@1.0.1/dist/create-plotly-component.js).
 
+You can load the component with:
+
+```html
+<script src="https://unpkg.com/react-plotly.js@1.0.1/dist/create-plotly-component.js"></script>
+```
+
+And instantiate the component with
+
+```javascript
+const Plot = createPlotlyComponent(Plotly);
+
+ReactDOM.render(
+  React.createElement(Plot, {
+    data: [{x: [1, 2, 3], y: [2, 1, 3]}]
+  }),
+  document.getElementById('root')
+);
+```
+
 You can see an example of this method in action [here](https://codepen.io/rsreusser/pen/qPgwwJ?editors=1010).
 
 ## API
