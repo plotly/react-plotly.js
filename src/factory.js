@@ -183,10 +183,6 @@ export default function plotComponentFactory(Plotly) {
     getRef(el) {
       this.el = el;
 
-      if (this.props.onInitialized) {
-        this.props.onInitialized(el);
-      }
-
       if (this.props.debug && isBrowser) {
         window.gd = this.el;
       }
@@ -271,7 +267,6 @@ export default function plotComponentFactory(Plotly) {
     onError: PropTypes.func,
     onUpdate: PropTypes.func,
     debug: PropTypes.bool,
-    //onGraphDiv: PropTypes.func,
   };
 
   for (let i = 0; i < eventNames.length; i++) {
