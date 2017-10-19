@@ -117,6 +117,12 @@ render () {
 
 **Note**: You must ensure `Plotly` is available before your React app tries to render the component. That could mean perhaps using script tag (without `async` or `defer`) or a utility like [load-script](https://www.npmjs.com/package/load-script).
 
+### As a standalone bundle
+
+For quick one-off demos on [CodePen](https://codepen.io/) or [JSFiddle](https://jsfiddle.net/), you may wish to just load the component directly as a script tag. We don't host the bundle directly, so you should never rely on this to work forever or in production, but you can use a third-party service to load the factory version of the component from, for example, [https://unpkg.com/react-plotly.js@latest/dist/create-plotly-component.js](https://unpkg.com/react-plotly.js@1.0.1/dist/create-plotly-component.js).
+
+You can see an example of this method in action [here](https://codepen.io/rsreusser/pen/qPgwwJ?editors=1010).
+
 ## API
 
 ### Props
