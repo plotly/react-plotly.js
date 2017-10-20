@@ -80,6 +80,8 @@ $ npm install -S react-plotly.js plotly.js
 
 Since `plotly.js` is a peer dependency, you do not need to require it separately to use it.
 
+**Important:**  If you build your project using webpack, you'll have to follow [these instructions](https://github.com/plotly/plotly.js#building-plotlyjs-with-webpack) in order to build plotly.js.
+
 ```javascript
 import Plot from 'react-plotly.js'
 
