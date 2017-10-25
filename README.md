@@ -112,8 +112,8 @@ Given perhaps a script tag that has loaded a CDN version of plotly.js,
 you may then inject Plotly and use the returned React component:
 
 ```javascript
-import plotComponentFactory from 'react-plotly.js/factory'
-const Plot = plotComponentFactory(Plotly);
+import createPlotlyComponent from 'react-plotly.js/factory'
+const Plot = createPlotlyComponent(Plotly);
 
 render () {
   return <Plot
