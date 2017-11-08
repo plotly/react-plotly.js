@@ -10,6 +10,21 @@
 
 ***
 
+## Contents
+- [Installation](#installation)
+- [Quick start](#quick-start)
+- [Usage](#usage)
+  * [build with plotly.js](#build-with-plotlyjs)
+    + [build with webpack](#build-with-webpack)
+    + [build with create-react-app](#build-with-create-react-app)
+  * [With external plotly.js (for example by `<script>` tag](#with-external-plotlyjs)
+  * [As a standalone bundle](#as-a-standalone-bundle)
+- [API](#api)
+  * [props](#props)
+  * [Event handler props](#event-handler-props)
+- [Roadmap](#roadmap)
+- [Development](#development)
+
 ## Installation
 
 ```bash
@@ -70,7 +85,7 @@ For a full description of Plotly chart types and attributes see the following re
 
 Using this component inside a larger application may require some additional considerations in addition to the simple usage example above. The following sections detail two basic use-cases.
 
-### With bundled `plotly.js`
+### Build with plotly.js
 
 [`plotly.js`](https://github.com/plotly/plotly.js) is a peer dependency of `react-plotly.js`. If you would like to bundle `plotly.js` with the rest of your project and use it in this component, you must install it separately.
 
@@ -80,7 +95,8 @@ $ npm install -S react-plotly.js plotly.js
 
 Since `plotly.js` is a peer dependency, you do not need to require it separately to use it.
 
-**Important:**  If you build your project using webpack, you'll have to follow [these instructions](https://github.com/plotly/plotly.js#building-plotlyjs-with-webpack) in order to successfully bundle plotly.js.
+#### Build with Webpack
+If you build your project using webpack, you'll have to follow [these instructions](https://github.com/plotly/plotly.js#building-plotlyjs-with-webpack) in order to successfully bundle plotly.js.
 
 ```javascript
 import Plot from 'react-plotly.js'
@@ -95,7 +111,12 @@ render () {
 }
 ```
 
-### With external `plotly.js`
+If you are building with Webpack but do not have access to the Webpack configuration or if you don't want to configure webpack see [build with `create-react-app`(#build-with-create-react-app).
+
+#### Build with `create-react-app`
+In this case we want to use versions of `react-plotly.js` and `plotly.js` that are already built. This lets us skip building these projects with `create-react-app` which [requires specific configuration to work](#build-with-webpack). To do so follow the instructions for [building with external plotly.js](#with-external-plotlyjs). 
+
+### With external plotly.js
 
 If you wish to use a version of `plotly.js` that is not bundled with the rest of your project, whether a [CDN version](https://plot.ly/javascript/getting-started/#plotlyjs-cdn) or through a [static distribution bundle](https://github.com/plotly/plotly.js/tree/master/dist), you may skip installing `plotly.js` and ignore the peer dependency warning.
 
