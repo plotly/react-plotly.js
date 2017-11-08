@@ -114,7 +114,9 @@ render () {
 If you are building with Webpack but do not have access to the Webpack configuration or if you don't want to configure webpack see [build with `create-react-app`(#build-with-create-react-app).
 
 #### Build with `create-react-app`
-In this case we want to use versions of `react-plotly.js` and `plotly.js` that are already built. This lets us skip building these projects with `create-react-app` which [requires specific configuration to work](#build-with-webpack). To do so follow the instructions for [building with external plotly.js](#with-external-plotlyjs). 
+In this case we want to use `react-plotly.js` without building `plotly.js` and use a version of `plotly.js` that is already built. Follow the instructions for [building an external plotly.js](#with-external-plotlyjs). 
+
+This lets us skip the [specific build configuration](#build-with-webpack) necessary to build `plotly.js` in webpack environments (`create-react-app` uses webpack under the hood). 
 
 ### With external plotly.js
 
