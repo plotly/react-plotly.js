@@ -17,7 +17,7 @@
   * [build with plotly.js](#build-with-plotlyjs)
     + [build with webpack](#build-with-webpack)
     + [build with create-react-app](#build-with-create-react-app)
-  * [With external plotly.js (for example by `<script>` tag](#with-external-plotlyjs)
+  * [With external plotly.js (for example by `<script>` tag)](#with-external-plotlyjs)
   * [As a standalone bundle](#as-a-standalone-bundle)
 - [API](#api)
   * [props](#props)
