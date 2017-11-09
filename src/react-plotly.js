@@ -1,5 +1,5 @@
 import plotComponentFactory from "./factory";
-import Plotly from "plotly.js";
+import Plotly from "plotly.js/lib/core";
 
 const PlotComponent = plotComponentFactory(Plotly);
 
