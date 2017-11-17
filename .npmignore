@@ -6,6 +6,7 @@ bower.json
 
 .ackrc
 .agignore
+.prettierrc
 
 npm-debug.log
 
