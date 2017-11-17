@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8,19 +8,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 exports.default = plotComponentFactory;
 
-var _react = require("react");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _propTypes = require("prop-types");
+var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _fastIsnumeric = require("fast-isnumeric");
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _fastIsnumeric = require('fast-isnumeric');
 
 var _fastIsnumeric2 = _interopRequireDefault(_fastIsnumeric);
 
-var _objectAssign = require("object-assign");
+var _objectAssign = require('object-assign');
 
 var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
@@ -37,13 +37,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 // The naming convention is:
 //   - events are attached as `'plotly_' + eventName.toLowerCase()`
 //   - react props are `'on' + eventName`
-var eventNames = ["AfterExport", "AfterPlot", "Animated", "AnimatingFrame", "AnimationInterrupted", "AutoSize", "BeforeExport", "ButtonClicked", "Click", "ClickAnnotation", "Deselect", "DoubleClick", "Framework", "Hover", "Relayout", "Restyle", "Redraw", "Selected", "Selecting", "SliderChange", "SliderEnd", "SliderStart", "Transitioning", "TransitionInterrupted", "Unhover"];
+var eventNames = ['AfterExport', 'AfterPlot', 'Animated', 'AnimatingFrame', 'AnimationInterrupted', 'AutoSize', 'BeforeExport', 'ButtonClicked', 'Click', 'ClickAnnotation', 'Deselect', 'DoubleClick', 'Framework', 'Hover', 'Relayout', 'Restyle', 'Redraw', 'Selected', 'Selecting', 'SliderChange', 'SliderEnd', 'SliderStart', 'Transitioning', 'TransitionInterrupted', 'Unhover'];
 
-var updateEvents = ["plotly_restyle", "plotly_redraw", "plotly_relayout", "plotly_doubleclick", "plotly_animated"];
+var updateEvents = ['plotly_restyle', 'plotly_redraw', 'plotly_relayout', 'plotly_doubleclick', 'plotly_animated'];
 
 // Check if a window is available since SSR (server-side rendering)
 // breaks unnecessarily if you try to use it server-side.
-var isBrowser = typeof window !== "undefined";
+var isBrowser = typeof window !== 'undefined';
 
 function plotComponentFactory(Plotly) {
   var hasReactAPIMethod = !!Plotly.react;
@@ -71,7 +71,7 @@ function plotComponentFactory(Plotly) {
     }
 
     _createClass(PlotlyComponent, [{
-      key: "shouldComponentUpdate",
+      key: 'shouldComponentUpdate',
       value: function shouldComponentUpdate(nextProps) {
         if ((0, _fastIsnumeric2.default)(nextProps.revision) && (0, _fastIsnumeric2.default)(this.props.revision)) {
           // If revision is numeric, then increment only if revision has increased:
@@ -81,7 +81,7 @@ function plotComponentFactory(Plotly) {
         }
       }
     }, {
-      key: "componentDidMount",
+      key: 'componentDidMount',
       value: function componentDidMount() {
         var _this2 = this;
 
@@ -94,17 +94,15 @@ function plotComponentFactory(Plotly) {
           });
         }).then(function () {
           return _this2.syncWindowResize(null, false);
-        }).then(this.syncEventHandlers).then(this.attachUpdateEvents)
-        //.then(
-        //() => this.props.onInitialized && this.props.onInitialized(this.el)
-        //)
-        .catch(function (e) {
-          console.error("Error while plotting:", e);
+        }).then(this.syncEventHandlers).then(this.attachUpdateEvents).then(function () {
+          return _this2.props.onInitialized && _this2.props.onInitialized(_this2.el);
+        }).catch(function (e) {
+          console.error('Error while plotting:', e);
           return _this2.props.onError && _this2.props.onError();
         });
       }
     }, {
-      key: "componentWillUpdate",
+      key: 'componentWillUpdate',
       value: function componentWillUpdate(nextProps) {
         var _this3 = this;
 
@@ -119,6 +117,9 @@ function plotComponentFactory(Plotly) {
               frames: nextProps.frames
             });
           } else {
+            // plotly.js destroys handlers on newPlot so we remove them here
+            // so they will be reset during syncEventHandlers.
+            _this3.clearLocalEventHandlers();
             return Plotly.newPlot(_this3.el, {
               data: nextProps.data,
               layout: nextLayout,
@@ -133,15 +134,15 @@ function plotComponentFactory(Plotly) {
         }).then(this.attachUpdateEvents).then(function () {
           return _this3.handleUpdate(nextProps);
         }).catch(function (err) {
-          console.error("Error while plotting:", err);
+          console.error('Error while plotting:', err);
           _this3.props.onError && _this3.props.onError(err);
         });
       }
     }, {
-      key: "componentWillUnmount",
+      key: 'componentWillUnmount',
       value: function componentWillUnmount() {
         if (this.resizeHandler && isBrowser) {
-          window.removeEventListener("resize", this.handleResize);
+          window.removeEventListener('resize', this.handleResize);
           this.resizeHandler = null;
         }
 
@@ -150,7 +151,7 @@ function plotComponentFactory(Plotly) {
         Plotly.purge(this.el);
       }
     }, {
-      key: "attachUpdateEvents",
+      key: 'attachUpdateEvents',
       value: function attachUpdateEvents() {
         var _this4 = this;
 
@@ -161,7 +162,7 @@ function plotComponentFactory(Plotly) {
         }
       }
     }, {
-      key: "removeUpdateEvents",
+      key: 'removeUpdateEvents',
       value: function removeUpdateEvents() {
         if (!this.el || !this.el.off) return;
 
@@ -169,16 +170,24 @@ function plotComponentFactory(Plotly) {
           this.el.off(updateEvents[i], this.handleUpdate);
         }
       }
+
+      // mostly for testing
+
     }, {
-      key: "handleUpdate",
+      key: 'clearLocalEventHandlers',
+      value: function clearLocalEventHandlers() {
+        this.handlers = [];
+      }
+    }, {
+      key: 'handleUpdate',
       value: function handleUpdate(props) {
         props = props || this.props;
-        if (props.onUpdate && typeof props.onUpdate === "function") {
+        if (props.onUpdate && typeof props.onUpdate === 'function') {
           props.onUpdate(this.el);
         }
       }
     }, {
-      key: "syncWindowResize",
+      key: 'syncWindowResize',
       value: function syncWindowResize(props, invoke) {
         var _this5 = this;
 
@@ -189,22 +198,18 @@ function plotComponentFactory(Plotly) {
           this.resizeHandler = function () {
             return Plotly.relayout(_this5.el, _this5.getSize());
           };
-          window.addEventListener("resize", this.resizeHandler);
+          window.addEventListener('resize', this.resizeHandler);
 
           if (invoke) return this.resizeHandler();
         } else if (!props.fit && this.resizeHandler) {
-          window.removeEventListener("resize", this.resizeHandler);
+          window.removeEventListener('resize', this.resizeHandler);
           this.resizeHandler = null;
         }
       }
     }, {
-      key: "getRef",
+      key: 'getRef',
       value: function getRef(el) {
         this.el = el;
-
-        if (this.props.onInitialized) {
-          this.props.onInitialized(el);
-        }
 
         if (this.props.debug && isBrowser) {
           window.gd = this.el;
@@ -214,28 +219,28 @@ function plotComponentFactory(Plotly) {
       // Attach and remove event handlers as they're added or removed from props:
 
     }, {
-      key: "syncEventHandlers",
+      key: 'syncEventHandlers',
       value: function syncEventHandlers(props) {
         // Allow use of nextProps if passed explicitly:
         props = props || this.props;
 
         for (var i = 0; i < eventNames.length; i++) {
           var eventName = eventNames[i];
-          var prop = props["on" + eventName];
+          var prop = props['on' + eventName];
           var hasHandler = !!this.handlers[eventName];
 
           if (prop && !hasHandler) {
-            var handler = this.handlers[eventName] = props["on" + eventName];
-            this.el.on("plotly_" + eventName.toLowerCase(), handler);
+            var handler = this.handlers[eventName] = props['on' + eventName];
+            this.el.on('plotly_' + eventName.toLowerCase(), handler);
           } else if (!prop && hasHandler) {
             // Needs to be removed:
-            this.el.off("plotly_" + eventName.toLowerCase(), this.handlers[eventName]);
+            this.el.off('plotly_' + eventName.toLowerCase(), this.handlers[eventName]);
             delete this.handlers[eventName];
           }
         }
       }
     }, {
-      key: "sizeAdjustedLayout",
+      key: 'sizeAdjustedLayout',
       value: function sizeAdjustedLayout(layout) {
         if (this.props.fit) {
           layout = (0, _objectAssign2.default)({}, layout);
@@ -245,12 +250,12 @@ function plotComponentFactory(Plotly) {
         return layout;
       }
     }, {
-      key: "getParentSize",
+      key: 'getParentSize',
       value: function getParentSize() {
         return this.el.parentElement.getBoundingClientRect();
       }
     }, {
-      key: "getSize",
+      key: 'getSize',
       value: function getSize(layout) {
         var rect = void 0;
         layout = layout || this.props.layout;
@@ -269,12 +274,12 @@ function plotComponentFactory(Plotly) {
         };
       }
     }, {
-      key: "render",
+      key: 'render',
       value: function render() {
-        return _react2.default.createElement("div", {
+        return _react2.default.createElement('div', {
           style: {
-            position: "relative",
-            display: "inline-block"
+            position: 'relative',
+            display: 'inline-block'
           },
           ref: this.getRef
         });
@@ -290,6 +295,7 @@ function plotComponentFactory(Plotly) {
     config: _propTypes2.default.object,
     layout: _propTypes2.default.object,
     frames: _propTypes2.default.arrayOf(_propTypes2.default.object),
+    revision: _propTypes2.default.number,
     onInitialized: _propTypes2.default.func,
     onError: _propTypes2.default.func,
     onUpdate: _propTypes2.default.func,
@@ -298,7 +304,7 @@ function plotComponentFactory(Plotly) {
   };
 
   for (var i = 0; i < eventNames.length; i++) {
-    PlotlyComponent.propTypes["on" + eventNames[i]] = _propTypes2.default.func;
+    PlotlyComponent.propTypes['on' + eventNames[i]] = _propTypes2.default.func;
   }
 
   PlotlyComponent.defaultProps = {
@@ -309,5 +315,5 @@ function plotComponentFactory(Plotly) {
 
   return PlotlyComponent;
 }
-module.exports = exports["default"];
+module.exports = exports['default'];
 //# sourceMappingURL=factory.js.map
