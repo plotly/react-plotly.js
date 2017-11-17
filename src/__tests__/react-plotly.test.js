@@ -136,6 +136,25 @@ describe("<Plotly/>", () => {
           })
           .catch(err => done.fail(err));
       });
+
+      it("clears adds event handlers on every newPlot", done => {
+        let wrapper;
+        createPlot({
+          fit: false,
+          onClick: jest.fn(),
+          onUpdate: () => {
+            expect(wrapper.instance().clearLocalEventHandlers).toBeCalled();
+            done();
+          },
+        })
+          .then(plot => {
+            wrapper = plot;
+            wrapper.instance().clearLocalEventHandlers = jest.fn();
+            expect(Object.keys(wrapper.instance().handlers)).toEqual(["Click"]);
+            plot.setProps({ layout: { title: "test test" } });
+          })
+          .catch(err => done.fail(err));
+      });
     });
 
     describe("responding to window events", () => {

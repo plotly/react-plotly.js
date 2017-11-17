@@ -111,6 +111,9 @@ export default function plotComponentFactory(Plotly) {
               frames: nextProps.frames,
             });
           } else {
+            // plotly.js destroys handlers on newPlot so we remove them here
+            // so they will be reset during syncEventHandlers.
+            this.clearLocalEventHandlers();
             return Plotly.newPlot(this.el, {
               data: nextProps.data,
               layout: nextLayout,
@@ -156,6 +159,11 @@ export default function plotComponentFactory(Plotly) {
       }
     }
 
+    // mostly for testing
+    clearLocalEventHandlers() {
+      this.handlers = [];
+    }
+
     handleUpdate(props) {
       props = props || this.props;
       if (props.onUpdate && typeof props.onUpdate === "function") {
@@ -182,10 +190,6 @@ export default function plotComponentFactory(Plotly) {
 
     getRef(el) {
       this.el = el;
-
-      if (this.props.onInitialized) {
-        this.props.onInitialized(el);
-      }
 
       if (this.props.debug && isBrowser) {
         window.gd = this.el;
