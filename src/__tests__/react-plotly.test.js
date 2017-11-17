@@ -48,7 +48,7 @@ describe("<Plotly/>", () => {
     });
 
     describe("initialization", function() {
-      test("calls Plotly.newPlot on instantiation", done => {
+      it("calls Plotly.newPlot on instantiation", done => {
         createPlot({})
           .then(() => {
             expect(Plotly.newPlot).toHaveBeenCalled();
@@ -59,7 +59,7 @@ describe("<Plotly/>", () => {
           .then(done);
       });
 
-      test("passes data", done => {
+      it("passes data", done => {
         createPlot({
           data: [{ x: [1, 2, 3] }],
           layout: { title: "foo" },
@@ -74,7 +74,7 @@ describe("<Plotly/>", () => {
           .then(done);
       });
 
-      test("accepts width and height", done => {
+      it("accepts width and height", done => {
         createPlot({
           layout: { width: 320, height: 240 },
         })
@@ -87,7 +87,7 @@ describe("<Plotly/>", () => {
           .then(done);
       });
 
-      test("overrides the height when fit: true", done => {
+      it("overrides the height when fit: true", done => {
         createPlot({
           layout: { width: 320, height: 240 },
           fit: true,
@@ -103,7 +103,7 @@ describe("<Plotly/>", () => {
     });
 
     describe("plot updates", () => {
-      test("updates data", done => {
+      it("updates data", done => {
         createPlot({
           fit: true,
           layout: { width: 123, height: 456 },
@@ -121,7 +121,7 @@ describe("<Plotly/>", () => {
           .catch(err => done.fail(err));
       });
 
-      test("sets the title", done => {
+      it("sets the title", done => {
         createPlot({
           fit: false,
           onUpdate: once(() => {
@@ -159,7 +159,7 @@ describe("<Plotly/>", () => {
 
     describe("responding to window events", () => {
       describe("with fit: true", () => {
-        test("does not call relayout on initialization", done => {
+        it("does not call relayout on initialization", done => {
           createPlot({
             fit: true,
             onRelayout: () => done.fail("Unexpected relayout event"),
@@ -170,7 +170,7 @@ describe("<Plotly/>", () => {
             .catch(err => done.fail(err));
         });
 
-        test("calls relayout on window resize when fit: true", done => {
+        it("calls relayout on window resize when fit: true", done => {
           let relayoutCnt = 0;
           createPlot({
             fit: true,
@@ -189,7 +189,7 @@ describe("<Plotly/>", () => {
       });
 
       describe("with fit: false", () => {
-        test("does not call relayout on init", done => {
+        it("does not call relayout on init", done => {
           createPlot({
             fit: false,
             onRelayout: () => done.fail("Unexpected relayout event"),
@@ -200,7 +200,7 @@ describe("<Plotly/>", () => {
             .catch(err => done.fail(err));
         });
 
-        test("does not call relayout on window resize", done => {
+        it("does not call relayout on window resize", done => {
           createPlot({
             fit: false,
             onRelayout: () => done.fail("Unexpected relayout event"),
