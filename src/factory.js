@@ -111,6 +111,7 @@ export default function plotComponentFactory(Plotly) {
               frames: nextProps.frames,
             });
           } else {
+            this.clearLocalEventHandlers();
             return Plotly.newPlot(this.el, {
               data: nextProps.data,
               layout: nextLayout,
@@ -154,6 +155,10 @@ export default function plotComponentFactory(Plotly) {
       for (let i = 0; i < updateEvents.length; i++) {
         this.el.off(updateEvents[i], this.handleUpdate);
       }
+    }
+
+    clearLocalEventHandlers() {
+      this.handlers = [];
     }
 
     handleUpdate(props) {
