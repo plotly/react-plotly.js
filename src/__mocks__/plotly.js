@@ -32,6 +32,6 @@ export default {
   }),
   update: jest.fn(),
   purge: jest.fn(() => {
-    state.gd = nll;
+    state.gd = null;
   }),
 };
