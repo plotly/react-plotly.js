@@ -3,6 +3,7 @@
 > A [plotly.js](https://github.com/plotly/plotly.js) React component from [Plotly](https://plot.ly/)
 
 👉 [DEMO](http://react-plotly.js-demo.getforge.io/)
+
 👉 [Demo source code](https://github.com/plotly/react-plotly.js-demo-app)
 
 ***
