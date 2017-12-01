@@ -2,6 +2,9 @@
 
 > A [plotly.js](https://github.com/plotly/plotly.js) React component from [Plotly](https://plot.ly/)
 
+👉 [DEMO](http://react-plotly.js-demo.getforge.io/)
+👉 [Demo source code](https://github.com/plotly/react-plotly.js-demo-app)
+
 ***
 
 ## Contents
@@ -105,10 +108,13 @@ render () {
 }
 ```
 
-If you are building with Webpack but do not have access to the Webpack configuration or if you don't want to configure webpack see [build with `create-react-app`(#build-with-create-react-app).
+If you are building with Webpack but do not have access to the Webpack configuration or if you don't want to configure webpack see [build with `create-react-app`](#build-with-create-react-app).
 
 #### Build with `create-react-app`
-In this case we want to use `react-plotly.js` without building `plotly.js` and use a version of `plotly.js` that is already built. Follow the instructions for [building an external plotly.js](#with-external-plotlyjs). 
+In this case, we want to use `react-plotly.js` without building `plotly.js` and use a version of `plotly.js` that is already built (see [building an external plotly.js](#with-external-plotlyjs)). This [demo app](http://react-plotly.js-demo.getforge.io/) was built with `create-react-app` and there 3 basic steps:
+1. Import plotly.js in a `<script>` tag in [public/index.html](https://github.com/plotly/react-plotly.js-demo-app/blob/master/public/index.html#L25)
+2. Declare `Plotly` as a global in [App.js](https://github.com/plotly/react-plotly.js-demo-app/blob/master/src/App.js#L1)
+3. Use `createPlotlyComponent()` in [App.js](https://github.com/plotly/react-plotly.js-demo-app/blob/master/src/App.js#L25)
 
 This lets us skip the [specific build configuration](#build-with-webpack) necessary to build `plotly.js` in webpack environments (`create-react-app` uses webpack under the hood). 
 
