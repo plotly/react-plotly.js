@@ -1,51 +1,51 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import isNumeric from "fast-isnumeric";
-import objectAssign from "object-assign";
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import isNumeric from 'fast-isnumeric';
+import objectAssign from 'object-assign';
 // import throttle from "throttle-debounce/throttle";
 
 // The naming convention is:
 //   - events are attached as `'plotly_' + eventName.toLowerCase()`
 //   - react props are `'on' + eventName`
 const eventNames = [
-  "AfterExport",
-  "AfterPlot",
-  "Animated",
-  "AnimatingFrame",
-  "AnimationInterrupted",
-  "AutoSize",
-  "BeforeExport",
-  "ButtonClicked",
-  "Click",
-  "ClickAnnotation",
-  "Deselect",
-  "DoubleClick",
-  "Framework",
-  "Hover",
-  "Relayout",
-  "Restyle",
-  "Redraw",
-  "Selected",
-  "Selecting",
-  "SliderChange",
-  "SliderEnd",
-  "SliderStart",
-  "Transitioning",
-  "TransitionInterrupted",
-  "Unhover",
+  'AfterExport',
+  'AfterPlot',
+  'Animated',
+  'AnimatingFrame',
+  'AnimationInterrupted',
+  'AutoSize',
+  'BeforeExport',
+  'ButtonClicked',
+  'Click',
+  'ClickAnnotation',
+  'Deselect',
+  'DoubleClick',
+  'Framework',
+  'Hover',
+  'Relayout',
+  'Restyle',
+  'Redraw',
+  'Selected',
+  'Selecting',
+  'SliderChange',
+  'SliderEnd',
+  'SliderStart',
+  'Transitioning',
+  'TransitionInterrupted',
+  'Unhover',
 ];
 
 const updateEvents = [
-  "plotly_restyle",
-  "plotly_redraw",
-  "plotly_relayout",
-  "plotly_doubleclick",
-  "plotly_animated",
+  'plotly_restyle',
+  'plotly_redraw',
+  'plotly_relayout',
+  'plotly_doubleclick',
+  'plotly_animated',
 ];
 
 // Check if a window is available since SSR (server-side rendering)
 // breaks unnecessarily if you try to use it server-side.
-const isBrowser = typeof window !== "undefined";
+const isBrowser = typeof window !== 'undefined';
 
 export default function plotComponentFactory(Plotly) {
   const hasReactAPIMethod = !!Plotly.react;
@@ -93,7 +93,7 @@ export default function plotComponentFactory(Plotly) {
           () => this.props.onInitialized && this.props.onInitialized(this.el)
         )
         .catch(e => {
-          console.error("Error while plotting:", e);
+          console.error('Error while plotting:', e);
           return this.props.onError && this.props.onError();
         });
     }
@@ -125,14 +125,14 @@ export default function plotComponentFactory(Plotly) {
         .then(this.attachUpdateEvents)
         .then(() => this.handleUpdate(nextProps))
         .catch(err => {
-          console.error("Error while plotting:", err);
+          console.error('Error while plotting:', err);
           this.props.onError && this.props.onError(err);
         });
     }
 
     componentWillUnmount() {
       if (this.resizeHandler && isBrowser) {
-        window.removeEventListener("resize", this.handleResize);
+        window.removeEventListener('resize', this.handleResize);
         this.resizeHandler = null;
       }
 
@@ -163,7 +163,7 @@ export default function plotComponentFactory(Plotly) {
 
     handleUpdate(props) {
       props = props || this.props;
-      if (props.onUpdate && typeof props.onUpdate === "function") {
+      if (props.onUpdate && typeof props.onUpdate === 'function') {
         props.onUpdate(this.el);
       }
     }
@@ -176,11 +176,11 @@ export default function plotComponentFactory(Plotly) {
         this.resizeHandler = () => {
           return Plotly.relayout(this.el, this.getSize());
         };
-        window.addEventListener("resize", this.resizeHandler);
+        window.addEventListener('resize', this.resizeHandler);
 
         if (invoke) return this.resizeHandler();
       } else if (!props.fit && this.resizeHandler) {
-        window.removeEventListener("resize", this.resizeHandler);
+        window.removeEventListener('resize', this.resizeHandler);
         this.resizeHandler = null;
       }
     }
@@ -200,16 +200,16 @@ export default function plotComponentFactory(Plotly) {
 
       for (let i = 0; i < eventNames.length; i++) {
         const eventName = eventNames[i];
-        const prop = props["on" + eventName];
+        const prop = props['on' + eventName];
         const hasHandler = !!this.handlers[eventName];
 
         if (prop && !hasHandler) {
-          let handler = (this.handlers[eventName] = props["on" + eventName]);
-          this.el.on("plotly_" + eventName.toLowerCase(), handler);
+          let handler = (this.handlers[eventName] = props['on' + eventName]);
+          this.el.on('plotly_' + eventName.toLowerCase(), handler);
         } else if (!prop && hasHandler) {
           // Needs to be removed:
           this.el.off(
-            "plotly_" + eventName.toLowerCase(),
+            'plotly_' + eventName.toLowerCase(),
             this.handlers[eventName]
           );
           delete this.handlers[eventName];
@@ -252,8 +252,8 @@ export default function plotComponentFactory(Plotly) {
       return (
         <div
           style={{
-            position: "relative",
-            display: "inline-block",
+            position: 'relative',
+            display: 'inline-block',
           }}
           ref={this.getRef}
         />
@@ -275,7 +275,7 @@ export default function plotComponentFactory(Plotly) {
   };
 
   for (let i = 0; i < eventNames.length; i++) {
-    PlotlyComponent.propTypes["on" + eventNames[i]] = PropTypes.func;
+    PlotlyComponent.propTypes['on' + eventNames[i]] = PropTypes.func;
   }
 
   PlotlyComponent.defaultProps = {
