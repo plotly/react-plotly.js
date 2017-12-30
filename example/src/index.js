@@ -1,20 +1,20 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import Plot from "./components/plot";
-import Code from "./components/code";
-var fs = require("fs");
-import path from "path";
-import styles from "./index.css";
-import Dat, { DatNumber, DatBoolean } from "react-dat-gui";
-import DatSelect from "./components/DatSelect.jsx";
-import beautify from "json-beautify";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Plot from './components/plot';
+import Code from './components/code';
+var fs = require('fs');
+import path from 'path';
+import styles from './index.css';
+import Dat, {DatNumber, DatBoolean} from 'react-dat-gui';
+import DatSelect from './components/DatSelect.jsx';
+import beautify from 'json-beautify';
 
-const initialData = fs.readFileSync(__dirname + "/example.json", "utf8");
+const initialData = fs.readFileSync(__dirname + '/example.json', 'utf8');
 
 class App extends React.Component {
   state = {
     value: initialData,
-    data: "",
+    data: '',
     valid: true,
     config: {
       width: 0,
@@ -28,11 +28,11 @@ class App extends React.Component {
     this.handleCode(null, null, initialData);
 
     fetch(
-      "https://api.github.com/repositories/45646037/contents/test/image/mocks"
+      'https://api.github.com/repositories/45646037/contents/test/image/mocks'
     ).then(data => {
       data.json().then(mocks => {
         this.setState({
-          mocks: [{ label: "- Select -", value: "" }].concat(
+          mocks: [{label: '- Select -', value: ''}].concat(
             mocks.map(m => ({
               label: m.name,
               value: m.download_url,
@@ -54,7 +54,7 @@ class App extends React.Component {
         data: parsed,
       });
     } catch (e) {
-      this.setState({ valid: false });
+      this.setState({valid: false});
     }
   };
 
@@ -107,7 +107,7 @@ class App extends React.Component {
           <Dat
             data={this.state.config}
             onUpdate={this.handleConfig}
-            style={{ zIndex: 100, marginTop: "1px" }}
+            style={{zIndex: 100, marginTop: '1px'}}
           >
             <DatBoolean path="fit" label="Fit" />
             <DatNumber path="width" min={0} max={1024} step={1} label="Width" />
@@ -131,6 +131,6 @@ class App extends React.Component {
   }
 }
 
-const root = document.createElement("div");
+const root = document.createElement('div');
 document.body.appendChild(root);
 ReactDOM.render(<App />, root);

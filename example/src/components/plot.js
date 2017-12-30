@@ -1,7 +1,7 @@
-import React from "react";
-import styles from "./plot.css";
+import React from 'react';
+import styles from './plot.css';
 
-import PlotComponent from "../../../src/react-plotly.js";
+import PlotComponent from '../../../src/react-plotly.js';
 
 export default class Plot extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -17,9 +17,9 @@ export default class Plot extends React.Component {
           config={this.props.data.config}
           frames={this.props.data.frames}
           fit={this.props.fit}
-          onClick={e => console.log("plotly_click:", e)}
-          onHover={e => console.log("plotly_hover:", e)}
-          onUnhover={e => console.log("plotly_unhover:", e)}
+          onClick={e => console.log('plotly_click:', e)}
+          onHover={e => console.log('plotly_hover:', e)}
+          onUnhover={e => console.log('plotly_unhover:', e)}
           debug
         />
       </div>
