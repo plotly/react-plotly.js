@@ -131,6 +131,9 @@ export default function plotComponentFactory(Plotly) {
     }
 
     componentWillUnmount() {
+      if (this.props.onPurge) {
+        this.props.onPurge(this.el);
+      }
       if (this.resizeHandler && isBrowser) {
         window.removeEventListener('resize', this.handleResize);
         this.resizeHandler = null;
@@ -269,6 +272,7 @@ export default function plotComponentFactory(Plotly) {
     frames: PropTypes.arrayOf(PropTypes.object),
     revision: PropTypes.number,
     onInitialized: PropTypes.func,
+    onPurge: PropTypes.func,
     onError: PropTypes.func,
     onUpdate: PropTypes.func,
     debug: PropTypes.bool,
