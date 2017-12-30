@@ -194,6 +194,7 @@ You can see an example of this method in action [here](https://codepen.io/rsreus
 | `revision` | `Number` | `undefined` | When provided, causes the plot to update *only* when the revision is incremented. |
 | `debug` | `Boolean` | `false` | Assign the graph div to `window.gd` for debugging |
 | `onInitialized` | `Function` | `undefined` | Callback executed after plot is initialized |
+| `onPurge` | `Function` | `undefined` | Callback executed when component unmounts. Unmounting triggers a Plotly.purge event which strips the graphDiv of all plotly.js related information including data and layout. This hook gives application writers a chance to pull data and layout off the DOM. |
 | `onUpdate` | `Function` | `undefined` | Callback executed when a plotly.js API method resolves |
 | `onError` | `Function` | `undefined` | Callback executed when a plotly.js API method rejects |
 
