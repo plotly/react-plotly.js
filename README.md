@@ -1,6 +1,8 @@
 # react-plotly.js
 
-> A [plotly.js](https://github.com/plotly/plotly.js) React component from [Plotly](https://plot.ly/)
+![plotly-react-logo](https://static1.squarespace.com/static/5a5adfdea9db09d594a841f3/t/5a5af2c5e2c48307ed4a21b6/1515975253370/)
+
+> A [plotly.js](https://github.com/plotly/plotly.js) React component from [Plotly](https://plot.ly/). The basis of Plotly's [React component suite](https://react.plot.ly/).
 
 👉 [DEMO](http://react-plotly.js-demo.getforge.io/)
 
