@@ -55,7 +55,7 @@ export default function plotComponentFactory(Plotly) {
       super(props);
 
       this.p = Promise.resolve();
-      this.resizeHandler = null;
+      this.fitHandler = null;
       this.handlers = {};
 
       this.syncWindowResize = this.syncWindowResize.bind(this);
@@ -134,9 +134,9 @@ export default function plotComponentFactory(Plotly) {
       if (this.props.onPurge) {
         this.props.onPurge(this.el);
       }
-      if (this.resizeHandler && isBrowser) {
+      if (this.fitHandler && isBrowser) {
         window.removeEventListener('resize', this.handleResize);
-        this.resizeHandler = null;
+        this.fitHandler = null;
       }
 
       this.removeUpdateEvents();
@@ -175,14 +175,24 @@ export default function plotComponentFactory(Plotly) {
       props = props || this.props;
       if (!isBrowser) return;
 
-      if (props.fit && !this.resizeHandler) {
-        this.resizeHandler = () => {
+      if (props.fit && !this.fitHandler) {
+        this.fitHandler = () => {
           return Plotly.relayout(this.el, this.getSize());
         };
-        window.addEventListener('resize', this.resizeHandler);
+        window.addEventListener('resize', this.fitHandler);
 
-        if (invoke) return this.resizeHandler();
-      } else if (!props.fit && this.resizeHandler) {
+        if (invoke) return this.fitHandler();
+      } else if (!props.fit && this.fitHandler) {
+        window.removeEventListener('resize', this.fitHandler);
+        this.fitHandler = null;
+      }
+
+      if (props.useResizeHandler && !this.resizeHandler) {
+        this.resizeHandler = () => {
+          return Plotly.Plots.resize(this.el);
+        };
+        window.addEventListener('resize', this.resizeHandler);
+      } else if (!props.useResizeHandler && this.resizeHandler) {
         window.removeEventListener('resize', this.resizeHandler);
         this.resizeHandler = null;
       }
@@ -269,6 +279,7 @@ export default function plotComponentFactory(Plotly) {
     onUpdate: PropTypes.func,
     debug: PropTypes.bool,
     style: PropTypes.object,
+    useResizeHandler: PropTypes.bool,
   };
 
   for (let i = 0; i < eventNames.length; i++) {
@@ -278,6 +289,7 @@ export default function plotComponentFactory(Plotly) {
   PlotlyComponent.defaultProps = {
     debug: false,
     fit: false,
+    useResizeHandler: false,
     data: [],
     style: {position: 'relative', display: 'inline-block'},
   };
