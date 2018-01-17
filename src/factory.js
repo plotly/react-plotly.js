@@ -252,15 +252,7 @@ export default function plotComponentFactory(Plotly) {
     }
 
     render() {
-      return (
-        <div
-          style={{
-            position: 'relative',
-            display: 'inline-block',
-          }}
-          ref={this.getRef}
-        />
-      );
+      return <div style={this.props.style} ref={this.getRef} />;
     }
   }
 
@@ -276,6 +268,7 @@ export default function plotComponentFactory(Plotly) {
     onError: PropTypes.func,
     onUpdate: PropTypes.func,
     debug: PropTypes.bool,
+    style: PropTypes.object,
   };
 
   for (let i = 0; i < eventNames.length; i++) {
@@ -286,6 +279,7 @@ export default function plotComponentFactory(Plotly) {
     debug: false,
     fit: false,
     data: [],
+    style: {position: 'relative', display: 'inline-block'},
   };
 
   return PlotlyComponent;
