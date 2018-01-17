@@ -102,7 +102,7 @@ If you build your project using webpack, you'll have to follow [these instructio
 import Plot from 'react-plotly.js'
 
 render () {
-  return <Plot 
+  return <Plot
     data={...}
     layout={...}
     frames={...}
@@ -119,7 +119,7 @@ In this case, we want to use `react-plotly.js` without building `plotly.js` and 
 2. Declare `Plotly` as a global in [App.js](https://github.com/plotly/react-plotly.js-demo-app/blob/master/src/App.js#L1)
 3. Use `createPlotlyComponent()` in [App.js](https://github.com/plotly/react-plotly.js-demo-app/blob/master/src/App.js#L25)
 
-This lets us skip the [specific build configuration](#build-with-webpack) necessary to build `plotly.js` in webpack environments (`create-react-app` uses webpack under the hood). 
+This lets us skip the [specific build configuration](#build-with-webpack) necessary to build `plotly.js` in webpack environments (`create-react-app` uses webpack under the hood).
 
 ### With external plotly.js
 
@@ -143,7 +143,7 @@ you may then inject Plotly and use the returned React component:
 import createPlotlyComponent from 'react-plotly.js/factory'
 
 /* (Note that Plotly is already defined from loading plotly.js through a <script> tag) */
-const Plot = createPlotlyComponent(Plotly); 
+const Plot = createPlotlyComponent(Plotly);
 
 render () {
   return <Plot
@@ -191,7 +191,9 @@ You can see an example of this method in action [here](https://codepen.io/rsreus
 | `data` | `Array` | `[]` | list of trace objects |
 | `layout` | `Object` | `undefined` | layout object |
 | `config` | `Object` | `undefined` | config object |
+| `style`  | `Object` | `{position: 'relative', display: 'inline-block'}` | used to style the containing `<div>` |
 | `frames` | `Array` | `undefined` | list of frame objects |
+| `useResizeHandler` | `Boolean` | `false` | When true, adds a call to `Plotly.Plot.resize()` as a `window.resize` event handler |
 | `fit` | `Boolean` | `false` | When true, disregards `layout.width` and `layout.height` and fits to the parent div size, updating on `window.resize` |
 | `revision` | `Number` | `undefined` | When provided, causes the plot to update *only* when the revision is incremented. |
 | `debug` | `Boolean` | `false` | Assign the graph div to `window.gd` for debugging |
