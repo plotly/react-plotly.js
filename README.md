@@ -203,6 +203,8 @@ You can see an example of this method in action [here](https://codepen.io/rsreus
 | `onError` | `Function` | `undefined` | Callback executed when a plotly.js API method rejects |
 | `fit` | `Boolean` | `false` | *deprecated* When true, will set `layout.height` and `layout.width` to the component's parent's size if they are unspecified, and will update them on `window.resize` |
 
+To make a plot responsive, i.e. to fill its containing element and resize when the window is resized, use `style` or `className` to set the dimensions of the element (i.e. using `width: 100%; height: 100%` or some similar values) and set `useResizeHandler` to `true` while setting `layout.autosize` to `true` and leaving `layout.height` and `layout.width` undefined. This will implement the behaviour documented here: https://plot.ly/javascript/responsive-fluid-layout/
+
 ### Event handler props
 
 Event handlers for [`plotly.js` events](https://plot.ly/javascript/plotlyjs-events/) may be attached through the following props.
