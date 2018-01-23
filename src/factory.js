@@ -68,12 +68,10 @@ export default function plotComponentFactory(Plotly) {
     }
 
     shouldComponentUpdate(nextProps) {
-      if (isNumeric(nextProps.revision) && isNumeric(this.props.revision)) {
-        // If revision is numeric, then increment only if revision has increased:
-        return nextProps.revision > this.props.revision;
-      } else {
-        return true;
-      }
+      return (
+        nextProps.revision === void 0 ||
+        nextProps.revision !== this.props.revision
+      );
     }
 
     componentDidMount() {
