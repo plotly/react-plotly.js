@@ -133,8 +133,12 @@ export default function plotComponentFactory(Plotly) {
         this.props.onPurge(this.el);
       }
       if (this.fitHandler && isBrowser) {
-        window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener('resize', this.fitHandler);
         this.fitHandler = null;
+      }
+      if (this.resizeHandler && isBrowser) {
+        window.removeEventListener('resize', this.resizeHandler);
+        this.resizeHandler = null;
       }
 
       this.removeUpdateEvents();
