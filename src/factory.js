@@ -264,7 +264,13 @@ export default function plotComponentFactory(Plotly) {
     }
 
     render() {
-      return <div style={this.props.style} ref={this.getRef} />;
+      return (
+        <div
+          style={this.props.style}
+          ref={this.getRef}
+          className={this.props.className}
+        />
+      );
     }
   }
 
@@ -281,6 +287,7 @@ export default function plotComponentFactory(Plotly) {
     onUpdate: PropTypes.func,
     debug: PropTypes.bool,
     style: PropTypes.object,
+    className: PropTypes.string,
     useResizeHandler: PropTypes.bool,
   };
 
