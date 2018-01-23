@@ -191,16 +191,17 @@ You can see an example of this method in action [here](https://codepen.io/rsreus
 | `data` | `Array` | `[]` | list of trace objects |
 | `layout` | `Object` | `undefined` | layout object |
 | `config` | `Object` | `undefined` | config object |
-| `style`  | `Object` | `{position: 'relative', display: 'inline-block'}` | used to style the containing `<div>` |
+| `style`  | `Object` | `{position: 'relative', display: 'inline-block'}` | used to style the `<div>` into which the plot is rendered |
+| `className`  | `string` | `undefined` | applied to the `<div>` into which the plot is rendered |
 | `frames` | `Array` | `undefined` | list of frame objects |
 | `useResizeHandler` | `Boolean` | `false` | When true, adds a call to `Plotly.Plot.resize()` as a `window.resize` event handler |
-| `fit` | `Boolean` | `false` | When true, disregards `layout.width` and `layout.height` and fits to the parent div size, updating on `window.resize` |
 | `revision` | `Number` | `undefined` | When provided, causes the plot to update *only* when the revision is incremented. |
 | `debug` | `Boolean` | `false` | Assign the graph div to `window.gd` for debugging |
 | `onInitialized` | `Function` | `undefined` | Callback executed after plot is initialized |
 | `onPurge` | `Function` | `undefined` | Callback executed when component unmounts. Unmounting triggers a Plotly.purge event which strips the graphDiv of all plotly.js related information including data and layout. This hook gives application writers a chance to pull data and layout off the DOM. |
 | `onUpdate` | `Function` | `undefined` | Callback executed when a plotly.js API method resolves |
 | `onError` | `Function` | `undefined` | Callback executed when a plotly.js API method rejects |
+| `fit` | `Boolean` | `false` | *deprecated* When true, will set `layout.height` and `layout.width` to the component's parent's size if they are unspecified, and will update them on `window.resize` |
 
 ### Event handler props
 
