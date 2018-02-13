@@ -16,8 +16,8 @@
 - [Usage](#usage)
   * [With local plotly.js](#with-local-plotlyjs)
     + [build with webpack](#build-with-webpack)
-    + [build with create-react-app](#build-with-create-react-app)
   * [With external plotly.js (for example by `<script>` tag)](#with-external-plotlyjs)
+    + [build with create-react-app](#build-with-create-react-app)
   * [As a standalone bundle](#as-a-standalone-bundle)
 - [API](#api)
   * [props](#props)
@@ -93,22 +93,27 @@ Using this component inside a larger application may require some additional con
 $ npm install -S react-plotly.js plotly.js
 ```
 
-Since `plotly.js` is a peer dependency, you do not need to require it separately to use it.
+Since `plotly.js` is a peer dependency, you do not need to require it separately to use it:
+
+```javascript
+import Plot from 'react-plotly.js'
+
+render () {
+  return <Plot
+    data={...}
+    layout={...}
+    frames={...}
+    config={...}
+  />
+}
+```
 
 #### Build with Webpack
 
 If you build your project using webpack, you'll have to follow [these instructions](https://github.com/plotly/plotly.js#building-plotlyjs-with-webpack) in order to successfully bundle plotly.js.
 
-If you are building with Webpack but do not have access to the Webpack configuration or if you don't want to configure webpack see next section.
+If you are building with Webpack but do not have access to the Webpack configuration (i.e. you are using `create-react-app`) or if you don't want to configure webpack see next section.
 
-#### Build with `create-react-app`
-
-In this case, we want to use `react-plotly.js` without building `plotly.js` and use a version of `plotly.js` that is already built (see [building an external plotly.js](#with-external-plotlyjs)). This [demo app](http://react-plotly.js-demo.getforge.io/) was built with `create-react-app` and there 3 basic steps:
-1. Import plotly.js in a `<script>` tag in [public/index.html](https://github.com/plotly/react-plotly.js-demo-app/blob/master/public/index.html#L25)
-2. Declare `Plotly` as a global in [App.js](https://github.com/plotly/react-plotly.js-demo-app/blob/master/src/App.js#L1)
-3. Use `createPlotlyComponent()` in [App.js](https://github.com/plotly/react-plotly.js-demo-app/blob/master/src/App.js#L25)
-
-This lets us skip the [specific build configuration](#build-with-webpack) necessary to build `plotly.js` in webpack environments (`create-react-app` uses webpack under the hood). However, if you wish to use `create-react-app` with a local plotly.js, you will need to `eject` and follow the Webpack instructions above.
 
 ### With external plotly.js
 
@@ -145,6 +150,14 @@ render () {
 ```
 
 **Note**: You must ensure `Plotly` is available before your React app tries to render the component. That could mean perhaps using script tag (without `async` or `defer`) or a utility like [load-script](https://www.npmjs.com/package/load-script).
+
+
+#### Build with `create-react-app`
+
+If you are using `create-react-app` you will not have access to the Webpack configuration unless you choose to `eject`. 
+
+* If you do not want to `eject`, you must use an *external* plotly.js using the instructions immediately above. This [demo app](http://react-plotly.js-demo.getforge.io/) was built with `create-react-app` using this approach. 
+* If you wish to use `create-react-app` with a *local* plotly.js, you will need to `eject` and follow the Webpack instructions above.
 
 ### As a standalone bundle
 
