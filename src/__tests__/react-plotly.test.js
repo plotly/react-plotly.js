@@ -135,32 +135,6 @@ describe('<Plotly/>', () => {
           .catch(err => done.fail(err));
       });
 
-      test('clear event handlers on newPlot', done => {
-        let wrapper;
-        createPlot({
-          fit: false,
-          onClick: jest.fn(),
-          onUpdate: once(() => {
-            expect(
-              wrapper.instance().clearLocalEventHandlers
-            ).toHaveBeenCalled();
-            done();
-          }),
-        })
-          .then(plot => {
-            wrapper = plot;
-
-            // make sure real clearLocalEventHandlers does the job
-            expect(Object.keys(wrapper.instance().handlers)).toEqual(['Click']);
-            plot.instance().clearLocalEventHandlers();
-            expect(Object.keys(wrapper.instance().handlers)).toEqual([]);
-
-            plot.instance().clearLocalEventHandlers = jest.fn();
-            plot.setProps({layout: {title: 'test test'}});
-          })
-          .catch(err => done.fail(err));
-      });
-
       test('revision counter', done => {
         var callCnt = 0;
         createPlot({
