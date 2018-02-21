@@ -73,6 +73,7 @@ export default function plotComponentFactory(Plotly) {
     }
 
     componentDidMount() {
+      if (!isBrowser) return;
       this.p = this.p
         .then(() => {
           return Plotly.newPlot(this.el, {
@@ -95,6 +96,7 @@ export default function plotComponentFactory(Plotly) {
     }
 
     componentWillUpdate(nextProps) {
+      if (!isBrowser) return;
       this.p = this.p
         .then(() => {
           if (hasReactAPIMethod) {
