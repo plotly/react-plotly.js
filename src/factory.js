@@ -63,6 +63,7 @@ export default function plotComponentFactory(Plotly) {
       this.attachUpdateEvents = this.attachUpdateEvents.bind(this);
       this.getRef = this.getRef.bind(this);
       this.handleUpdate = this.handleUpdate.bind(this);
+      this.handleUpdateWithProps = this.handleUpdateWithProps.bind(this);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -73,7 +74,6 @@ export default function plotComponentFactory(Plotly) {
     }
 
     componentDidMount() {
-      if (!isBrowser) return;
       this.p = this.p
         .then(() => {
           return Plotly.newPlot(this.el, {
@@ -96,7 +96,6 @@ export default function plotComponentFactory(Plotly) {
     }
 
     componentWillUpdate(nextProps) {
-      if (!isBrowser) return;
       this.p = this.p
         .then(() => {
           if (hasReactAPIMethod) {
@@ -121,7 +120,7 @@ export default function plotComponentFactory(Plotly) {
         .then(() => {
           if (!hasReactAPIMethod) this.attachUpdateEvents();
         })
-        .then(() => this.handleUpdate(nextProps))
+        .then(() => this.handleUpdateWithProps(nextProps))
         .catch(err => {
           console.error('Error while plotting:', err);
           this.props.onError && this.props.onError(err);
@@ -162,8 +161,11 @@ export default function plotComponentFactory(Plotly) {
       }
     }
 
-    handleUpdate(props) {
-      props = props || this.props;
+    handleUpdate() {
+      this.handleUpdateWithProps(this.props);
+    }
+
+    handleUpdateWithProps(props) {
       if (props.onUpdate && typeof props.onUpdate === 'function') {
         props.onUpdate(this.el);
       }
