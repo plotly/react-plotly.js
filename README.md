@@ -188,6 +188,8 @@ You can see an example of this method in action [here](https://codepen.io/rsreus
 
 ### Props
 
+**Note**: for the time being, this component may mutate its `layout` and `data` props in response to user input, going against React rules. This behaviour will change in the near future.
+
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `data` | `Array` | `[]` | list of trace objects |
