@@ -16,16 +16,11 @@
 
 * [Installation](#installation)
 * [Quick start](#quick-start)
-* [Usage](#usage)
-  * [With local plotly.js](#with-local-plotlyjs)
-    * [build with webpack](#build-with-webpack)
-  * [With external plotly.js (for example by `<script>` tag)](#with-external-plotlyjs)
-    * [build with create-react-app](#build-with-create-react-app)
-  * [As a standalone bundle](#as-a-standalone-bundle)
+* [Customizing the `plotly.js` bundle](#customizing-the-plotlyjs-bundle)
+* [Loading from a `<script>` tag](#loading-from-a-script-tag)
 * [API](#api)
   * [props](#props)
   * [Event handler props](#event-handler-props)
-* [Roadmap](#roadmap)
 * [Development](#development)
 
 ## Installation
