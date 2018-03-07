@@ -268,6 +268,7 @@ export default function plotComponentFactory(Plotly) {
           style={this.props.style}
           ref={this.getRef}
           className={this.props.className}
+          id={this.props.chartId}
         />
       );
     }
@@ -288,6 +289,7 @@ export default function plotComponentFactory(Plotly) {
     style: PropTypes.object,
     className: PropTypes.string,
     useResizeHandler: PropTypes.bool,
+    chartId: _propTypes2.default.string
   };
 
   for (let i = 0; i < eventNames.length; i++) {
