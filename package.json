@@ -72,7 +72,7 @@
     "react": "React"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx}": [
+    "src/*.{js,jsx}": [
       "prettier --write --trailing-comma es5",
       "git add"
     ]
