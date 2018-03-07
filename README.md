@@ -127,9 +127,7 @@ You can see an example of this method in action
 
 **Note**: This component will not refresh the plot unless either the `revision` prop is defined and has changed, OR unless a shallow equality check on `data`, `layout`, `frames` and `config` fails.
 
-**Note**: for the time being, this component may mutate its `layout` and `data`
-props in response to user input, going against React rules. This behaviour will
-change in the near future once https://github.com/plotly/plotly.js/issues/2389 is completed.
+**Note**: for the time being, this component may mutate its `layout` and `data` props in response to user input, going against React rules. This behaviour will change in the near future once https://github.com/plotly/plotly.js/issues/2389 is completed.
 
 | Prop               | Type       | Default                                           | Description                                                                                                                                                                                                                                                     |
 | ------------------ | ---------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
