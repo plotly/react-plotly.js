@@ -66,13 +66,6 @@ export default function plotComponentFactory(Plotly) {
       this.handleUpdateWithProps = this.handleUpdateWithProps.bind(this);
     }
 
-    shouldComponentUpdate(nextProps) {
-      return (
-        nextProps.revision === void 0 ||
-        nextProps.revision !== this.props.revision
-      );
-    }
-
     componentDidMount() {
       this.p = this.p
         .then(() => {
@@ -96,6 +89,17 @@ export default function plotComponentFactory(Plotly) {
     }
 
     componentWillUpdate(nextProps) {
+      if (
+        (nextProps.revision !== void 0 &&
+          nextProps.revision === this.props.revision) ||
+        (nextProps.layout === this.props.layout &&
+          nextProps.data === this.props.data &&
+          nextProps.config === this.props.config &&
+          nextProps.frames === this.props.frames)
+      ) {
+        return;
+      }
+
       this.p = this.p
         .then(() => {
           if (hasReactAPIMethod) {
