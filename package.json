@@ -13,17 +13,11 @@
     "url": "https://github.com/plotly/react-plotly.js/issues"
   },
   "scripts": {
-    "start": "budo example/src/index.js --dir example/src --dir example --open --live --host localhost -- -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/assets/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs",
-    "example:build:html": "cp example/src/index.html example/dist/index.html",
-    "example:build:js": "browserify example/src/index.js -p [ css-modulesify --after autoprefixer --autoprefixer.browsers \"> 5%\" -o example/dist/styles.css ] -t [ babelify --presets [ es2015 react ] --plugins transform-class-properties ] -t brfs -g [ envify --NODE_ENV production ] -p bundle-collapser/plugin | uglifyjs --compress --mangle > example/dist/index.js",
-    "example:build:assets": "rimraf example/dist/assets && cp -r example/assets example/dist/assets",
-    "example:build": "rimraf docs/example example/dist && mkdirp example/dist && npm run example:build:html && npm run example:build:js && npm run example:build:assets && mv example/dist docs/example",
     "make:lib": "mkdirp lib && babel src --out-dir=lib --ignore __tests__/*.js,__mocks__/*.js --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports && mv lib/* ./ && rmdir lib",
     "make:dist": "mkdirp dist && browserify src/factory.js -o ./dist/create-plotly-component.js -t [ babelify --presets [ es2015 react ] --plugins add-module-exports ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./dist/create-plotly-component.js --compress --mangle --output ./dist/create-plotly-component.min.js --source-map filename=dist/create-plotly-component.min.js.map",
     "clean": "rimraf lib dist react-plotly.js react-plotly.js.map factory.js factory.js.map",
     "prepublishOnly": "npm run clean && npm run make:lib && npm run make:dist",
-    "lint": "prettier --trailing-comma es5 --write \"{src,example/src}/**/*.js\" && eslint src",
-    "precommit": "lint-staged",
+    "lint": "prettier --trailing-comma es5 --write \"src/**/*.js\" && eslint src",
     "test": "npm run lint && npm run deps && jest",
     "watch-test": "jest --watch",
     "watch": "nodemon --exec \"npm run make:lib\" -w src",
@@ -38,7 +32,6 @@
     "react"
   ],
   "devDependencies": {
-    "autoprefixer": "^7.1.2",
     "babel-cli": "^6.24.1",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -48,22 +41,13 @@
     "brfs": "^1.4.3",
     "browserify": "^14.4.0",
     "browserify-global-shim": "^1.0.3",
-    "budo": "^10.0.4",
-    "bundle-collapser": "^1.2.1",
     "cash-mv": "^0.2.0",
-    "css-modulesify": "^0.28.0",
     "dependency-check": "^2.9.1",
-    "envify": "^4.1.0",
     "enzyme": "^2.9.1",
     "eslint": "^4.8.0",
     "eslint-plugin-react": "^7.4.0",
     "event-emitter": "^0.3.5",
-    "gl": "^4.0.4",
-    "husky": "^0.14.3",
-    "insert-css": "^2.0.0",
     "jest": "^20.0.4",
-    "json-beautify": "^1.0.1",
-    "lint-staged": "^4.0.2",
     "mkdirp": "^0.5.1",
     "nodemon": "^1.11.0",
     "onetime": "^1.1.0",
@@ -71,13 +55,10 @@
     "prettier": "^1.5.3",
     "react": "^15.6.1",
     "react-addons-test-utils": "^15.6.0",
-    "react-codemirror2": "0.0.13",
-    "react-dat-gui": "0.0.13",
     "react-dom": "^15.6.1",
     "react-test-renderer": "^15.6.1",
     "rimraf": "^2.6.2",
     "semver": "^5.4.1",
-    "throttle-debounce": "^1.0.1",
     "uglify-js": "^3.0.26"
   },
   "peerDependencies": {
@@ -86,12 +67,6 @@
   },
   "browserify-global-shim": {
     "react": "React"
-  },
-  "lint-staged": {
-    "{src,example/src}/**/*.{js,jsx}": [
-      "prettier --write --trailing-comma es5",
-      "git add"
-    ]
   },
   "dependencies": {
     "fast-isnumeric": "^1.1.1",
