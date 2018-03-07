@@ -175,8 +175,8 @@ export default function plotComponentFactory(Plotly) {
       }
     }
 
-    syncWindowResize(props, invoke) {
-      props = props || this.props;
+    syncWindowResize(propsIn, invoke) {
+      const props = propsIn || this.props;
       if (!isBrowser) return;
 
       if (props.fit && !this.fitHandler) {
@@ -211,9 +211,9 @@ export default function plotComponentFactory(Plotly) {
     }
 
     // Attach and remove event handlers as they're added or removed from props:
-    syncEventHandlers(props) {
+    syncEventHandlers(propsIn) {
       // Allow use of nextProps if passed explicitly:
-      props = props || this.props;
+      const props = propsIn || this.props;
 
       for (let i = 0; i < eventNames.length; i++) {
         const eventName = eventNames[i];
@@ -244,9 +244,9 @@ export default function plotComponentFactory(Plotly) {
       return objectAssign({}, layout, this.getSize(layout));
     }
 
-    getSize(layout) {
+    getSize(layoutIn) {
       let rect;
-      layout = layout || this.props.layout;
+      const layout = layoutIn || this.props.layout;
       const layoutWidth = layout ? layout.width : null;
       const layoutHeight = layout ? layout.height : null;
       const hasWidth = isNumeric(layoutWidth);
