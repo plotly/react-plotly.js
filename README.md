@@ -31,8 +31,7 @@ $ npm install react-plotly.js plotly.js
 
 ## Quick start
 
-The easiest way to use this component is to import and pass data to a plot
-component. To import the component,
+The easiest way to use this component is to import and pass data to a plot component. To import the component,
 
 ```javascript
 import Plot from 'react-plotly.js';
@@ -75,8 +74,7 @@ You should see a plot like this:
   <img src="example.png" alt="Example plot" width="320" height="240">
 </p>
 
-For a full description of Plotly chart types and attributes see the following
-resources:
+For a full description of Plotly chart types and attributes see the following resources:
 
 * [Plotly JavaScript API documentation](https://plot.ly/javascript/)
 * [Full plotly.js attribute listing](https://plot.ly/javascript/reference/)
