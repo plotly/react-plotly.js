@@ -265,6 +265,7 @@ export default function plotComponentFactory(Plotly) {
     render() {
       return (
         <div
+          id={this.props.divId}
           style={this.props.style}
           ref={this.getRef}
           className={this.props.className}
@@ -288,6 +289,7 @@ export default function plotComponentFactory(Plotly) {
     style: PropTypes.object,
     className: PropTypes.string,
     useResizeHandler: PropTypes.bool,
+    divId: PropTypes.string,
   };
 
   for (let i = 0; i < eventNames.length; i++) {
