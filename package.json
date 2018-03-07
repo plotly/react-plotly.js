@@ -18,7 +18,6 @@
     "clean": "rimraf lib dist react-plotly.js react-plotly.js.map factory.js factory.js.map",
     "prepublishOnly": "npm run clean && npm run make:lib && npm run make:dist",
     "lint": "prettier --trailing-comma es5 --write \"src/**/*.js\" && eslint src",
-    "precommit": "lint-staged",
     "test": "npm run lint && npm run deps && jest",
     "watch-test": "jest --watch",
     "watch": "nodemon --exec \"npm run make:lib\" -w src",
@@ -48,9 +47,7 @@
     "eslint": "^4.8.0",
     "eslint-plugin-react": "^7.4.0",
     "event-emitter": "^0.3.5",
-    "husky": "^0.14.3",
     "jest": "^20.0.4",
-    "lint-staged": "^4.0.2",
     "mkdirp": "^0.5.1",
     "nodemon": "^1.11.0",
     "onetime": "^1.1.0",
@@ -70,12 +67,6 @@
   },
   "browserify-global-shim": {
     "react": "React"
-  },
-  "lint-staged": {
-    "src/*.{js,jsx}": [
-      "prettier --write --trailing-comma es5",
-      "git add"
-    ]
   },
   "dependencies": {
     "fast-isnumeric": "^1.1.1",
