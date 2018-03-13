@@ -20,7 +20,7 @@
 * [Refreshing the Plot](#refreshing-the-plot)
 * [Customizing the `plotly.js` bundle](#customizing-the-plotlyjs-bundle)
 * [API](#api)
-  * [props](#props)
+  * [Basic props](#basic-props)
   * [Event handler props](#event-handler-props)
 * [Customizing the `plotly.js` bundle](#customizing-the-plotlyjs-bundle)
 * [Loading from a `<script>` tag](#loading-from-a-script-tag)
