@@ -92,7 +92,6 @@ class App extends React.Component {
             <Plot
                 data={this.state.data}
                 layout={this.state.layout}
-                frames={this.state.frames}
                 onInitialized={(figure) => this.setState(figure)}
                 onUpdate={(figure) => this.setState(figure)}
             />
