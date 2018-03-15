@@ -167,7 +167,7 @@ export default function plotComponentFactory(Plotly) {
     }
 
     figureCallback(callback) {
-      if (callback && typeof callback === 'function') {
+      if (typeof callback === 'function') {
         const {data, layout, _transitionData: {_frames: frames}} = this.el;
         const figure = {data, layout, frames}; // for extra clarity!
         callback(figure, this.el);
