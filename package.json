@@ -51,7 +51,7 @@
     "mkdirp": "^0.5.1",
     "nodemon": "^1.11.0",
     "onetime": "^1.1.0",
-    "plotly.js": "^1.31.1",
+    "plotly.js": "^1.35.0",
     "prettier": "^1.5.3",
     "react": "^15.6.1",
     "react-addons-test-utils": "^15.6.0",
@@ -62,15 +62,13 @@
     "uglify-js": "^3.0.26"
   },
   "peerDependencies": {
-    "plotly.js": ">1.0.0",
+    "plotly.js": ">1.34.0",
     "react": ">12.0.0"
   },
   "browserify-global-shim": {
     "react": "React"
   },
   "dependencies": {
-    "fast-isnumeric": "^1.1.1",
-    "object-assign": "^4.1.1",
     "prop-types": "^15.5.10"
   }
 }
