@@ -63,7 +63,7 @@ export default function plotComponentFactory(Plotly) {
       this.attachUpdateEvents = this.attachUpdateEvents.bind(this);
       this.getRef = this.getRef.bind(this);
       this.handleUpdate = this.handleUpdate.bind(this);
-      this.handleUpdateWithProps = this.handleUpdateWithProps.bind(this);
+      this.figureCallback = this.figureCallback.bind(this);
     }
 
     componentDidMount() {
@@ -79,12 +79,10 @@ export default function plotComponentFactory(Plotly) {
         .then(() => this.syncWindowResize(null, false))
         .then(this.syncEventHandlers)
         .then(this.attachUpdateEvents)
-        .then(
-          () => this.props.onInitialized && this.props.onInitialized(this.el)
-        )
-        .catch(e => {
-          console.error('Error while plotting:', e);
-          return this.props.onError && this.props.onError();
+        .then(() => this.figureCallback(this.props.onInitialized))
+        .catch(err => {
+          console.error('Error while plotting:', err);
+          return this.props.onError && this.props.onError(err);
         });
     }
 
@@ -124,7 +122,7 @@ export default function plotComponentFactory(Plotly) {
         .then(() => {
           if (!hasReactAPIMethod) this.attachUpdateEvents();
         })
-        .then(() => this.handleUpdateWithProps(nextProps))
+        .then(() => this.figureCallback(nextProps.onUpdate))
         .catch(err => {
           console.error('Error while plotting:', err);
           this.props.onError && this.props.onError(err);
@@ -132,9 +130,8 @@ export default function plotComponentFactory(Plotly) {
     }
 
     componentWillUnmount() {
-      if (this.props.onPurge) {
-        this.props.onPurge(this.el);
-      }
+      this.figureCallback(this.props.onPurge);
+
       if (this.fitHandler && isBrowser) {
         window.removeEventListener('resize', this.fitHandler);
         this.fitHandler = null;
@@ -166,12 +163,14 @@ export default function plotComponentFactory(Plotly) {
     }
 
     handleUpdate() {
-      this.handleUpdateWithProps(this.props);
+      this.figureCallback(this.props.onUpdate);
     }
 
-    handleUpdateWithProps(props) {
-      if (props.onUpdate && typeof props.onUpdate === 'function') {
-        props.onUpdate(this.el);
+    figureCallback(callback) {
+      if (typeof callback === 'function') {
+        const {data, layout, _transitionData: {_frames: frames}} = this.el;
+        const figure = {data, layout, frames}; // for extra clarity!
+        callback(figure, this.el);
       }
     }
 
