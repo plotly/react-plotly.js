@@ -83,7 +83,7 @@ class App extends React.Component {
     Plot(props) {
         super(props);
         this.state = {
-          /* data, layout, config, frames */
+          /* data, layout */
         };
     }
 
