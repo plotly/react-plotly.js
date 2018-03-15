@@ -83,13 +83,29 @@ export default function plotComponentFactory(Plotly) {
 
     componentWillUpdate(nextProps) {
       if (
-        (nextProps.revision !== void 0 &&
-          nextProps.revision === this.props.revision) ||
-        (nextProps.layout === this.props.layout &&
-          nextProps.data === this.props.data &&
-          nextProps.config === this.props.config &&
-          nextProps.frames === this.props.frames)
+        nextProps.revision !== void 0 &&
+        nextProps.revision === this.props.revision
       ) {
+        // if revision is set and unchanged, do nothing
+        return;
+      }
+
+      const numPrevFrames =
+        this.props.frames && this.props.frames.length
+          ? this.props.frames.length
+          : 0;
+      const numNextFrames =
+        nextProps.frames && nextProps.frames.length
+          ? nextProps.frames.length
+          : 0;
+      if (
+        nextProps.layout === this.props.layout &&
+        nextProps.data === this.props.data &&
+        nextProps.config === this.props.config &&
+        numNextFrames === numPrevFrames
+      ) {
+        // prevent infinite loops when component is re-rendered after onUpdate
+        // frames *always* changes identity so fall back to check length only :(
         return;
       }
 

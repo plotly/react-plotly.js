@@ -74,17 +74,15 @@ For a full description of Plotly chart types and attributes see the following re
 
 ## State management
 
-This is a "dumb" component with no internal state. This means that if a user interacts with the plot, by zooming or panning for example, any subsequent re-renders will lose this information unless it is captured and upstreamed via the `onUpdate` callback prop.
+This is a "dumb" component that doesn't merge its internal state with any updates. This means that if a user interacts with the plot, by zooming or panning for example, any subsequent re-renders will lose this information unless it is captured and upstreamed via the `onUpdate` callback prop.
 
 Here is a simple example of how to capture and store state in a parent object:
 
 ```javascript
 class App extends React.Component {
-    Plot(props) {
+    constructor(props) {
         super(props);
-        this.state = {
-          /* data, layout */
-        };
+        this.state = { data: [], layout: {}, frames: [], config: {} };
     }
 
     render() {
@@ -92,6 +90,8 @@ class App extends React.Component {
             <Plot
                 data={this.state.data}
                 layout={this.state.layout}
+                frames={this.state.frames}
+                config={this.state.config}
                 onInitialized={(figure) => this.setState(figure)}
                 onUpdate={(figure) => this.setState(figure)}
             />
@@ -102,14 +102,15 @@ class App extends React.Component {
 
 ## Refreshing the Plot
 
-This component will refresh the plot via `Plotly.react` if either of the following is true:
+This component will refresh the plot via [`Plotly.react`](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyreact) if any of the following are true:
 
 * The `revision` prop is defined and has changed, OR;
-* One of `data`, `layout`, `frames` or `config` has changed identity as checked via a shallow `===`.
+* One of `data`, `layout` or `config` has changed identity as checked via a shallow `===`, OR;
+* The number of elements in `frames` has changed
 
-Furthermore, when called, `Plotly.react` will only refresh the data being plotted if the _identity_ of the data arrays (e.g. `x`, `y`, `color` etc) has changed, or if `layout.datarevision` has changed.
+Furthermore, when called, [`Plotly.react`](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyreact) will only refresh the data being plotted if the _identity_ of the data arrays (e.g. `x`, `y`, `marker.color` etc) has changed, or if `layout.datarevision` has changed.
 
-In short, this means that simply adding data points to a trace in `data` or changing a value in `layout` will not cause a plot to update unless this is done immutably via something like [immutability-helper](https://github.com/kolodny/immutability-helper) if performance considerations permit it, or unless `revision` and/or `layout.datarevision` are used to force a rerender.
+In short, this means that simply adding data points to a trace in `data` or changing a value in `layout` will not cause a plot to update unless this is done immutably via something like [immutability-helper](https://github.com/kolodny/immutability-helper) if performance considerations permit it, or unless `revision` and/or [`layout.datarevision`](https://plot.ly/javascript/reference/#layout-datarevision) are used to force a rerender.
 
 ## API Reference
 
