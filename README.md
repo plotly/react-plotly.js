@@ -18,7 +18,6 @@
 * [Quick start](#quick-start)
 * [State management](#state-management)
 * [Refreshing the Plot](#refreshing-the-plot)
-* [Customizing the `plotly.js` bundle](#customizing-the-plotlyjs-bundle)
 * [API](#api)
   * [Basic props](#basic-props)
   * [Event handler props](#event-handler-props)
