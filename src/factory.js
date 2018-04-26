@@ -19,6 +19,8 @@ const eventNames = [
   'DoubleClick',
   'Framework',
   'Hover',
+  'LegendClick',
+  'LegendDoubleClick',
   'Relayout',
   'Restyle',
   'Redraw',
