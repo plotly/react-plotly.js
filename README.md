@@ -164,6 +164,8 @@ Event handlers for specific [`plotly.js` events](https://plot.ly/javascript/plot
 | `onDoubleClick`           | `Function` | `plotly_doubleclick`           |
 | `onFramework`             | `Function` | `plotly_framework`             |
 | `onHover`                 | `Function` | `plotly_hover`                 |
+| `onLegendClick`           | `Function` | `plotly_legendclick`           |
+| `onLegendDoubleClick`     | `Function` | `plotly_legenddoubleclick`     |
 | `onRelayout`              | `Function` | `plotly_relayout`              |
 | `onRestyle`               | `Function` | `plotly_restyle`               |
 | `onRedraw`                | `Function` | `plotly_redraw`                |
