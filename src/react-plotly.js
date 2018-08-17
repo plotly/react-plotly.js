@@ -1,16 +1,12 @@
-var Plotly = require('plotly.js/lib/core');
+import plotComponentFactory from './factory';
+import Plotly from 'plotly.js/lib/core';
 
-// Load in the trace types for pie, and choropleth
 Plotly.register([
-    require('plotly.js/lib/pie'),
-    require('plotly.js/lib/choropleth')
+    require('plotly.js/lib/pie'), 
+    require('plotly.js/lib/choropleth'),
+    require('plotly.js/lib/bar'),
+    require('plotly.js/lib/scatter')
 ]);
 
-module.exports = Plotly;
-
-//import plotComponentFactory from './factory';
-//import Plotly from 'plotly.js/dist/plotly';
-
-//const PlotComponent = plotComponentFactory(Plotly);
-
-//export default PlotComponent;
+const PlotComponent = plotComponentFactory(Plotly);
+export default PlotComponent;
