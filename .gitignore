@@ -11,14 +11,9 @@ npm-debug.log*
 !.babelrc
 !.eslintignore
 
-dist
 !example/dist
 
 package-lock.json.*
 
-factory.js
-factory.js.map
-react-plotly.js
-react-plotly.js.map
 package-lock.json
 yarn.lock
