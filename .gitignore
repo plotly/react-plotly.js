@@ -4,6 +4,7 @@ npm-debug.log*
 *.sublime*
 
 .*
+!.circleci
 !.gitignore
 !.gitattributes
 !.npmignore
