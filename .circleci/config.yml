@@ -1,12 +1,5 @@
 version: 2.0
 
-# Inspired by:
-# https://github.com/CircleCI-Public/circleci-demo-workflows/blob/workspace-forwarding/.circleci/config.yml
-# https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
-#
-# For list of official CircleCI node.js images, go to:
-# https://hub.docker.com/r/circleci/node/tags/
-
 jobs:
   build:
     docker:
@@ -39,7 +32,6 @@ jobs:
 
   test:
     docker:
-      # need '-browsers' version to test in real (xvfb-wrapped) browsers
       - image: circleci/node:10.9.0
     working_directory: ~/react-plotly.js
     steps:
