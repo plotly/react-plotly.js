@@ -33,5 +33,10 @@
   },
   "plugins": [
     "react"
-  ]
+  ],
+  "settings": {
+    "react": {
+      "version": "^15.6.1"
+    }
+  }
 }
