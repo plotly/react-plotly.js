@@ -103,23 +103,35 @@ export default function plotComponentFactory(Plotly) {
     componentWillUpdate(nextProps) {
       this.unmounting = false;
 
+      let doNothing = false;
+
+      // If revision is set and unchanged, do nothing.
       if (nextProps.revision !== void 0 && nextProps.revision === this.props.revision) {
-        // if revision is set and unchanged, do nothing
-        return;
+        doNothing = true;
       }
 
       const numPrevFrames =
         this.props.frames && this.props.frames.length ? this.props.frames.length : 0;
       const numNextFrames =
         nextProps.frames && nextProps.frames.length ? nextProps.frames.length : 0;
+
+      /*
+       * If none of data, layout, or config have changed identity and the
+       * number of elements in frames has not changed, do nothing. This
+       * prevents infinite loops when the component is re-rendered after
+       * onUpdate. frames *always* changes identity, so check its length
+       * insead.
+       */
       if (
         nextProps.layout === this.props.layout &&
         nextProps.data === this.props.data &&
         nextProps.config === this.props.config &&
         numNextFrames === numPrevFrames
       ) {
-        // prevent infinite loops when component is re-rendered after onUpdate
-        // frames *always* changes identity so fall back to check length only :(
+        doNothing = true;
+      }
+
+      if (doNothing) {
         return;
       }
 
