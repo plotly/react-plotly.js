@@ -48,7 +48,7 @@ class App extends React.Component {
             x: [1, 2, 3],
             y: [2, 6, 3],
             type: 'scatter',
-            mode: 'lines+points',
+            mode: 'lines+markers',
             marker: {color: 'red'},
           },
           {type: 'bar', x: [1, 2, 3], y: [2, 5, 3]},
