@@ -64,8 +64,20 @@ export default function plotComponentFactory(Plotly) {
     }
 
     componentDidMount() {
+      this.unmounting = false;
+
       this.p = this.p
         .then(() => {
+          if (!this.el) {
+            let error;
+            if (this.unmounting) {
+              error = new Error('Component is unmounting');
+              error.reason = 'unmounting';
+            } else {
+              error = new Error('Missing element reference');
+            }
+            throw error;
+          }
           return Plotly.newPlot(this.el, {
             data: this.props.data,
             layout: this.props.layout,
@@ -78,6 +90,9 @@ export default function plotComponentFactory(Plotly) {
         .then(this.attachUpdateEvents)
         .then(() => this.figureCallback(this.props.onInitialized))
         .catch(err => {
+          if (err.reason === 'unmounting') {
+            return;
+          }
           console.error('Error while plotting:', err); // eslint-disable-line no-console
           if (this.props.onError) {
             this.props.onError(err);
@@ -86,6 +101,8 @@ export default function plotComponentFactory(Plotly) {
     }
 
     componentWillUpdate(nextProps) {
+      this.unmounting = false;
+
       if (nextProps.revision !== void 0 && nextProps.revision === this.props.revision) {
         // if revision is set and unchanged, do nothing
         return;
@@ -108,6 +125,16 @@ export default function plotComponentFactory(Plotly) {
 
       this.p = this.p
         .then(() => {
+          if (!this.el) {
+            let error;
+            if (this.unmounting) {
+              error = new Error('Component is unmounting');
+              error.reason = 'unmounting';
+            } else {
+              error = new Error('Missing element reference');
+            }
+            throw error;
+          }
           return Plotly.react(this.el, {
             data: nextProps.data,
             layout: nextProps.layout,
@@ -119,6 +146,9 @@ export default function plotComponentFactory(Plotly) {
         .then(() => this.syncWindowResize(nextProps))
         .then(() => this.figureCallback(nextProps.onUpdate))
         .catch(err => {
+          if (err.reason === 'unmounting') {
+            return;
+          }
           console.error('Error while plotting:', err); // eslint-disable-line no-console
           if (this.props.onError) {
             this.props.onError(err);
@@ -127,6 +157,8 @@ export default function plotComponentFactory(Plotly) {
     }
 
     componentWillUnmount() {
+      this.unmounting = true;
+
       this.figureCallback(this.props.onPurge);
 
       if (this.resizeHandler && isBrowser) {
