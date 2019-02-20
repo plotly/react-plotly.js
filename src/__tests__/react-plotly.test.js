@@ -9,11 +9,7 @@ describe('<Plotly/>', () => {
   function createPlot(props) {
     return new Promise((resolve, reject) => {
       const plot = mount(
-        <PlotComponent
-          {...props}
-          onInitialized={() => resolve(plot)}
-          onError={reject}
-        />
+        <PlotComponent {...props} onInitialized={() => resolve(plot)} onError={reject} />
       );
     });
   }
@@ -24,9 +20,9 @@ describe('<Plotly/>', () => {
       Object.assign(
         defaultArgs || {
           data: [],
-          config: undefined,
-          layout: undefined,
-          frames: undefined,
+          config: undefined, // eslint-disable-line no-undefined
+          layout: undefined, // eslint-disable-line no-undefined
+          frames: undefined, // eslint-disable-line no-undefined
         },
         props || {}
       )
@@ -139,19 +135,11 @@ describe('<Plotly/>', () => {
         })
           .then(plot => {
             // Update with and without revision bumps:
+            /* eslint-disable no-magic-numbers */
             setTimeout(() => plot.setProps({layout: {title: 'test test'}}), 10);
-            setTimeout(
-              () => plot.setProps({revision: 1, layout: {title: 'test test'}}),
-              20
-            );
-            setTimeout(
-              () => plot.setProps({revision: 1, layout: {title: 'test test'}}),
-              30
-            );
-            setTimeout(
-              () => plot.setProps({revision: 2, layout: {title: 'test test'}}),
-              40
-            );
+            setTimeout(() => plot.setProps({revision: 1, layout: {title: 'test test'}}), 20);
+            setTimeout(() => plot.setProps({revision: 1, layout: {title: 'test test'}}), 30);
+            setTimeout(() => plot.setProps({revision: 2, layout: {title: 'test test'}}), 40);
           })
           .catch(err => done.fail(err));
       });

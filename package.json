@@ -13,8 +13,8 @@
     "url": "https://github.com/plotly/react-plotly.js/issues"
   },
   "scripts": {
-    "make:lib": "mkdirp lib && babel src --out-dir=lib --ignore __tests__/*.js,__mocks__/*.js --presets=es2015,react --source-maps --plugins babel-plugin-add-module-exports && mv lib/* ./ && rmdir lib",
-    "make:dist": "mkdirp dist && browserify src/factory.js -o ./dist/create-plotly-component.js -t [ babelify --presets [ es2015 react ] --plugins add-module-exports ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./dist/create-plotly-component.js --compress --mangle --output ./dist/create-plotly-component.min.js --source-map filename=dist/create-plotly-component.min.js.map",
+    "make:lib": "mkdirp lib && babel src --out-dir=lib --ignore __tests__/*.js,__mocks__/*.js --presets=env,react --source-maps --plugins babel-plugin-add-module-exports && mv lib/* ./ && rmdir lib",
+    "make:dist": "mkdirp dist && browserify src/factory.js -o ./dist/create-plotly-component.js -t [ babelify --presets [ env react ] --plugins add-module-exports ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./dist/create-plotly-component.js --compress --mangle --output ./dist/create-plotly-component.min.js --source-map filename=dist/create-plotly-component.min.js.map",
     "clean": "rimraf lib dist react-plotly.js react-plotly.js.map factory.js factory.js.map",
     "prepublishOnly": "npm run clean && npm run make:lib && npm run make:dist",
     "lint": "prettier --trailing-comma es5 --write \"src/**/*.js\" && eslint src",
@@ -33,9 +33,10 @@
   ],
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-eslint": "^10.0.1",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babelify": "^7.3.0",
     "brfs": "^1.4.3",
@@ -45,6 +46,8 @@
     "dependency-check": "^2.9.1",
     "enzyme": "^2.9.1",
     "eslint": "^4.8.0",
+    "eslint-config-prettier": "^4.0.0",
+    "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-react": "^7.4.0",
     "event-emitter": "^0.3.5",
     "jest": "^20.0.4",

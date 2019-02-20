@@ -78,28 +78,23 @@ export default function plotComponentFactory(Plotly) {
         .then(this.attachUpdateEvents)
         .then(() => this.figureCallback(this.props.onInitialized))
         .catch(err => {
-          console.error('Error while plotting:', err);
-          return this.props.onError && this.props.onError(err);
+          console.error('Error while plotting:', err); // eslint-disable-line no-console
+          if (this.props.onError) {
+            this.props.onError(err);
+          }
         });
     }
 
     componentWillUpdate(nextProps) {
-      if (
-        nextProps.revision !== void 0 &&
-        nextProps.revision === this.props.revision
-      ) {
+      if (nextProps.revision !== void 0 && nextProps.revision === this.props.revision) {
         // if revision is set and unchanged, do nothing
         return;
       }
 
       const numPrevFrames =
-        this.props.frames && this.props.frames.length
-          ? this.props.frames.length
-          : 0;
+        this.props.frames && this.props.frames.length ? this.props.frames.length : 0;
       const numNextFrames =
-        nextProps.frames && nextProps.frames.length
-          ? nextProps.frames.length
-          : 0;
+        nextProps.frames && nextProps.frames.length ? nextProps.frames.length : 0;
       if (
         nextProps.layout === this.props.layout &&
         nextProps.data === this.props.data &&
@@ -124,8 +119,10 @@ export default function plotComponentFactory(Plotly) {
         .then(() => this.syncWindowResize(nextProps))
         .then(() => this.figureCallback(nextProps.onUpdate))
         .catch(err => {
-          console.error('Error while plotting:', err);
-          this.props.onError && this.props.onError(err);
+          console.error('Error while plotting:', err); // eslint-disable-line no-console
+          if (this.props.onError) {
+            this.props.onError(err);
+          }
         });
     }
 
@@ -143,7 +140,9 @@ export default function plotComponentFactory(Plotly) {
     }
 
     attachUpdateEvents() {
-      if (!this.el || !this.el.removeListener) return;
+      if (!this.el || !this.el.removeListener) {
+        return;
+      }
 
       for (let i = 0; i < updateEvents.length; i++) {
         this.el.on(updateEvents[i], this.handleUpdate);
@@ -151,7 +150,9 @@ export default function plotComponentFactory(Plotly) {
     }
 
     removeUpdateEvents() {
-      if (!this.el || !this.el.removeListener) return;
+      if (!this.el || !this.el.removeListener) {
+        return;
+      }
 
       for (let i = 0; i < updateEvents.length; i++) {
         this.el.removeListener(updateEvents[i], this.handleUpdate);
@@ -165,17 +166,17 @@ export default function plotComponentFactory(Plotly) {
     figureCallback(callback) {
       if (typeof callback === 'function') {
         const {data, layout} = this.el;
-        const frames = this.el._transitionData
-          ? this.el._transitionData._frames
-          : null;
-        const figure = {data, layout, frames}; // for extra clarity!
+        const frames = this.el._transitionData ? this.el._transitionData._frames : null;
+        const figure = {data, layout, frames};
         callback(figure, this.el);
       }
     }
 
     syncWindowResize(propsIn, invoke) {
       const props = propsIn || this.props;
-      if (!isBrowser) return;
+      if (!isBrowser) {
+        return;
+      }
 
       if (props.useResizeHandler && !this.resizeHandler) {
         this.resizeHandler = () => {
@@ -207,20 +208,14 @@ export default function plotComponentFactory(Plotly) {
       for (let i = 0; i < eventNames.length; i++) {
         const eventName = eventNames[i];
         const prop = props['on' + eventName];
-        const hasHandler = !!this.handlers[eventName];
+        const hasHandler = Boolean(this.handlers[eventName]);
 
         if (prop && !hasHandler) {
           this.handlers[eventName] = prop;
-          this.el.on(
-            'plotly_' + eventName.toLowerCase(),
-            this.handlers[eventName]
-          );
+          this.el.on('plotly_' + eventName.toLowerCase(), this.handlers[eventName]);
         } else if (!prop && hasHandler) {
           // Needs to be removed:
-          this.el.removeListener(
-            'plotly_' + eventName.toLowerCase(),
-            this.handlers[eventName]
-          );
+          this.el.removeListener('plotly_' + eventName.toLowerCase(), this.handlers[eventName]);
           delete this.handlers[eventName];
         }
       }
