@@ -1,8 +1,15 @@
 {
   "extends": [
     "eslint:recommended",
+    "plugin:react/recommended",
     "prettier"
   ],
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    }
+  },
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 6,
@@ -33,16 +40,6 @@
   "plugins": [
     "react",
     "import"
-  ],
-  "overrides": [
-    {
-      "files": [
-        "**/*.percy.{js,jsx}"
-      ],
-      "env": {
-        "react-percy/globals": true
-      }
-    }
   ],
   "rules": {
     "accessor-pairs": [

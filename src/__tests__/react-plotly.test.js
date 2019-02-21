@@ -1,10 +1,12 @@
 import React from 'react';
-import {mount} from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import {mount, configure} from 'enzyme';
 import createComponent from '../factory';
 import once from 'onetime';
 
 describe('<Plotly/>', () => {
   let Plotly, PlotComponent;
+  configure({adapter: new Adapter()});
 
   function createPlot(props) {
     return new Promise((resolve, reject) => {
