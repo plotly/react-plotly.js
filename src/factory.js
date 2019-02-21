@@ -100,7 +100,7 @@ export default function plotComponentFactory(Plotly) {
         });
     }
 
-    componentWillUpdate(nextProps) {
+    UNSAFE_componentWillUpdate(nextProps) {
       this.unmounting = false;
 
       if (nextProps.revision !== void 0 && nextProps.revision === this.props.revision) {
