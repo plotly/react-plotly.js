@@ -1,6 +1,6 @@
 # react-plotly.js
 
-![plotly-react-logo](https://static1.squarespace.com/static/5a5adfdea9db09d594a841f3/t/5a5af2c5e2c48307ed4a21b6/1515975253370/)
+![plotly-react-logo](https://images.plot.ly/plotly-documentation/thumbnail/react.png)
 
 > A [plotly.js](https://github.com/plotly/plotly.js) React component from
 > [Plotly](https://plot.ly/). The basis of Plotly's

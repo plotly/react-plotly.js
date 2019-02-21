@@ -12,7 +12,7 @@ export default {
   }),
   newPlot: jest.fn(gd => {
     state.gd = gd;
-    EventEmitter(state.gd);
+    EventEmitter(state.gd); // eslint-disable-line new-cap
 
     setTimeout(() => {
       state.gd.emit('plotly_afterplot');
@@ -20,7 +20,7 @@ export default {
   }),
   react: jest.fn(gd => {
     state.gd = gd;
-    EventEmitter(state.gd);
+    EventEmitter(state.gd); // eslint-disable-line new-cap
 
     setTimeout(() => {
       state.gd.emit('plotly_afterplot');
@@ -40,6 +40,6 @@ export default {
   }),
   update: jest.fn(),
   purge: jest.fn(() => {
-    state.gd = nll;
+    state.gd = null;
   }),
 };
