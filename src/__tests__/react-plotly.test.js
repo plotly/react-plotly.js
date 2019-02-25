@@ -44,10 +44,10 @@ describe('<Plotly/>', () => {
     });
 
     describe('initialization', function() {
-      test('calls Plotly.newPlot on instantiation', done => {
+      test('calls Plotly.react on instantiation', done => {
         createPlot({})
           .then(() => {
-            expect(Plotly.newPlot).toHaveBeenCalled();
+            expect(Plotly.react).toHaveBeenCalled();
           })
           .catch(err => {
             done.fail(err);
@@ -61,7 +61,7 @@ describe('<Plotly/>', () => {
           layout: {title: 'foo'},
         })
           .then(() => {
-            expectPlotlyAPICall(Plotly.newPlot, {
+            expectPlotlyAPICall(Plotly.react, {
               data: [{x: [1, 2, 3]}],
               layout: {title: 'foo'},
             });
@@ -75,7 +75,7 @@ describe('<Plotly/>', () => {
           layout: {width: 320, height: 240},
         })
           .then(() => {
-            expectPlotlyAPICall(Plotly.newPlot, {
+            expectPlotlyAPICall(Plotly.react, {
               layout: {width: 320, height: 240},
             });
           })
@@ -98,6 +98,24 @@ describe('<Plotly/>', () => {
         })
           .then(plot => {
             plot.setProps({data: [{x: [1, 2, 3]}]});
+          })
+          .catch(err => done.fail(err));
+      });
+
+      test('updates data when revision is defined but not changed', done => {
+        createPlot({
+          revision: 1,
+          layout: {width: 123, height: 456},
+          onUpdate: once(() => {
+            expectPlotlyAPICall(Plotly.react, {
+              data: [{x: [1, 2, 3]}],
+              layout: {width: 123, height: 456},
+            });
+            done();
+          }),
+        })
+          .then(plot => {
+            plot.setProps({revision: 1, data: [{x: [1, 2, 3]}]});
           })
           .catch(err => done.fail(err));
       });
@@ -129,7 +147,7 @@ describe('<Plotly/>', () => {
             // we've checked the third and fourth calls:
             if (callCnt === 2) {
               setTimeout(() => {
-                expect(Plotly.newPlot).not.toHaveBeenCalledTimes(2);
+                expect(Plotly.react).not.toHaveBeenCalledTimes(2);
                 done();
               }, 100);
             }

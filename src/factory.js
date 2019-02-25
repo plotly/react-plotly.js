@@ -61,67 +61,10 @@ export default function plotComponentFactory(Plotly) {
       this.getRef = this.getRef.bind(this);
       this.handleUpdate = this.handleUpdate.bind(this);
       this.figureCallback = this.figureCallback.bind(this);
+      this.updatePlotly = this.updatePlotly.bind(this);
     }
 
-    componentDidMount() {
-      this.unmounting = false;
-
-      this.p = this.p
-        .then(() => {
-          if (!this.el) {
-            let error;
-            if (this.unmounting) {
-              error = new Error('Component is unmounting');
-              error.reason = 'unmounting';
-            } else {
-              error = new Error('Missing element reference');
-            }
-            throw error;
-          }
-          return Plotly.newPlot(this.el, {
-            data: this.props.data,
-            layout: this.props.layout,
-            config: this.props.config,
-            frames: this.props.frames,
-          });
-        })
-        .then(() => this.syncWindowResize(null, true))
-        .then(this.syncEventHandlers)
-        .then(this.attachUpdateEvents)
-        .then(() => this.figureCallback(this.props.onInitialized))
-        .catch(err => {
-          if (err.reason === 'unmounting') {
-            return;
-          }
-          console.error('Error while plotting:', err); // eslint-disable-line no-console
-          if (this.props.onError) {
-            this.props.onError(err);
-          }
-        });
-    }
-
-    UNSAFE_componentWillUpdate(nextProps) {
-      this.unmounting = false;
-
-      // frames *always* changes identity so fall back to check length only :(
-      const numPrevFrames =
-        this.props.frames && this.props.frames.length ? this.props.frames.length : 0;
-      const numNextFrames =
-        nextProps.frames && nextProps.frames.length ? nextProps.frames.length : 0;
-
-      const figureChanged = !(
-        nextProps.layout === this.props.layout &&
-        nextProps.data === this.props.data &&
-        nextProps.config === this.props.config &&
-        numNextFrames === numPrevFrames
-      );
-      const revisionDefined = nextProps.revision !== void 0;
-      const revisionChanged = nextProps.revision !== this.props.revision;
-
-      if (!figureChanged && (!revisionDefined || (revisionDefined && !revisionChanged))) {
-        return;
-      }
-
+    updatePlotly(shouldInvokeResizeHandler, figureCallbackFunction, shouldAttachUpdateEvents) {
       this.p = this.p
         .then(() => {
           if (!this.el) {
@@ -135,15 +78,16 @@ export default function plotComponentFactory(Plotly) {
             throw error;
           }
           return Plotly.react(this.el, {
-            data: nextProps.data,
-            layout: nextProps.layout,
-            config: nextProps.config,
-            frames: nextProps.frames,
+            data: this.props.data,
+            layout: this.props.layout,
+            config: this.props.config,
+            frames: this.props.frames,
           });
         })
-        .then(() => this.syncEventHandlers(nextProps))
-        .then(() => this.syncWindowResize(nextProps))
-        .then(() => this.figureCallback(nextProps.onUpdate))
+        .then(() => this.syncWindowResize(shouldInvokeResizeHandler))
+        .then(this.syncEventHandlers)
+        .then(() => this.figureCallback(figureCallbackFunction))
+        .then(shouldAttachUpdateEvents ? this.attachUpdateEvents : () => {})
         .catch(err => {
           if (err.reason === 'unmounting') {
             return;
@@ -153,6 +97,37 @@ export default function plotComponentFactory(Plotly) {
             this.props.onError(err);
           }
         });
+    }
+
+    componentDidMount() {
+      this.unmounting = false;
+
+      this.updatePlotly(true, this.props.onInitialized, true);
+    }
+
+    componentDidUpdate(prevProps) {
+      this.unmounting = false;
+
+      // frames *always* changes identity so fall back to check length only :(
+      const numPrevFrames =
+        prevProps.frames && prevProps.frames.length ? prevProps.frames.length : 0;
+      const numNextFrames =
+        this.props.frames && this.props.frames.length ? this.props.frames.length : 0;
+
+      const figureChanged = !(
+        prevProps.layout === this.props.layout &&
+        prevProps.data === this.props.data &&
+        prevProps.config === this.props.config &&
+        numNextFrames === numPrevFrames
+      );
+      const revisionDefined = prevProps.revision !== void 0;
+      const revisionChanged = prevProps.revision !== this.props.revision;
+
+      if (!figureChanged && (!revisionDefined || (revisionDefined && !revisionChanged))) {
+        return;
+      }
+
+      this.updatePlotly(false, this.props.onUpdate, false);
     }
 
     componentWillUnmount() {
@@ -175,9 +150,9 @@ export default function plotComponentFactory(Plotly) {
         return;
       }
 
-      for (let i = 0; i < updateEvents.length; i++) {
-        this.el.on(updateEvents[i], this.handleUpdate);
-      }
+      updateEvents.forEach(updateEvent => {
+        this.el.on(updateEvent, this.handleUpdate);
+      });
     }
 
     removeUpdateEvents() {
@@ -185,9 +160,9 @@ export default function plotComponentFactory(Plotly) {
         return;
       }
 
-      for (let i = 0; i < updateEvents.length; i++) {
-        this.el.removeListener(updateEvents[i], this.handleUpdate);
-      }
+      updateEvents.forEach(updateEvent => {
+        this.el.removeListener(updateEvent, this.handleUpdate);
+      });
     }
 
     handleUpdate() {
@@ -203,21 +178,18 @@ export default function plotComponentFactory(Plotly) {
       }
     }
 
-    syncWindowResize(propsIn, invoke) {
-      const props = propsIn || this.props;
+    syncWindowResize(invoke) {
       if (!isBrowser) {
         return;
       }
 
-      if (props.useResizeHandler && !this.resizeHandler) {
-        this.resizeHandler = () => {
-          return Plotly.Plots.resize(this.el);
-        };
+      if (this.props.useResizeHandler && !this.resizeHandler) {
+        this.resizeHandler = () => Plotly.Plots.resize(this.el);
         window.addEventListener('resize', this.resizeHandler);
         if (invoke) {
           this.resizeHandler();
         }
-      } else if (!props.useResizeHandler && this.resizeHandler) {
+      } else if (!this.props.useResizeHandler && this.resizeHandler) {
         window.removeEventListener('resize', this.resizeHandler);
         this.resizeHandler = null;
       }
@@ -232,13 +204,9 @@ export default function plotComponentFactory(Plotly) {
     }
 
     // Attach and remove event handlers as they're added or removed from props:
-    syncEventHandlers(propsIn) {
-      // Allow use of nextProps if passed explicitly:
-      const props = propsIn || this.props;
-
-      for (let i = 0; i < eventNames.length; i++) {
-        const eventName = eventNames[i];
-        const prop = props['on' + eventName];
+    syncEventHandlers() {
+      eventNames.forEach(eventName => {
+        const prop = this.props['on' + eventName];
         const hasHandler = Boolean(this.handlers[eventName]);
 
         if (prop && !hasHandler) {
@@ -249,7 +217,7 @@ export default function plotComponentFactory(Plotly) {
           this.el.removeListener('plotly_' + eventName.toLowerCase(), this.handlers[eventName]);
           delete this.handlers[eventName];
         }
-      }
+      });
     }
 
     render() {
@@ -281,9 +249,9 @@ export default function plotComponentFactory(Plotly) {
     divId: PropTypes.string,
   };
 
-  for (let i = 0; i < eventNames.length; i++) {
-    PlotlyComponent.propTypes['on' + eventNames[i]] = PropTypes.func;
-  }
+  eventNames.forEach(eventName => {
+    PlotlyComponent.propTypes['on' + eventName] = PropTypes.func;
+  });
 
   PlotlyComponent.defaultProps = {
     debug: false,
