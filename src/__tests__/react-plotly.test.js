@@ -102,6 +102,24 @@ describe('<Plotly/>', () => {
           .catch(err => done.fail(err));
       });
 
+      test('updates data when revision is defined but not changed', done => {
+        createPlot({
+          revision: 1,
+          layout: {width: 123, height: 456},
+          onUpdate: once(() => {
+            expectPlotlyAPICall(Plotly.react, {
+              data: [{x: [1, 2, 3]}],
+              layout: {width: 123, height: 456},
+            });
+            done();
+          }),
+        })
+          .then(plot => {
+            plot.setProps({revision: 1, data: [{x: [1, 2, 3]}]});
+          })
+          .catch(err => done.fail(err));
+      });
+
       test('sets the title', done => {
         createPlot({
           onUpdate: once(() => {
