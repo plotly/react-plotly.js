@@ -214,10 +214,10 @@ export default function plotComponentFactory(Plotly) {
           this.addEventHandler(eventName, prop);
         } else if (!prop && hasHandler) {
           // Needs to be removed:
-          this.removeHandler(eventName);
+          this.removeEventHandler(eventName);
         } else if (prop && hasHandler && prop !== handler) {
           // replace the handler
-          this.removeHandler(eventName);
+          this.removeEventHandler(eventName);
           this.addEventHandler(eventName, prop);
         }
       });
