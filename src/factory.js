@@ -207,15 +207,23 @@ export default function plotComponentFactory(Plotly) {
     syncEventHandlers() {
       eventNames.forEach(eventName => {
         const prop = this.props['on' + eventName];
-        const hasHandler = Boolean(this.handlers[eventName]);
+        const prevHandler = this.handlers[eventName];
+        const hasHandler = Boolean(prevHandler);
 
-        if (prop && !hasHandler) {
+        const registerListener = () => {
           this.handlers[eventName] = prop;
           this.el.on('plotly_' + eventName.toLowerCase(), this.handlers[eventName]);
+        }
+
+        if (prop && !hasHandler) {
+          registerListener();
         } else if (!prop && hasHandler) {
           // Needs to be removed:
           this.el.removeListener('plotly_' + eventName.toLowerCase(), this.handlers[eventName]);
           delete this.handlers[eventName];
+        } else if (prop && hasHandler && prop !== prevHandler) {
+          this.el.removeListener('plotly_' + eventName.toLowerCase(), this.handlers[eventName]);
+          registerListener();
         }
       });
     }
