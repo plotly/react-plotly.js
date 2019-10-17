@@ -164,5 +164,20 @@ describe('<Plotly/>', () => {
           .catch(err => done.fail(err));
       });
     });
+
+    describe('manging event handlers', () => {
+      test('should add an event handler when one does not already exist', (done) => {
+        const onRelayout = () => {};
+
+        createPlot({onRelayout}).then((plot) => {
+          const { handlers } = plot.instance();
+
+          expect(plot.prop('onRelayout')).toBe(onRelayout);
+          expect(handlers.Relayout).toBe(onRelayout);
+
+          done();
+        });
+      });
+    });
   });
 });
