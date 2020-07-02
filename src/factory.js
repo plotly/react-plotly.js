@@ -65,7 +65,7 @@ export default function plotComponentFactory(Plotly) {
     }
 
     updatePlotly(shouldInvokeResizeHandler, figureCallbackFunction, shouldAttachUpdateEvents) {
-      this.p = this.p
+      this.p
         .then(() => {
           if (!this.el) {
             let error;
