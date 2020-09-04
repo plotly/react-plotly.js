@@ -22,6 +22,7 @@ const eventNames = [
   'LegendClick',
   'LegendDoubleClick',
   'Relayout',
+  'Relayouting',
   'Restyle',
   'Redraw',
   'Selected',
@@ -38,6 +39,7 @@ const updateEvents = [
   'plotly_restyle',
   'plotly_redraw',
   'plotly_relayout',
+  'plotly_relayouting',
   'plotly_doubleclick',
   'plotly_animated',
 ];
