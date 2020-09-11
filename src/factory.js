@@ -67,16 +67,13 @@ export default function plotComponentFactory(Plotly) {
     updatePlotly(shouldInvokeResizeHandler, figureCallbackFunction, shouldAttachUpdateEvents) {
       this.p = this.p
         .then(() => {
-          if (!this.el) {
-            let error;
-            if (this.unmounting) {
-              error = new Error('Component is unmounting');
-              error.reason = 'unmounting';
-            } else {
-              error = new Error('Missing element reference');
-            }
-            throw error;
+          if (this.unmounting) {
+            return;
           }
+          if (!this.el) {
+            throw new Error('Missing element reference');
+          }
+          // eslint-disable-next-line consistent-return
           return Plotly.react(this.el, {
             data: this.props.data,
             layout: this.props.layout,
@@ -84,15 +81,18 @@ export default function plotComponentFactory(Plotly) {
             frames: this.props.frames,
           });
         })
-        .then(() => this.syncWindowResize(shouldInvokeResizeHandler))
-        .then(this.syncEventHandlers)
-        .then(() => this.figureCallback(figureCallbackFunction))
-        .then(shouldAttachUpdateEvents ? this.attachUpdateEvents : () => {})
-        .catch(err => {
-          if (err.reason === 'unmounting') {
+        .then(() => {
+          if (this.unmounting) {
             return;
           }
-          console.error('Error while plotting:', err); // eslint-disable-line no-console
+          this.syncWindowResize(shouldInvokeResizeHandler);
+          this.syncEventHandlers();
+          this.figureCallback(figureCallbackFunction);
+          if (shouldAttachUpdateEvents) {
+            this.attachUpdateEvents();
+          }
+        })
+        .catch(err => {
           if (this.props.onError) {
             this.props.onError(err);
           }
