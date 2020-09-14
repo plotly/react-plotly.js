@@ -1,6 +1,6 @@
 {
   "name": "react-plotly.js",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "license": "MIT",
   "description": "A plotly.js react component from Plotly",
   "author": "Plotly, Inc.",
@@ -21,7 +21,7 @@
     "test": "npm run lint && npm run deps && jest",
     "watch-test": "jest --watch",
     "watch": "nodemon --exec \"npm run make:lib\" -w src",
-    "deps": "./node_modules/.bin/dependency-check package.json --entry src/react-plotly.js --missing"
+    "deps": "./node_modules/.bin/dependency-check src/react-plotly.js --missing"
   },
   "keywords": [
     "graphing",
@@ -31,39 +31,42 @@
     "plotly",
     "react"
   ],
+  "dependencies": {
+    "prop-types": "^15.7.2"
+  },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.3",
-    "@babel/plugin-proposal-class-properties": "^7.3.3",
-    "@babel/preset-env": "^7.3.1",
-    "@babel/preset-react": "^7.0.0",
-    "babel-eslint": "^10.0.1",
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
+    "babel-eslint": "^10.1.0",
     "babelify": "^10.0.0",
     "brfs": "^2.0.2",
-    "browserify": "^16.2.3",
+    "browserify": "^16.5.2",
     "browserify-global-shim": "^1.0.3",
     "cash-mv": "^0.2.0",
-    "dependency-check": "^3.3.0",
-    "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.9.1",
-    "eslint": "^5.14.1",
-    "eslint-config-prettier": "^4.0.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-react": "^7.12.4",
+    "dependency-check": "^4.1.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.4",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-react": "^7.20.6",
     "event-emitter": "^0.3.5",
-    "jest": "^24.1.0",
-    "mkdirp": "^0.5.1",
-    "nodemon": "^1.18.10",
-    "onetime": "^3.0.0",
+    "jest": "^26.4.2",
+    "mkdirp": "^1.0.4",
+    "nodemon": "^2.0.4",
+    "onetime": "^5.1.2",
     "plotly.js": "^1.35.0",
-    "prettier": "^1.16.4",
-    "react": "^16.8.2",
+    "prettier": "^2.1.1",
+    "react": "^16.13.1",
     "react-addons-test-utils": "^15.6.0",
-    "react-dom": "^16.8.2",
-    "react-test-renderer": "^16.8.2",
-    "rimraf": "^2.6.2",
-    "semver": "^5.4.1",
-    "uglify-js": "^3.0.26"
+    "react-dom": "^16.13.1",
+    "react-test-renderer": "^16.13.1",
+    "rimraf": "^3.0.2",
+    "semver": "^7.3.2",
+    "uglify-js": "^3.10.4"
   },
   "peerDependencies": {
     "plotly.js": ">1.34.0",
@@ -71,8 +74,5 @@
   },
   "browserify-global-shim": {
     "react": "React"
-  },
-  "dependencies": {
-    "prop-types": "^15.7.2"
   }
 }

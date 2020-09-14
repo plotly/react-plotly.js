@@ -3,14 +3,14 @@ version: 2.0
 jobs:
   build:
     docker:
-      - image: circleci/node:10.9.0
+      - image: circleci/node:12.18.3
     working_directory: ~/react-plotly.js
     steps:
       - checkout
       - restore_cache:
           keys:
-            - v{{ .Environment.CIRCLE_CACHE_VERSION }}-deps-{{ .Branch }}-{{ checksum "package-lock.json" }}
-            - v{{ .Environment.CIRCLE_CACHE_VERSION }}-deps-master-{{ checksum "package-lock.json" }}
+            - v{{ .Environment.CIRCLE_CACHE_VERSION }}-deps-{{ .Branch }}-{{ checksum "package.json" }}
+            - v{{ .Environment.CIRCLE_CACHE_VERSION }}-deps-master-{{ checksum "package.json" }}
       - run:
           name: Install dependencies
           command: |
@@ -32,7 +32,7 @@ jobs:
 
   test:
     docker:
-      - image: circleci/node:10.9.0
+      - image: circleci/node:12.18.3
     working_directory: ~/react-plotly.js
     steps:
       - checkout

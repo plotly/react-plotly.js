@@ -167,6 +167,7 @@ Event handlers for specific [`plotly.js` events](https://plot.ly/javascript/plot
 | `onLegendClick`           | `Function` | `plotly_legendclick`           |
 | `onLegendDoubleClick`     | `Function` | `plotly_legenddoubleclick`     |
 | `onRelayout`              | `Function` | `plotly_relayout`              |
+| `onRelayouting`           | `Function` | `plotly_relayouting`           |
 | `onRestyle`               | `Function` | `plotly_restyle`               |
 | `onRedraw`                | `Function` | `plotly_redraw`                |
 | `onSelected`              | `Function` | `plotly_selected`              |
@@ -243,4 +244,4 @@ $ npm run test
 
 ## License
 
-&copy; 2017 Plotly, Inc. MIT License.
+&copy; 2017-2020 Plotly, Inc. MIT License.
