@@ -4,21 +4,13 @@ const state = {};
 const ASYNC_DELAY = 1;
 
 export default {
-  plot: jest.fn(gd => {
+  plot: jest.fn((gd) => {
     state.gd = gd;
     setTimeout(() => {
       state.gd.emit('plotly_afterplot');
     }, ASYNC_DELAY);
   }),
-  newPlot: jest.fn(gd => {
-    state.gd = gd;
-    EventEmitter(state.gd); // eslint-disable-line new-cap
-
-    setTimeout(() => {
-      state.gd.emit('plotly_afterplot');
-    }, ASYNC_DELAY);
-  }),
-  react: jest.fn(gd => {
+  newPlot: jest.fn((gd) => {
     state.gd = gd;
     EventEmitter(state.gd); // eslint-disable-line new-cap
 
@@ -26,13 +18,21 @@ export default {
       state.gd.emit('plotly_afterplot');
     }, ASYNC_DELAY);
   }),
-  relayout: jest.fn(gd => {
+  react: jest.fn((gd) => {
+    state.gd = gd;
+    EventEmitter(state.gd); // eslint-disable-line new-cap
+
+    setTimeout(() => {
+      state.gd.emit('plotly_afterplot');
+    }, ASYNC_DELAY);
+  }),
+  relayout: jest.fn((gd) => {
     state.gd = gd;
     setTimeout(() => {
       state.gd.emit('plotly_relayout');
     }, ASYNC_DELAY);
   }),
-  restyle: jest.fn(gd => {
+  restyle: jest.fn((gd) => {
     state.gd = gd;
     setTimeout(() => {
       state.gd.emit('plotly_restyle');

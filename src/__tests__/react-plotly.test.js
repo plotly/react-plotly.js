@@ -33,7 +33,7 @@ describe('<Plotly/>', () => {
 
   describe('with mocked plotly.js', () => {
     beforeEach(() => {
-      Plotly = require.requireMock('../__mocks__/plotly.js').default;
+      Plotly = jest.requireMock('../__mocks__/plotly.js').default;
       PlotComponent = createComponent(Plotly);
 
       // Override the parent element size:
@@ -43,19 +43,19 @@ describe('<Plotly/>', () => {
       });
     });
 
-    describe('initialization', function() {
-      test('calls Plotly.react on instantiation', done => {
+    describe('initialization', function () {
+      test('calls Plotly.react on instantiation', (done) => {
         createPlot({})
           .then(() => {
             expect(Plotly.react).toHaveBeenCalled();
           })
-          .catch(err => {
+          .catch((err) => {
             done.fail(err);
           })
           .then(done);
       });
 
-      test('passes data', done => {
+      test('passes data', (done) => {
         createPlot({
           data: [{x: [1, 2, 3]}],
           layout: {title: 'foo'},
@@ -66,11 +66,11 @@ describe('<Plotly/>', () => {
               layout: {title: 'foo'},
             });
           })
-          .catch(err => done.fail(err))
+          .catch((err) => done.fail(err))
           .then(done);
       });
 
-      test('accepts width and height', done => {
+      test('accepts width and height', (done) => {
         createPlot({
           layout: {width: 320, height: 240},
         })
@@ -79,13 +79,13 @@ describe('<Plotly/>', () => {
               layout: {width: 320, height: 240},
             });
           })
-          .catch(err => done.fail(err))
+          .catch((err) => done.fail(err))
           .then(done);
       });
     });
 
     describe('plot updates', () => {
-      test('updates data', done => {
+      test('updates data', (done) => {
         createPlot({
           layout: {width: 123, height: 456},
           onUpdate: once(() => {
@@ -96,13 +96,13 @@ describe('<Plotly/>', () => {
             done();
           }),
         })
-          .then(plot => {
+          .then((plot) => {
             plot.setProps({data: [{x: [1, 2, 3]}]});
           })
-          .catch(err => done.fail(err));
+          .catch((err) => done.fail(err));
       });
 
-      test('updates data when revision is defined but not changed', done => {
+      test('updates data when revision is defined but not changed', (done) => {
         createPlot({
           revision: 1,
           layout: {width: 123, height: 456},
@@ -114,13 +114,13 @@ describe('<Plotly/>', () => {
             done();
           }),
         })
-          .then(plot => {
+          .then((plot) => {
             plot.setProps({revision: 1, data: [{x: [1, 2, 3]}]});
           })
-          .catch(err => done.fail(err));
+          .catch((err) => done.fail(err));
       });
 
-      test('sets the title', done => {
+      test('sets the title', (done) => {
         createPlot({
           onUpdate: once(() => {
             expectPlotlyAPICall(Plotly.react, {
@@ -129,13 +129,13 @@ describe('<Plotly/>', () => {
             done();
           }),
         })
-          .then(plot => {
+          .then((plot) => {
             plot.setProps({layout: {title: 'test test'}});
           })
-          .catch(err => done.fail(err));
+          .catch((err) => done.fail(err));
       });
 
-      test('revision counter', done => {
+      test('revision counter', (done) => {
         var callCnt = 0;
         createPlot({
           revision: 0,
@@ -153,7 +153,7 @@ describe('<Plotly/>', () => {
             }
           },
         })
-          .then(plot => {
+          .then((plot) => {
             // Update with and without revision bumps:
             /* eslint-disable no-magic-numbers */
             setTimeout(() => plot.setProps({layout: {title: 'test test'}}), 10);
@@ -161,7 +161,7 @@ describe('<Plotly/>', () => {
             setTimeout(() => plot.setProps({revision: 1, layout: {title: 'test test'}}), 30);
             setTimeout(() => plot.setProps({revision: 2, layout: {title: 'test test'}}), 40);
           })
-          .catch(err => done.fail(err));
+          .catch((err) => done.fail(err));
       });
     });
 
@@ -170,7 +170,7 @@ describe('<Plotly/>', () => {
         const onRelayout = () => {};
 
         createPlot({onRelayout}).then((plot) => {
-          const { handlers } = plot.instance();
+          const {handlers} = plot.instance();
 
           expect(plot.prop('onRelayout')).toBe(onRelayout);
           expect(handlers.Relayout).toBe(onRelayout);
