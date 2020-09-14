@@ -30,6 +30,7 @@ const eventNames = [
   'SliderChange',
   'SliderEnd',
   'SliderStart',
+  'SunburstClick',
   'Transitioning',
   'TransitionInterrupted',
   'Unhover',

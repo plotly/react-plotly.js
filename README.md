@@ -174,6 +174,7 @@ Event handlers for specific [`plotly.js` events](https://plot.ly/javascript/plot
 | `onSliderChange`          | `Function` | `plotly_sliderchange`          |
 | `onSliderEnd`             | `Function` | `plotly_sliderend`             |
 | `onSliderStart`           | `Function` | `plotly_sliderstart`           |
+| `onSunburstClick`         | `Function` | `plotly_sunburstclick`         |
 | `onTransitioning`         | `Function` | `plotly_transitioning`         |
 | `onTransitionInterrupted` | `Function` | `plotly_transitioninterrupted` |
 | `onUnhover`               | `Function` | `plotly_unhover`               |
