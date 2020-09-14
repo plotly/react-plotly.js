@@ -9,8 +9,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v{{ .Environment.CIRCLE_CACHE_VERSION }}-deps-{{ .Branch }}-{{ checksum "package-lock.json" }}
-            - v{{ .Environment.CIRCLE_CACHE_VERSION }}-deps-master-{{ checksum "package-lock.json" }}
+            - v{{ .Environment.CIRCLE_CACHE_VERSION }}-deps-{{ .Branch }}-{{ checksum "package.json" }}
+            - v{{ .Environment.CIRCLE_CACHE_VERSION }}-deps-master-{{ checksum "package.json" }}
       - run:
           name: Install dependencies
           command: |
