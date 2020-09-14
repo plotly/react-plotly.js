@@ -43,6 +43,7 @@ const updateEvents = [
   'plotly_relayouting',
   'plotly_doubleclick',
   'plotly_animated',
+  'plotly_sunburstclick',
 ];
 
 // Check if a window is available since SSR (server-side rendering)
