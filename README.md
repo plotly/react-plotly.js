@@ -14,16 +14,16 @@
 
 ## Contents
 
-* [Installation](#installation)
-* [Quick start](#quick-start)
-* [State management](#state-management)
-* [Refreshing the Plot](#refreshing-the-plot)
-* [API](#api)
-  * [Basic props](#basic-props)
-  * [Event handler props](#event-handler-props)
-* [Customizing the `plotly.js` bundle](#customizing-the-plotlyjs-bundle)
-* [Loading from a `<script>` tag](#loading-from-a-script-tag)
-* [Development](#development)
+- [Installation](#installation)
+- [Quick start](#quick-start)
+- [State management](#state-management)
+- [Refreshing the Plot](#refreshing-the-plot)
+- [API](#api)
+  - [Basic props](#basic-props)
+  - [Event handler props](#event-handler-props)
+- [Customizing the `plotly.js` bundle](#customizing-the-plotlyjs-bundle)
+- [Loading from a `<script>` tag](#loading-from-a-script-tag)
+- [Development](#development)
 
 ## Installation
 
@@ -68,8 +68,8 @@ You should see a plot like this:
 
 For a full description of Plotly chart types and attributes see the following resources:
 
-* [Plotly JavaScript API documentation](https://plot.ly/javascript/)
-* [Full plotly.js attribute listing](https://plot.ly/javascript/reference/)
+- [Plotly JavaScript API documentation](https://plot.ly/javascript/)
+- [Full plotly.js attribute listing](https://plot.ly/javascript/reference/)
 
 ## State management
 
@@ -79,23 +79,23 @@ Here is a simple example of how to capture and store state in a parent object:
 
 ```javascript
 class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { data: [], layout: {}, frames: [], config: {} };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {data: [], layout: {}, frames: [], config: {}};
+  }
 
-    render() {
-        return (
-            <Plot
-                data={this.state.data}
-                layout={this.state.layout}
-                frames={this.state.frames}
-                config={this.state.config}
-                onInitialized={(figure) => this.setState(figure)}
-                onUpdate={(figure) => this.setState(figure)}
-            />
-        );
-    }
+  render() {
+    return (
+      <Plot
+        data={this.state.data}
+        layout={this.state.layout}
+        frames={this.state.frames}
+        config={this.state.config}
+        onInitialized={(figure) => this.setState(figure)}
+        onUpdate={(figure) => this.setState(figure)}
+      />
+    );
+  }
 }
 ```
 
@@ -103,9 +103,9 @@ class App extends React.Component {
 
 This component will refresh the plot via [`Plotly.react`](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyreact) if any of the following are true:
 
-* The `revision` prop is defined and has changed, OR;
-* One of `data`, `layout` or `config` has changed identity as checked via a shallow `===`, OR;
-* The number of elements in `frames` has changed
+- The `revision` prop is defined and has changed, OR;
+- One of `data`, `layout` or `config` has changed identity as checked via a shallow `===`, OR;
+- The number of elements in `frames` has changed
 
 Furthermore, when called, [`Plotly.react`](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyreact) will only refresh the data being plotted if the _identity_ of the data arrays (e.g. `x`, `y`, `marker.color` etc) has changed, or if `layout.datarevision` has changed.
 
@@ -117,22 +117,22 @@ In short, this means that simply adding data points to a trace in `data` or chan
 
 **Warning**: for the time being, this component may _mutate_ its `layout` and `data` props in response to user input, going against React rules. This behaviour will change in the near future once https://github.com/plotly/plotly.js/issues/2389 is completed.
 
-| Prop               | Type                         | Default                                           | Description                                                                                                                                                           |
-| ------------------ | ---------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `data`             | `Array`                      | `[]`                                              | list of trace objects (see https://plot.ly/javascript/reference/)                                                                                                     |
-| `layout`           | `Object`                     | `undefined`                                       | layout object (see https://plot.ly/javascript/reference/#layout)                                                                                                      |
-| `frames`           | `Array`                      | `undefined`                                       | list of frame objects (see https://plot.ly/javascript/reference/)                                                                                                     |
-| `config`           | `Object`                     | `undefined`                                       | config object (see https://plot.ly/javascript/configuration-options/)                                                                                                 |
-| `revision`         | `Number`                     | `undefined`                                       | When provided, causes the plot to update when the revision is incremented.                                                                                     |
-| `onInitialized`    | `Function(figure, graphDiv)` | `undefined`                                       | Callback executed after plot is initialized. See below for parameter information.                                                                                     |
-| `onUpdate`         | `Function(figure, graphDiv)` | `undefined`                                       | Callback executed when when a plot is updated due to new data or layout, or when user interacts with a plot. See below for parameter information.                     |
-| `onPurge`          | `Function(figure, graphDiv)` | `undefined`                                       | Callback executed when component unmounts, before `Plotly.purge` strips the `graphDiv` of all private attributes. See below for parameter information.                |
-| `onError`          | `Function(err)`              | `undefined`                                       | Callback executed when a plotly.js API method rejects                                                                                                                 |
-| `divId`            | `string`                     | `undefined`                                       | id assigned to the `<div>` into which the plot is rendered.                                                                                                           |
-| `className`        | `string`                     | `undefined`                                       | applied to the `<div>` into which the plot is rendered                                                                                                                |
-| `style`            | `Object`                     | `{position: 'relative', display: 'inline-block'}` | used to style the `<div>` into which the plot is rendered                                                                                                             |
-| `debug`            | `Boolean`                    | `false`                                           | Assign the graph div to `window.gd` for debugging                                                                                                                     |
-| `useResizeHandler` | `Boolean`                    | `false`                                           | When true, adds a call to `Plotly.Plot.resize()` as a `window.resize` event handler                                                                                   |
+| Prop               | Type                         | Default                                           | Description                                                                                                                                            |
+| ------------------ | ---------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `data`             | `Array`                      | `[]`                                              | list of trace objects (see https://plot.ly/javascript/reference/)                                                                                      |
+| `layout`           | `Object`                     | `undefined`                                       | layout object (see https://plot.ly/javascript/reference/#layout)                                                                                       |
+| `frames`           | `Array`                      | `undefined`                                       | list of frame objects (see https://plot.ly/javascript/reference/)                                                                                      |
+| `config`           | `Object`                     | `undefined`                                       | config object (see https://plot.ly/javascript/configuration-options/)                                                                                  |
+| `revision`         | `Number`                     | `undefined`                                       | When provided, causes the plot to update when the revision is incremented.                                                                             |
+| `onInitialized`    | `Function(figure, graphDiv)` | `undefined`                                       | Callback executed after plot is initialized. See below for parameter information.                                                                      |
+| `onUpdate`         | `Function(figure, graphDiv)` | `undefined`                                       | Callback executed when a plot is updated due to new data or layout, or when user interacts with a plot. See below for parameter information.           |
+| `onPurge`          | `Function(figure, graphDiv)` | `undefined`                                       | Callback executed when component unmounts, before `Plotly.purge` strips the `graphDiv` of all private attributes. See below for parameter information. |
+| `onError`          | `Function(err)`              | `undefined`                                       | Callback executed when a plotly.js API method rejects                                                                                                  |
+| `divId`            | `string`                     | `undefined`                                       | id assigned to the `<div>` into which the plot is rendered.                                                                                            |
+| `className`        | `string`                     | `undefined`                                       | applied to the `<div>` into which the plot is rendered                                                                                                 |
+| `style`            | `Object`                     | `{position: 'relative', display: 'inline-block'}` | used to style the `<div>` into which the plot is rendered                                                                                              |
+| `debug`            | `Boolean`                    | `false`                                           | Assign the graph div to `window.gd` for debugging                                                                                                      |
+| `useResizeHandler` | `Boolean`                    | `false`                                           | When true, adds a call to `Plotly.Plot.resize()` as a `window.resize` event handler                                                                    |
 
 **Note**: To make a plot responsive, i.e. to fill its containing element and resize when the window is resized, use `style` or `className` to set the dimensions of the element (i.e. using `width: 100%; height: 100%` or some similar values) and set `useResizeHandler` to `true` while setting `layout.autosize` to `true` and leaving `layout.height` and `layout.width` undefined. This can be seen in action in [this CodePen](https://codepen.io/nicolaskruchten/pen/ERgBZX) and will implement the behaviour documented here: https://plot.ly/javascript/responsive-fluid-layout/
 
@@ -140,9 +140,9 @@ In short, this means that simply adding data points to a trace in `data` or chan
 
 The `onInitialized`, `onUpdate` and `onPurge` props are all functions which will be called with two arguments: `figure` and `graphDiv`.
 
-* `figure` is a serializable object with three keys corresponding to input props: `data`, `layout` and `frames`.
-  * As mentioned above, for the time being, this component may _mutate_ its `layout` and `data` props in response to user input, going against React rules. This behaviour will change in the near future once https://github.com/plotly/plotly.js/issues/2389 is completed.
-* `graphDiv` is a reference to the (unserializable) DOM node into which the figure was rendered.
+- `figure` is a serializable object with three keys corresponding to input props: `data`, `layout` and `frames`.
+  - As mentioned above, for the time being, this component may _mutate_ its `layout` and `data` props in response to user input, going against React rules. This behaviour will change in the near future once https://github.com/plotly/plotly.js/issues/2389 is completed.
+- `graphDiv` is a reference to the (unserializable) DOM node into which the figure was rendered.
 
 ### Event handler props
 
