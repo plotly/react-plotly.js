@@ -157,6 +157,7 @@ Event handlers for specific [`plotly.js` events](https://plot.ly/javascript/plot
 | `onAnimationInterrupted`  | `Function` | `plotly_animationinterrupted`  |
 | `onAutoSize`              | `Function` | `plotly_autosize`              |
 | `onBeforeExport`          | `Function` | `plotly_beforeexport`          |
+| `onBeforeHover`           | `Function` | `plotly_beforehover`           |
 | `onButtonClicked`         | `Function` | `plotly_buttonclicked`         |
 | `onClick`                 | `Function` | `plotly_click`                 |
 | `onClickAnnotation`       | `Function` | `plotly_clickannotation`       |

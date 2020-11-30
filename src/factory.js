@@ -12,6 +12,7 @@ const eventNames = [
   'AnimationInterrupted',
   'AutoSize',
   'BeforeExport',
+  'BeforeHover',
   'ButtonClicked',
   'Click',
   'ClickAnnotation',
