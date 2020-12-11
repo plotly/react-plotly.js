@@ -35,6 +35,7 @@ const eventNames = [
   'Transitioning',
   'TransitionInterrupted',
   'Unhover',
+  'WebGlContextLost',
 ];
 
 const updateEvents = [

@@ -180,6 +180,7 @@ Event handlers for specific [`plotly.js` events](https://plot.ly/javascript/plot
 | `onTransitioning`         | `Function` | `plotly_transitioning`         |
 | `onTransitionInterrupted` | `Function` | `plotly_transitioninterrupted` |
 | `onUnhover`               | `Function` | `plotly_unhover`               |
+| `onWebGlContextLost`      | `Function` | `plotly_webglcontextlost`      |
 
 ## Customizing the `plotly.js` bundle
 
