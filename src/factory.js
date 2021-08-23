@@ -107,6 +107,10 @@ export default function plotComponentFactory(Plotly) {
 
     componentDidMount() {
       this.unmounting = false;
+      
+      if (Object.isFrozen(this.props.data)) {
+        console.warn("react-plotly.js expects mutable data and layout props");
+      }
 
       this.updatePlotly(true, this.props.onInitialized, true);
     }
