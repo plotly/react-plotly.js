@@ -202,7 +202,7 @@ For quick one-off demos on [CodePen](https://codepen.io/) or [JSFiddle](https://
 You can load plotly.js and the component factory with:
 
 ```html
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.0.0.min.js"></script>
 <script src="https://unpkg.com/react-plotly.js@latest/dist/create-plotly-component.js"></script>
 ```
 
