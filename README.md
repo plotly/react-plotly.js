@@ -3,8 +3,8 @@
 ![plotly-react-logo](https://images.plot.ly/plotly-documentation/thumbnail/react.png)
 
 > A [plotly.js](https://github.com/plotly/plotly.js) React component from
-> [Plotly](https://plot.ly/). The basis of Plotly's
-> [React component suite](https://plot.ly/products/react/).
+> [Plotly](https://plotly.com/). The basis of Plotly's
+> [React component suite](https://plotly.com/products/react/).
 
 👉 [Demo source code](https://github.com/plotly/react-plotly.js-demo-app)
 
@@ -66,8 +66,8 @@ You should see a plot like this:
 
 For a full description of Plotly chart types and attributes see the following resources:
 
-- [Plotly JavaScript API documentation](https://plot.ly/javascript/)
-- [Full plotly.js attribute listing](https://plot.ly/javascript/reference/)
+- [Plotly JavaScript API documentation](https://plotly.com/javascript/)
+- [Full plotly.js attribute listing](https://plotly.com/javascript/reference/)
 
 ## State management
 
@@ -99,15 +99,15 @@ class App extends React.Component {
 
 ## Refreshing the Plot
 
-This component will refresh the plot via [`Plotly.react`](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyreact) if any of the following are true:
+This component will refresh the plot via [`Plotly.react`](https://plotly.com/javascript/plotlyjs-function-reference/#plotlyreact) if any of the following are true:
 
 - The `revision` prop is defined and has changed, OR;
 - One of `data`, `layout` or `config` has changed identity as checked via a shallow `===`, OR;
 - The number of elements in `frames` has changed
 
-Furthermore, when called, [`Plotly.react`](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyreact) will only refresh the data being plotted if the _identity_ of the data arrays (e.g. `x`, `y`, `marker.color` etc) has changed, or if `layout.datarevision` has changed.
+Furthermore, when called, [`Plotly.react`](https://plotly.com/javascript/plotlyjs-function-reference/#plotlyreact) will only refresh the data being plotted if the _identity_ of the data arrays (e.g. `x`, `y`, `marker.color` etc) has changed, or if `layout.datarevision` has changed.
 
-In short, this means that simply adding data points to a trace in `data` or changing a value in `layout` will not cause a plot to update unless this is done immutably via something like [immutability-helper](https://github.com/kolodny/immutability-helper) if performance considerations permit it, or unless `revision` and/or [`layout.datarevision`](https://plot.ly/javascript/reference/#layout-datarevision) are used to force a rerender.
+In short, this means that simply adding data points to a trace in `data` or changing a value in `layout` will not cause a plot to update unless this is done immutably via something like [immutability-helper](https://github.com/kolodny/immutability-helper) if performance considerations permit it, or unless `revision` and/or [`layout.datarevision`](https://plotly.com/javascript/reference/#layout-datarevision) are used to force a rerender.
 
 ## API Reference
 
@@ -117,10 +117,10 @@ In short, this means that simply adding data points to a trace in `data` or chan
 
 | Prop               | Type                         | Default                                           | Description                                                                                                                                            |
 | ------------------ | ---------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `data`             | `Array`                      | `[]`                                              | list of trace objects (see https://plot.ly/javascript/reference/)                                                                                      |
-| `layout`           | `Object`                     | `undefined`                                       | layout object (see https://plot.ly/javascript/reference/#layout)                                                                                       |
-| `frames`           | `Array`                      | `undefined`                                       | list of frame objects (see https://plot.ly/javascript/reference/)                                                                                      |
-| `config`           | `Object`                     | `undefined`                                       | config object (see https://plot.ly/javascript/configuration-options/)                                                                                  |
+| `data`             | `Array`                      | `[]`                                              | list of trace objects (see https://plotly.com/javascript/reference/)                                                                                      |
+| `layout`           | `Object`                     | `undefined`                                       | layout object (see https://plotly.com/javascript/reference/#layout)                                                                                       |
+| `frames`           | `Array`                      | `undefined`                                       | list of frame objects (see https://plotly.com/javascript/reference/)                                                                                      |
+| `config`           | `Object`                     | `undefined`                                       | config object (see https://plotly.com/javascript/configuration-options/)                                                                                  |
 | `revision`         | `Number`                     | `undefined`                                       | When provided, causes the plot to update when the revision is incremented.                                                                             |
 | `onInitialized`    | `Function(figure, graphDiv)` | `undefined`                                       | Callback executed after plot is initialized. See below for parameter information.                                                                      |
 | `onUpdate`         | `Function(figure, graphDiv)` | `undefined`                                       | Callback executed when a plot is updated due to new data or layout, or when user interacts with a plot. See below for parameter information.           |
@@ -132,7 +132,7 @@ In short, this means that simply adding data points to a trace in `data` or chan
 | `debug`            | `Boolean`                    | `false`                                           | Assign the graph div to `window.gd` for debugging                                                                                                      |
 | `useResizeHandler` | `Boolean`                    | `false`                                           | When true, adds a call to `Plotly.Plot.resize()` as a `window.resize` event handler                                                                    |
 
-**Note**: To make a plot responsive, i.e. to fill its containing element and resize when the window is resized, use `style` or `className` to set the dimensions of the element (i.e. using `width: 100%; height: 100%` or some similar values) and set `useResizeHandler` to `true` while setting `layout.autosize` to `true` and leaving `layout.height` and `layout.width` undefined. This can be seen in action in [this CodePen](https://codepen.io/nicolaskruchten/pen/ERgBZX) and will implement the behaviour documented here: https://plot.ly/javascript/responsive-fluid-layout/
+**Note**: To make a plot responsive, i.e. to fill its containing element and resize when the window is resized, use `style` or `className` to set the dimensions of the element (i.e. using `width: 100%; height: 100%` or some similar values) and set `useResizeHandler` to `true` while setting `layout.autosize` to `true` and leaving `layout.height` and `layout.width` undefined. This can be seen in action in [this CodePen](https://codepen.io/nicolaskruchten/pen/ERgBZX) and will implement the behaviour documented here: https://plotly.com/javascript/responsive-fluid-layout/
 
 #### Callback signature: `Function(figure, graphDiv)`
 
@@ -144,7 +144,7 @@ The `onInitialized`, `onUpdate` and `onPurge` props are all functions which will
 
 ### Event handler props
 
-Event handlers for specific [`plotly.js` events](https://plot.ly/javascript/plotlyjs-events/) may be attached through the following props:
+Event handlers for specific [`plotly.js` events](https://plotly.com/javascript/plotlyjs-events/) may be attached through the following props:
 
 | Prop                      | Type       | Plotly Event                   |
 | ------------------------- | ---------- | ------------------------------ |
