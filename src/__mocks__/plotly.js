@@ -4,12 +4,6 @@ const state = {};
 const ASYNC_DELAY = 1;
 
 export default {
-  plot: jest.fn((gd) => {
-    state.gd = gd;
-    setTimeout(() => {
-      state.gd.emit('plotly_afterplot');
-    }, ASYNC_DELAY);
-  }),
   newPlot: jest.fn((gd) => {
     state.gd = gd;
     EventEmitter(state.gd); // eslint-disable-line new-cap
