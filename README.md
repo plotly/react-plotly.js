@@ -6,8 +6,6 @@
 > [Plotly](https://plot.ly/). The basis of Plotly's
 > [React component suite](https://plot.ly/products/react/).
 
-👉 [DEMO](http://react-plotly.js-demo.getforge.io/)
-
 👉 [Demo source code](https://github.com/plotly/react-plotly.js-demo-app)
 
 ---
