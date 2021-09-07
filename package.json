@@ -32,6 +32,7 @@
     "react"
   ],
   "dependencies": {
+    "plotly.js-dist": "^2.0.0",
     "prop-types": "^15.7.2"
   },
   "devDependencies": {
@@ -58,7 +59,6 @@
     "mkdirp": "^1.0.4",
     "nodemon": "^2.0.6",
     "onetime": "^5.1.2",
-    "plotly.js-dist": "^2.0.0",
     "prettier": "^2.2.1",
     "react": "^16.13.1",
     "react-addons-test-utils": "^15.6.0",
@@ -69,7 +69,6 @@
     "uglify-js": "^3.12.1"
   },
   "peerDependencies": {
-    "plotly.js-dist": ">=2.0.0",
     "react": ">0.13.0"
   },
   "browserify-global-shim": {
