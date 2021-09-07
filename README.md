@@ -26,7 +26,7 @@
 ## Installation
 
 ```bash
-$ npm install react-plotly.js plotly.js
+$ npm install react-plotly.js plotly.js-dist
 ```
 
 ## Quick start
