@@ -18,7 +18,7 @@ const debounce = (fn, delay) => {
 
 const getSizeForLayout = compose(objOf('layout'), pick(['width', 'height']), prop('contentRect'), head);
 
-export default function usePlotly(type) {
+export default function usePlotly() {
    const updates = useMemo(stream, []);
    const appendData = useMemo(stream, []);
    const plotlyState = useMemo(
