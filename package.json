@@ -71,8 +71,8 @@
   "peerDependencies": {
     "plotly.js": ">1.34.0",
     "react": ">0.13.0",
-    "flyd": ">0.2.8",
-    "ramda": ">0.28.0"
+    "flyd": ">=0.2.8",
+    "ramda": ">=0.28.0"
   },
   "browserify-global-shim": {
     "react": "React"
