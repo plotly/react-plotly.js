@@ -1,6 +1,6 @@
 {
   "name": "react-plotly.js",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "license": "MIT",
   "description": "A plotly.js react component from Plotly",
   "author": "Plotly, Inc.",
