@@ -179,6 +179,7 @@ Event handlers for specific [`plotly.js` events](https://plot.ly/javascript/plot
 | `onSunburstClick`         | `Function` | `plotly_sunburstclick`         |
 | `onTransitioning`         | `Function` | `plotly_transitioning`         |
 | `onTransitionInterrupted` | `Function` | `plotly_transitioninterrupted` |
+| `onTreemapClick`          | `Function` | `plotly_treemapclick`          |
 | `onUnhover`               | `Function` | `plotly_unhover`               |
 | `onWebGlContextLost`      | `Function` | `plotly_webglcontextlost`      |
 
