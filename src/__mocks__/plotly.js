@@ -1,16 +1,12 @@
 import EventEmitter from 'event-emitter';
+import {vi} from 'vitest';
+
 const state = {};
 
 const ASYNC_DELAY = 1;
 
 export default {
-  plot: jest.fn((gd) => {
-    state.gd = gd;
-    setTimeout(() => {
-      state.gd.emit('plotly_afterplot');
-    }, ASYNC_DELAY);
-  }),
-  newPlot: jest.fn((gd) => {
+  newPlot: vi.fn((gd) => {
     state.gd = gd;
     EventEmitter(state.gd); // eslint-disable-line new-cap
 
@@ -18,7 +14,7 @@ export default {
       state.gd.emit('plotly_afterplot');
     }, ASYNC_DELAY);
   }),
-  react: jest.fn((gd) => {
+  react: vi.fn((gd) => {
     state.gd = gd;
     EventEmitter(state.gd); // eslint-disable-line new-cap
 
@@ -26,20 +22,20 @@ export default {
       state.gd.emit('plotly_afterplot');
     }, ASYNC_DELAY);
   }),
-  relayout: jest.fn((gd) => {
+  relayout: vi.fn((gd) => {
     state.gd = gd;
     setTimeout(() => {
       state.gd.emit('plotly_relayout');
     }, ASYNC_DELAY);
   }),
-  restyle: jest.fn((gd) => {
+  restyle: vi.fn((gd) => {
     state.gd = gd;
     setTimeout(() => {
       state.gd.emit('plotly_restyle');
     }, ASYNC_DELAY);
   }),
-  update: jest.fn(),
-  purge: jest.fn(() => {
+  update: vi.fn(),
+  purge: vi.fn(() => {
     state.gd = null;
   }),
 };
