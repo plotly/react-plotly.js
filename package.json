@@ -4,7 +4,6 @@
   "license": "MIT",
   "description": "A plotly.js react component from Plotly",
   "author": "Plotly, Inc.",
-  "main": "react-plotly.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/plotly/react-plotly.js.git"
@@ -12,16 +11,29 @@
   "bugs": {
     "url": "https://github.com/plotly/react-plotly.js/issues"
   },
+  "main": "dist/cjs/react-plotly.cjs",
+  "module": "dist/react-plotly.legacy-esm.js",
+  "types": "dist/react-plotly.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/react-plotly.d.ts",
+      "import": "./dist/react-plotly.mjs",
+      "default": "./dist/cjs/react-plotly.cjs"
+    },
+    "./factory": {
+      "types": "./dist/factory.d.ts",
+      "import": "./dist/factory.mjs",
+      "default": "./dist/cjs/factory.cjs"
+    }
+  },
   "scripts": {
-    "make:lib": "mkdirp lib && babel src --out-dir lib --ignore \"src/__tests__/*.js\",\"src/__mocks__/*.js\" --presets=@babel/preset-env,@babel/preset-react --source-maps && mv lib/* ./ && rmdir lib",
-    "make:dist": "mkdirp dist && browserify src/factory.js -o ./dist/create-plotly-component.js -t [ babelify --presets [ @babel/preset-env @babel/preset-react ] --plugins [ @babel/plugin-proposal-class-properties ] ] -t browserify-global-shim --standalone createPlotlyComponent && uglifyjs ./dist/create-plotly-component.js --compress --mangle --output ./dist/create-plotly-component.min.js --source-map filename=dist/create-plotly-component.min.js.map",
-    "clean": "rimraf lib dist react-plotly.js react-plotly.js.map factory.js factory.js.map",
-    "prepublishOnly": "npm run clean && npm run make:lib && npm run make:dist",
     "lint": "prettier --trailing-comma es5 --write \"src/**/*.js\" && eslint src",
     "test": "npm run lint && npm run deps && jest",
     "watch-test": "jest --watch",
     "watch": "nodemon --exec \"npm run make:lib\" -w src",
-    "deps": "./node_modules/.bin/dependency-check src/react-plotly.js --missing"
+    "deps": "./node_modules/.bin/dependency-check src/react-plotly.js --missing",
+    "build": "tsup && node copy-types.mjs"
   },
   "keywords": [
     "graphing",
@@ -32,49 +44,26 @@
     "react"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.18.10",
-    "@babel/core": "^7.19.0",
-    "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@babel/preset-env": "^7.19.0",
-    "@babel/preset-react": "^7.18.6",
     "@types/plotly.js-dist-min": "^2.3.4",
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
-    "babelify": "^10.0.0",
-    "brfs": "^2.0.2",
-    "browserify": "^17.0.0",
-    "browserify-global-shim": "^1.0.3",
-    "cash-mv": "^0.2.0",
     "dependency-check": "^4.1.0",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "event-emitter": "^0.3.5",
-    "jest": "^26.6.3",
-    "mkdirp": "^1.0.4",
-    "nodemon": "^2.0.19",
-    "onetime": "^5.1.2",
     "prettier": "^3.1.0",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
-    "react-test-renderer": "^16.13.1",
-    "rimraf": "^3.0.2",
-    "semver": "^7.3.7",
-    "typescript": "^5.3.3",
-    "uglify-js": "^3.17.0"
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
   },
   "peerDependencies": {
     "plotly.js-dist-min": "^2.0.0",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
-  },
-  "browserify-global-shim": {
-    "react": "React"
   }
 }
