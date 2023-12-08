@@ -17,14 +17,7 @@
     "strict": true,
     "target": "ESNext"
   },
-  "include": [
-    "src*",
-    "src/__mocks__*",
-    "src/__tests__*",
-    "tsup.config.ts",
-    "vite.config.mts",
-    "vitest.setup.mjs"
-  ],
+  "include": ["src", "tsup.config.ts", "vite.config.mts", "vitest.setup.mjs"],
   "exclude": ["coverage", "dist", "node_modules"],
   "references": [{"path": "./tsconfig.node.json"}]
 }
