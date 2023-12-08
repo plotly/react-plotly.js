@@ -4,7 +4,7 @@ import {defineConfig, Options} from 'tsup';
 export default defineConfig((options) => {
   const commonOptions: Partial<Options> = {
     entry: {
-      'react-plotly': 'src/react-plotly.mts',
+      'react-plotly': 'src/react-plotly.ts',
       factory: 'src/factory.tsx',
     },
     sourcemap: true,

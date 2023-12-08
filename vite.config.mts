@@ -1,9 +1,11 @@
-import {defineConfig} from 'vitest/config';
+/// <reference types="vitest" />
+import tsconfigPaths from 'vite-tsconfig-paths';
+import {defineConfig} from 'vite';
 
 export default defineConfig({
+  plugins: [tsconfigPaths()],
   test: {
     environment: 'jsdom',
-    globals: true,
     setupFiles: 'vitest.setup.mjs',
     deps: {
       optimizer: {

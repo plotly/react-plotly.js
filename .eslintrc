@@ -13,10 +13,14 @@
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "sourceType": "module"
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": ["./tsconfig.json", "./tsconfig.node.json"]
   },
   "env": {
-    "browser": true
+    "browser": true,
+    "es2020": true,
+    "node": true
   },
   "plugins": ["@typescript-eslint", "react", "import"],
   "rules": {

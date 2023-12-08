@@ -2,7 +2,7 @@
 import type Plotly from 'plotly.js-dist-min';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {usePrevious} from './hooks/use-previous.mjs';
+import {usePrevious} from './hooks/use-previous';
 
 declare global {
   interface Window {

@@ -8,16 +8,14 @@ const ASYNC_DELAY = 1;
 export default {
   newPlot: vi.fn((gd) => {
     state.gd = gd;
-    EventEmitter(state.gd); // eslint-disable-line new-cap
-
+    EventEmitter(state.gd);
     setTimeout(() => {
       state.gd.emit('plotly_afterplot');
     }, ASYNC_DELAY);
   }),
   react: vi.fn((gd) => {
     state.gd = gd;
-    EventEmitter(state.gd); // eslint-disable-line new-cap
-
+    EventEmitter(state.gd);
     setTimeout(() => {
       state.gd.emit('plotly_afterplot');
     }, ASYNC_DELAY);
