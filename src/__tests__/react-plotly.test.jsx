@@ -1,4 +1,4 @@
-import {render, screen, waitFor} from '@testing-library/react';
+import {render, waitFor} from '@testing-library/react';
 import once from 'onetime';
 import * as React from 'react';
 import {beforeEach, describe, expect, test, vi} from 'vitest';
@@ -24,107 +24,43 @@ test('Plot', async () => {
       style={{height: '100%', width: '100%'}}
       useResizeHandler
       debug
-      onAfterExport={() => {
-        console.log('onAfterExport');
-      }}
-      onAfterPlot={() => {
-        console.log('onAfterPlot');
-      }}
-      onAnimated={() => {
-        console.log('onAnimated');
-      }}
-      onAnimatingFrame={() => {
-        console.log('onAnimatingFrame');
-      }}
-      onAnimationInterrupted={() => {
-        console.log('onAnimationInterrupted');
-      }}
-      onAutoSize={() => {
-        console.log('onAutoSize');
-      }}
-      onBeforeExport={() => {
-        console.log('onBeforeExport');
-      }}
-      onBeforeHover={() => {
-        console.log('onBeforeHover');
-      }}
-      onButtonClicked={() => {
-        console.log('onButtonClicked');
-      }}
-      onClick={() => {
-        console.log('onClick');
-      }}
-      onClickAnnotation={() => {
-        console.log('onClickAnnotation');
-      }}
-      onDeselect={() => {
-        console.log('onDeselect');
-      }}
-      onDoubleClick={() => {
-        console.log('onDoubleClick');
-      }}
-      onFramework={() => {
-        console.log('onFramework');
-      }}
-      onHover={() => {
-        console.log('onHover');
-      }}
-      onLegendClick={() => {
-        console.log('onLegendClick');
-      }}
-      onLegendDoubleClick={() => {
-        console.log('onLegendDoubleClick');
-      }}
-      onRelayout={() => {
-        console.log('onRelayout');
-      }}
-      onRelayouting={() => {
-        console.log('onRelayouting');
-      }}
-      onRestyle={() => {
-        console.log('onRestyle');
-      }}
-      onRedraw={() => {
-        console.log('onRedraw');
-      }}
-      onSelected={() => {
-        console.log('onSelected');
-      }}
-      onSelecting={() => {
-        console.log('onSelecting');
-      }}
-      onSliderChange={() => {
-        console.log('onSliderChange');
-      }}
-      onSliderEnd={() => {
-        console.log('onSliderEnd');
-      }}
-      onSliderStart={() => {
-        console.log('onSliderStart');
-      }}
-      onSunburstClick={() => {
-        console.log('onSunburstClick');
-      }}
-      onTransitioning={() => {
-        console.log('onTransitioning');
-      }}
-      onTransitionInterrupted={() => {
-        console.log('onTransitionInterrupted');
-      }}
-      onUnhover={() => {
-        console.log('onUnhover');
-      }}
-      onWebGlContextLost={() => {
-        console.log('onWebGlContextLost');
-      }}
+      onAfterExport={() => {}}
+      onAfterPlot={() => {}}
+      onAnimated={() => {}}
+      onAnimatingFrame={() => {}}
+      onAnimationInterrupted={() => {}}
+      onAutoSize={() => {}}
+      onBeforeExport={() => {}}
+      onBeforeHover={() => {}}
+      onButtonClicked={() => {}}
+      onClick={() => {}}
+      onClickAnnotation={() => {}}
+      onDeselect={() => {}}
+      onDoubleClick={() => {}}
+      onFramework={() => {}}
+      onHover={() => {}}
+      onLegendClick={() => {}}
+      onLegendDoubleClick={() => {}}
+      onRelayout={() => {}}
+      onRelayouting={() => {}}
+      onRestyle={() => {}}
+      onRedraw={() => {}}
+      onSelected={() => {}}
+      onSelecting={() => {}}
+      onSliderChange={() => {}}
+      onSliderEnd={() => {}}
+      onSliderStart={() => {}}
+      onSunburstClick={() => {}}
+      onTransitioning={() => {}}
+      onTransitionInterrupted={() => {}}
+      onUnhover={() => {}}
+      onWebGlContextLost={() => {}}
     />
   );
 
   await waitFor(() =>
     expect(container.querySelector('[class="js-plotly-plot"]')).toBeInTheDocument()
   );
-
-  screen.debug();
 });
 
 describe('<Plotly/>', () => {
@@ -141,15 +77,7 @@ describe('<Plotly/>', () => {
   function expectPlotlyAPICall(method, props, defaultArgs) {
     expect(method).toHaveBeenCalledWith(
       expect.anything(),
-      Object.assign(
-        defaultArgs || {
-          data: [],
-          config: undefined, // eslint-disable-line no-undefined
-          layout: undefined, // eslint-disable-line no-undefined
-          frames: undefined, // eslint-disable-line no-undefined
-        },
-        props || {}
-      )
+      Object.assign(defaultArgs || {data: []}, props || {})
     );
   }
 
