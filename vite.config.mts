@@ -10,6 +10,7 @@ export default defineConfig({
     deps: {
       optimizer: {
         web: {
+          // Required to mock canvas for tests
           include: ['vitest-canvas-mock'],
         },
       },

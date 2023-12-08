@@ -2,6 +2,7 @@ import fs from 'fs';
 import {defineConfig, Options} from 'tsup';
 
 export default defineConfig((options) => {
+  // Shared options among all outputs
   const commonOptions: Partial<Options> = {
     entry: {
       'react-plotly': 'src/react-plotly.ts',
@@ -21,7 +22,7 @@ export default defineConfig((options) => {
       clean: true,
       dts: true,
       async onSuccess() {
-        // Support Webpack 4 by pointing `"module"` to a file with a `.js` extension
+        // Support Webpack 4 by pointing package.json `module` to a file with a `.js` extension
         fs.copyFileSync('dist/react-plotly.mjs', 'dist/react-plotly.legacy-esm.js');
       },
     },

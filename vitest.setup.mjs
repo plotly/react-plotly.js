@@ -8,6 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
+// Required to mock window.URL.createObjectURL for tests
 const URLMock = {
   createObjectURL: vi.fn(),
 };
