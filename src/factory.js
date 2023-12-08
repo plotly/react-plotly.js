@@ -70,6 +70,7 @@ export default function plotComponentFactory(Plotly) {
       this.updatePlotly = this.updatePlotly.bind(this);
     }
 
+    // DONE
     updatePlotly(shouldInvokeResizeHandler, figureCallbackFunction, shouldAttachUpdateEvents) {
       this.p = this.p
         .then(() => {
@@ -105,12 +106,14 @@ export default function plotComponentFactory(Plotly) {
         });
     }
 
+    // DONE
     componentDidMount() {
       this.unmounting = false;
 
       this.updatePlotly(true, this.props.onInitialized, true);
     }
 
+    // DONE
     componentDidUpdate(prevProps) {
       this.unmounting = false;
 
@@ -136,6 +139,7 @@ export default function plotComponentFactory(Plotly) {
       this.updatePlotly(false, this.props.onUpdate, false);
     }
 
+    // DONE
     componentWillUnmount() {
       this.unmounting = true;
 
@@ -151,6 +155,7 @@ export default function plotComponentFactory(Plotly) {
       Plotly.purge(this.el);
     }
 
+    // DONE
     attachUpdateEvents() {
       if (!this.el || !this.el.removeListener) {
         return;
@@ -161,6 +166,7 @@ export default function plotComponentFactory(Plotly) {
       });
     }
 
+    // DONE
     removeUpdateEvents() {
       if (!this.el || !this.el.removeListener) {
         return;
@@ -171,10 +177,12 @@ export default function plotComponentFactory(Plotly) {
       });
     }
 
+    // DONE
     handleUpdate() {
       this.figureCallback(this.props.onUpdate);
     }
 
+    // DONE
     figureCallback(callback) {
       if (typeof callback === 'function') {
         const {data, layout} = this.el;
@@ -184,6 +192,7 @@ export default function plotComponentFactory(Plotly) {
       }
     }
 
+    // DONE
     syncWindowResize(invoke) {
       if (!isBrowser) {
         return;
@@ -201,6 +210,7 @@ export default function plotComponentFactory(Plotly) {
       }
     }
 
+    // DONE
     getRef(el) {
       this.el = el;
 
@@ -209,6 +219,7 @@ export default function plotComponentFactory(Plotly) {
       }
     }
 
+    // DONE
     // Attach and remove event handlers as they're added or removed from props:
     syncEventHandlers() {
       eventNames.forEach((eventName) => {
@@ -229,20 +240,24 @@ export default function plotComponentFactory(Plotly) {
       });
     }
 
+    // DONE
     addEventHandler(eventName, prop) {
       this.handlers[eventName] = prop;
       this.el.on(this.getPlotlyEventName(eventName), this.handlers[eventName]);
     }
 
+    // DONE
     removeEventHandler(eventName) {
       this.el.removeListener(this.getPlotlyEventName(eventName), this.handlers[eventName]);
       delete this.handlers[eventName];
     }
 
+    // DONE
     getPlotlyEventName(eventName) {
       return 'plotly_' + eventName.toLowerCase();
     }
 
+    // DONE
     render() {
       return (
         <div
@@ -255,6 +270,7 @@ export default function plotComponentFactory(Plotly) {
     }
   }
 
+  // DONE
   PlotlyComponent.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
     config: PropTypes.object,
@@ -272,10 +288,12 @@ export default function plotComponentFactory(Plotly) {
     divId: PropTypes.string,
   };
 
+  // DONE
   eventNames.forEach((eventName) => {
     PlotlyComponent.propTypes['on' + eventName] = PropTypes.func;
   });
 
+  // DONE
   PlotlyComponent.defaultProps = {
     debug: false,
     useResizeHandler: false,
