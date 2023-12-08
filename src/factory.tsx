@@ -2,8 +2,6 @@
 import type Plotly from 'plotly.js-dist-min';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {usePrevious} from './hooks/use-previous';
-
 declare global {
   interface Window {
     gd: Plotly.PlotlyHTMLElement;
@@ -200,40 +198,12 @@ export default function createPlotlyComponent(plotly: typeof Plotly) {
     const [handlers, setHandlers] = useState<{[K in PlotlyEvent]?: Function}>({});
     const [resizeHandler, setResizeHandler] = useState<(() => void) | null>(null);
 
-    const prevConfig = usePrevious(props.config);
-    const prevData = usePrevious(data);
-    const prevFrames = usePrevious(props.frames);
-    const prevLayout = usePrevious(props.layout);
-    const prevRevision = usePrevious(props.revision);
-
-    const syncWindowResize = useCallback(
-      (invoke: boolean) => {
-        if (!isBrowser || !gd) {
-          return;
-        }
-
-        if (useResizeHandler && resizeHandler === null) {
-          const _resizeHandler = () => plotly.Plots.resize(gd);
-          window.addEventListener('resize', _resizeHandler);
-          if (invoke) {
-            _resizeHandler();
-          }
-
-          setResizeHandler(resizeHandler);
-        } else if (!useResizeHandler && resizeHandler !== null) {
-          window.removeEventListener('resize', resizeHandler);
-
-          setResizeHandler(null);
-        }
-      },
-      [gd, resizeHandler, useResizeHandler]
-    );
-
     const figureCallback = useCallback(
       (callback: Function) => {
         if (typeof callback === 'function' && gd) {
           const {data, layout} = gd;
           // Property '_transitionData' does not exist on type 'PlotlyHTMLElement'
+          // https://github.com/plotly/plotly.js/blob/7234c0822c31472cfd551b8fbb2578f0bb0902d2/src/components/legend/draw.js#L485
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const frames = (gd as unknown as any)?._transitionData?._frames;
           const figure = {data, layout, frames};
@@ -249,19 +219,9 @@ export default function createPlotlyComponent(plotly: typeof Plotly) {
       }
     }, [figureCallback, props.onUpdate]);
 
-    const attachUpdateEvents = useCallback(() => {
-      if (!gd?.on) {
-        return;
-      }
-
-      updateEvents.forEach((updateEvent) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        gd.on(updateEvent as any, handleUpdate);
-      });
-    }, [gd, handleUpdate]);
-
     const removeUpdateEvents = useCallback(() => {
       // Property 'removeListener' does not exist on type 'PlotlyHTMLElement'
+      // https://github.com/plotly/plotly.js/blob/7234c0822c31472cfd551b8fbb2578f0bb0902d2/src/lib/events.js#L47
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const _gd = gd as unknown as any;
       if (!_gd?.removeListener) {
@@ -274,11 +234,7 @@ export default function createPlotlyComponent(plotly: typeof Plotly) {
     }, [gd, handleUpdate]);
 
     const updatePlotly = useCallback(
-      (
-        shouldInvokeResizeHandler: boolean,
-        figureCallbackFunction: Function | undefined,
-        shouldAttachUpdateEvents: boolean
-      ) => {
+      (figureCallbackFunction: Function | undefined) => {
         Promise.resolve()
           .then(() => {
             if (!el) {
@@ -295,14 +251,8 @@ export default function createPlotlyComponent(plotly: typeof Plotly) {
             });
           })
           .then(() => {
-            syncWindowResize(shouldInvokeResizeHandler);
-
             if (typeof figureCallbackFunction !== 'undefined') {
               figureCallback(figureCallbackFunction);
-            }
-
-            if (shouldAttachUpdateEvents) {
-              attachUpdateEvents();
             }
           })
           .catch((err) => {
@@ -311,38 +261,7 @@ export default function createPlotlyComponent(plotly: typeof Plotly) {
             }
           });
       },
-      [attachUpdateEvents, config, data, debug, el, figureCallback, props, syncWindowResize]
-    );
-
-    const addEventHandler = useCallback(
-      (eventName: PlotlyEvent, prop: Function) => {
-        handlers[eventName] = prop;
-        const event = getPlotlyEventName(eventName);
-        const callback = handlers[eventName];
-        if (gd && callback) {
-          // Disable rule to get around "No overload matches this call" error
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          gd.on(event as any, callback as any);
-        }
-      },
-      [gd, handlers]
-    );
-
-    const removeEventHandler = useCallback(
-      (eventName: PlotlyEvent) => {
-        const event = getPlotlyEventName(eventName);
-        const callback = handlers[eventName];
-        if (gd && callback) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          gd.removeEventListener(event, callback as any);
-
-          setHandlers((prevHandlers) => {
-            delete prevHandlers[eventName];
-            return prevHandlers;
-          });
-        }
-      },
-      [gd, handlers]
+      [config, data, debug, el, figureCallback, props]
     );
 
     const getEl = useCallback((el: HTMLDivElement | Plotly.PlotlyHTMLElement | null) => {
@@ -363,41 +282,50 @@ export default function createPlotlyComponent(plotly: typeof Plotly) {
     // componentDidMount
     useEffect(() => {
       if (!mountEffectWasRun.current) {
-        updatePlotly(true, props.onInitialized, true);
+        updatePlotly(props.onInitialized);
+
+        // Invoke resizeHandler
+        if (!isBrowser || !gd) {
+          return;
+        }
+
+        if (useResizeHandler && resizeHandler === null) {
+          const _resizeHandler = () => plotly.Plots.resize(gd);
+          window.addEventListener('resize', _resizeHandler);
+          _resizeHandler();
+
+          setResizeHandler(resizeHandler);
+        } else if (!useResizeHandler && resizeHandler !== null) {
+          window.removeEventListener('resize', resizeHandler);
+
+          setResizeHandler(null);
+        }
+
+        // Attach updateEvents
+        if (!gd?.on) {
+          return;
+        }
+
+        updateEvents.forEach((updateEvent) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          gd.on(updateEvent as any, handleUpdate);
+        });
       }
 
       return () => {
         mountEffectWasRun.current = true;
       };
-    }, [props.config, props.onInitialized, updatePlotly, useResizeHandler]);
+    }, [gd, handleUpdate, props.onInitialized, resizeHandler, updatePlotly, useResizeHandler]);
 
     // componentDidUpdate
     useEffect(() => {
-      // frames *always* changes identity so fall back to check length only
-      const numPrevFrames = prevFrames?.length ?? 0;
-      const numNextFrames = props.frames?.length ?? 0;
-
-      const figureChanged = !(
-        prevLayout === props.layout &&
-        prevData === data &&
-        prevConfig === props.config &&
-        numPrevFrames === numNextFrames
-      );
-      const revisionDefined = prevRevision !== void 0;
-      const revisionChanged = prevRevision !== props.revision;
-
-      if (!figureChanged && (!revisionDefined || (revisionDefined && !revisionChanged))) {
-        return;
+      if (props.onUpdate) {
+        updatePlotly(props.onUpdate);
       }
-
-      updatePlotly(false, props.onUpdate, false);
     }, [
+      // Want to watch for changes to data, config, frames.length, layout, and revision. See:
+      // https://github.com/plotly/react-plotly.js/blob/24d81259ea9369074586f1c3d2b7ae9fc3610860/src/factory.js#L123
       data,
-      prevConfig,
-      prevData,
-      prevFrames?.length,
-      prevLayout,
-      prevRevision,
       props.config,
       props.frames?.length,
       props.layout,
@@ -425,8 +353,33 @@ export default function createPlotlyComponent(plotly: typeof Plotly) {
       };
     }, [figureCallback, gd, props.onPurge, removeUpdateEvents, resizeHandler]);
 
-    // Attach and remove event handlers as they're added or removed from props:
+    // Attach and remove event handlers as they're added or removed from props
     useEffect(() => {
+      function addEventHandler(eventName: PlotlyEvent, prop: Function) {
+        handlers[eventName] = prop;
+        const event = getPlotlyEventName(eventName);
+        const callback = handlers[eventName];
+        if (gd && callback) {
+          // Disable rule to get around "No overload matches this call" error
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          gd.on(event as any, callback as any);
+        }
+      }
+
+      function removeEventHandler(eventName: PlotlyEvent) {
+        const event = getPlotlyEventName(eventName);
+        const callback = handlers[eventName];
+        if (gd && callback) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          gd.removeEventListener(event, callback as any);
+
+          setHandlers((prevHandlers) => {
+            delete prevHandlers[eventName];
+            return prevHandlers;
+          });
+        }
+      }
+
       if (gd) {
         eventNames.forEach((eventName) => {
           const reactPlotlyEvent = ('on' + eventName) as keyof ReactEventProps;
@@ -447,7 +400,7 @@ export default function createPlotlyComponent(plotly: typeof Plotly) {
           }
         });
       }
-    }, [addEventHandler, gd, handlers, props, removeEventHandler]);
+    }, [gd, handlers, props]);
 
     return <div id={props.divId} style={style} ref={getEl} className={props.className} />;
   }
