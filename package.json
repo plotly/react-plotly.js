@@ -13,16 +13,16 @@
   },
   "main": "dist/cjs/react-plotly.cjs",
   "module": "dist/react-plotly.legacy-esm.js",
-  "types": "dist/react-plotly.d.ts",
+  "types": "dist/cjs/react-plotly.d.ts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/react-plotly.d.ts",
+      "types": "./dist/react-plotly.d.mts",
       "import": "./dist/react-plotly.mjs",
       "default": "./dist/cjs/react-plotly.cjs"
     },
     "./factory": {
-      "types": "./dist/factory.d.ts",
+      "types": "./dist/factory.d.mts",
       "import": "./dist/factory.mjs",
       "default": "./dist/cjs/factory.cjs"
     }
@@ -31,9 +31,9 @@
     "lint": "prettier --trailing-comma es5 --write \"src/**/*.js\" && eslint src",
     "test": "npm run lint && npm run deps && jest",
     "watch-test": "jest --watch",
-    "watch": "nodemon --exec \"npm run make:lib\" -w src",
     "deps": "./node_modules/.bin/dependency-check src/react-plotly.js --missing",
-    "build": "tsup && node copy-types.mjs"
+    "build": "tsup",
+    "watch": "tsup --watch"
   },
   "keywords": [
     "graphing",

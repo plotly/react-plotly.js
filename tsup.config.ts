@@ -19,6 +19,7 @@ export default defineConfig((options) => {
       format: ['esm'],
       outExtension: () => ({js: '.mjs'}),
       clean: true,
+      dts: true,
       async onSuccess() {
         // Support Webpack 4 by pointing `"module"` to a file with a `.js` extension
         fs.copyFileSync('dist/react-plotly.mjs', 'dist/react-plotly.legacy-esm.js');
