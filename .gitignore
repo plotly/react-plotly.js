@@ -1,24 +1,8 @@
 node_modules
 
 npm-debug.log*
-*.sublime*
 
-.*
-!.circleci
-!.gitignore
-!.gitattributes
-!.npmignore
-!.eslintrc
-!.babelrc
-!.eslintignore
-
+coverage
 dist
-!example/dist
 
-package-lock.json.*
-
-factory.js
-factory.js.map
-react-plotly.js
-react-plotly.js.map
-yarn.lock
+package-lock.json
