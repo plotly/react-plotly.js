@@ -28,7 +28,7 @@
 ## Installation
 
 ```bash
-$ npm install react-plotly.js plotly.js
+$ npm install react-plotly.js plotly.js-dist-min
 ```
 
 ## Quick start
@@ -184,9 +184,9 @@ Event handlers for specific [`plotly.js` events](https://plot.ly/javascript/plot
 
 ## Customizing the `plotly.js` bundle
 
-By default, the `Plot` component exported by this library loads a precompiled version of all of `plotly.js`, so `plotly.js` must be installed as a peer dependency. This bundle is around 6Mb unminified, and minifies to just over 2Mb.
+By default, the `Plot` component exported by this library loads a precompiled version of all of `plotly.js-dist-min`, so `plotly.js-dist-min` must be installed as a peer dependency. This bundle is around 6Mb unminified, and minifies to just over 2Mb.
 
-If you do not wish to use this version of `plotly.js`, e.g. if you want to use a [different precompiled bundle](https://github.com/plotly/plotly.js/blob/master/dist/README.md#partial-bundles) or if your wish to [assemble you own customized bundle](https://github.com/plotly/plotly.js/blob/master/CUSTOM_BUNDLE.md), or if you wish to load `plotly.js` [from a CDN](https://github.com/plotly/plotly.js#use-the-plotlyjs-cdn-hosted-by-fastly), you can skip the installation of as a peer dependency (and ignore the resulting warning) and use the `createPlotComponent` method to get a `Plot` component, instead of importing it:
+If you do not wish to use this version of `plotly.js-dist-min`, e.g. if you want to use a [different precompiled bundle](https://github.com/plotly/plotly.js/blob/master/dist/README.md#partial-bundles) or if your wish to [assemble you own customized bundle](https://github.com/plotly/plotly.js/blob/master/CUSTOM_BUNDLE.md), or if you wish to load `plotly.js-dist-min` [from a CDN](https://github.com/plotly/plotly.js#use-the-plotlyjs-cdn-hosted-by-fastly), you can skip the installation as a peer dependency (and ignore the resulting warning) and use the `createPlotComponent` method to get a `Plot` component, instead of importing it:
 
 ```javascript
 // simplest method: uses precompiled complete bundle from `plotly.js`
@@ -232,10 +232,10 @@ To get started:
 $ npm install
 ```
 
-To transpile from ES2015 + JSX into the ES5 npm-distributed version:
+To build the distributed version:
 
 ```bash
-$ npm run prepublishOnly
+$ npm run build
 ```
 
 To run the tests:
@@ -246,4 +246,4 @@ $ npm run test
 
 ## License
 
-&copy; 2017-2020 Plotly, Inc. MIT License.
+&copy; 2017-2024 Plotly, Inc. MIT License.
