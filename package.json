@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://github.com/plotly/react-plotly.js/issues"
   },
-  "main": "dist/cjs/react-plotly.cjs",
+  "main": "dist/cjs/react-plotly.js",
   "module": "dist/react-plotly.legacy-esm.js",
   "types": "dist/cjs/react-plotly.d.ts",
   "exports": {
@@ -22,12 +22,12 @@
     ".": {
       "types": "./dist/react-plotly.d.mts",
       "import": "./dist/react-plotly.mjs",
-      "default": "./dist/cjs/react-plotly.cjs"
+      "default": "./dist/cjs/react-plotly.js"
     },
     "./factory": {
       "types": "./dist/factory.d.mts",
       "import": "./dist/factory.mjs",
-      "default": "./dist/cjs/factory.cjs"
+      "default": "./dist/cjs/factory.js"
     }
   },
   "scripts": {
@@ -35,7 +35,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "coverage": "vitest run --coverage",
-    "build": "tsup",
+    "build": "rimraf dist && tsup",
     "watch": "tsup --watch"
   },
   "keywords": [
@@ -67,6 +67,7 @@
     "prettier": "^3.1.0",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
+    "rimraf": "^5.0.5",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
     "vite": "^5.0.7",

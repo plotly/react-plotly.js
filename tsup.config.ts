@@ -30,7 +30,7 @@ export default defineConfig((options) => {
     {
       ...commonOptions,
       entry: {
-        'react-plotly.broswer': 'src/react-plotly.mts',
+        'react-plotly.broswer': 'src/react-plotly.ts',
         'factory.broswer': 'src/factory.tsx',
       },
       define: {
@@ -45,7 +45,7 @@ export default defineConfig((options) => {
       format: 'cjs',
       dts: true,
       outDir: './dist/cjs/',
-      outExtension: () => ({js: '.cjs'}),
+      outExtension: () => ({js: '.js'}),
     },
   ];
 });
