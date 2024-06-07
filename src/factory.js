@@ -34,6 +34,7 @@ const eventNames = [
   'SunburstClick',
   'Transitioning',
   'TransitionInterrupted',
+  'TreemapClick',
   'Unhover',
   'WebGlContextLost',
 ];
@@ -46,6 +47,7 @@ const updateEvents = [
   'plotly_doubleclick',
   'plotly_animated',
   'plotly_sunburstclick',
+  'plotly_treemapclick',
 ];
 
 // Check if a window is available since SSR (server-side rendering)
