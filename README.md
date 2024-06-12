@@ -119,6 +119,34 @@ In short, this means that simply adding data points to a trace in `data` or chan
 
 ## API Reference
 
+### usePlotly Hook
+
+As an alternative to the `Plot` component, you may use the `usePlotly` react _hook_. This provides a more powerful API with full control over the plot element, compatibility with functional components, intuitive responsive behaviour and ability to use `extendTraces`. 
+Here is a simple example of creating a chart with `usePlotly`:
+
+```jsx
+function MyChart(props) {
+   const { ref, updates, appendData } = usePlotly();
+
+  // Here is a function that will change the data. You must pass a partial Figure object (plotly DSL object) which will be
+  // merged with all previous calls to `updates`
+  const changeData = () => updates({ data: [ { y: [Math.random() * 10], type: 'scatter' } ] })
+
+ // Here we start extending traces using the `appendData` stream
+ const extendData = setInterval(() => {
+      appendData({ data: { y: [[Math.random() * 10]]}, tracePos: [0] });
+   }, 500);
+  
+   return (
+   <div> 
+      <div ref={ref}  style={{ width: '500px', height: '300px' }}/> 
+      <button onClick={changeData}>React!</button>
+      <button onClick={extendData}>Extend!</button>
+   </div>);
+}
+```
+
+
 ### Basic Props
 
 **Warning**: for the time being, this component may _mutate_ its `layout` and `data` props in response to user input, going against React rules. This behaviour will change in the near future once https://github.com/plotly/plotly.js/issues/2389 is completed.
