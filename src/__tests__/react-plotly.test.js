@@ -1,18 +1,44 @@
-import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
-import {mount, configure} from 'enzyme';
+/** @jest-environment jsdom */
+import React, {useState} from 'react';
+import {act, render} from '@testing-library/react';
 import createComponent from '../factory';
 import once from 'onetime';
 
 describe('<Plotly/>', () => {
   let Plotly, PlotComponent;
-  configure({adapter: new Adapter()});
 
+  // Mirrors enzyme's `mount(...).setProps(...)` / `.instance()` interface so the
+  // existing tests can keep their shape. `setProps` re-renders via a hook-driven
+  // wrapper; `instance` exposes the class component via a ref.
   function createPlot(props) {
     return new Promise((resolve, reject) => {
-      const plot = mount(
-        <PlotComponent {...props} onInitialized={() => resolve(plot)} onError={reject} />
-      );
+      let setProps;
+      let instance;
+      const Wrapper = () => {
+        const [currentProps, setCurrentProps] = useState(props);
+        setProps = (next) => act(() => setCurrentProps((prev) => ({...prev, ...next})));
+        return (
+          <PlotComponent
+            {...currentProps}
+            ref={(r) => {
+              instance = r;
+            }}
+            onInitialized={() =>
+              resolve({
+                setProps,
+                get instance() {
+                  return instance;
+                },
+                get props() {
+                  return currentProps;
+                },
+              })
+            }
+            onError={reject}
+          />
+        );
+      };
+      render(<Wrapper />);
     });
   }
 
@@ -50,7 +76,7 @@ describe('<Plotly/>', () => {
             expect(Plotly.react).toHaveBeenCalled();
           })
           .catch((err) => {
-            done.fail(err);
+            done(err);
           })
           .then(done);
       });
@@ -66,7 +92,7 @@ describe('<Plotly/>', () => {
               layout: {title: 'foo'},
             });
           })
-          .catch((err) => done.fail(err))
+          .catch((err) => done(err))
           .then(done);
       });
 
@@ -79,7 +105,7 @@ describe('<Plotly/>', () => {
               layout: {width: 320, height: 240},
             });
           })
-          .catch((err) => done.fail(err))
+          .catch((err) => done(err))
           .then(done);
       });
     });
@@ -99,7 +125,7 @@ describe('<Plotly/>', () => {
           .then((plot) => {
             plot.setProps({data: [{x: [1, 2, 3]}]});
           })
-          .catch((err) => done.fail(err));
+          .catch((err) => done(err));
       });
 
       test('updates data when revision is defined but not changed', (done) => {
@@ -117,7 +143,7 @@ describe('<Plotly/>', () => {
           .then((plot) => {
             plot.setProps({revision: 1, data: [{x: [1, 2, 3]}]});
           })
-          .catch((err) => done.fail(err));
+          .catch((err) => done(err));
       });
 
       test('sets the title', (done) => {
@@ -132,7 +158,7 @@ describe('<Plotly/>', () => {
           .then((plot) => {
             plot.setProps({layout: {title: 'test test'}});
           })
-          .catch((err) => done.fail(err));
+          .catch((err) => done(err));
       });
 
       test('revision counter', (done) => {
@@ -161,7 +187,7 @@ describe('<Plotly/>', () => {
             setTimeout(() => plot.setProps({revision: 1, layout: {title: 'test test'}}), 30);
             setTimeout(() => plot.setProps({revision: 2, layout: {title: 'test test'}}), 40);
           })
-          .catch((err) => done.fail(err));
+          .catch((err) => done(err));
       });
     });
 
@@ -170,9 +196,9 @@ describe('<Plotly/>', () => {
         const onRelayout = () => {};
 
         createPlot({onRelayout}).then((plot) => {
-          const {handlers} = plot.instance();
+          const {handlers} = plot.instance;
 
-          expect(plot.prop('onRelayout')).toBe(onRelayout);
+          expect(plot.props.onRelayout).toBe(onRelayout);
           expect(handlers.Relayout).toBe(onRelayout);
 
           done();
