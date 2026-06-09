@@ -167,10 +167,12 @@ Event handlers for specific [`plotly.js` events](https://plot.ly/javascript/plot
 | `onButtonClicked`         | `Function` | `plotly_buttonclicked`         |
 | `onClick`                 | `Function` | `plotly_click`                 |
 | `onClickAnnotation`       | `Function` | `plotly_clickannotation`       |
+| `onClickAnywhere`         | `Function` | `plotly_clickanywhere`         |
 | `onDeselect`              | `Function` | `plotly_deselect`              |
 | `onDoubleClick`           | `Function` | `plotly_doubleclick`           |
 | `onFramework`             | `Function` | `plotly_framework`             |
 | `onHover`                 | `Function` | `plotly_hover`                 |
+| `onHoverAnywhere`         | `Function` | `plotly_hoveranywhere`         |
 | `onLegendClick`           | `Function` | `plotly_legendclick`           |
 | `onLegendDoubleClick`     | `Function` | `plotly_legenddoubleclick`     |
 | `onRelayout`              | `Function` | `plotly_relayout`              |
