@@ -52,7 +52,7 @@
     "clean": "rimraf dist",
     "prepublishOnly": "npm run build",
     "lint": "prettier --write \"src/**/*.js\" && eslint src",
-    "typecheck": "tsc --noEmit --strict --jsx preserve --esModuleInterop --moduleResolution bundler --target es2022 src/index.d.ts src/factory.d.ts",
+    "typecheck": "tsc",
     "test": "npm run lint && npm run typecheck && jest",
     "watch-test": "jest --watch",
     "watch": "tsup --watch"
