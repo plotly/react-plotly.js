@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {forwardRef, useCallback, useEffect, useRef} from 'react';
 
 // The naming convention is:
 //   - events are attached as `'plotly_' + eventName.toLowerCase()`
@@ -53,215 +53,221 @@ const updateEvents = [
 // breaks unnecessarily if you try to use it server-side.
 const isBrowser = typeof window !== 'undefined';
 
+// Module-level frozen defaults so identity stays stable across renders when a
+// consumer omits the prop. Without this, the `===` checks in the update
+// effect would always see "changed" and trigger a needless Plotly.react.
+const DEFAULT_DATA = Object.freeze([]);
+const DEFAULT_STYLE = Object.freeze({position: 'relative', display: 'inline-block'});
+
+function getPlotlyEventName(eventName) {
+  return 'plotly_' + eventName.toLowerCase();
+}
+
 export default function plotComponentFactory(Plotly) {
-  class PlotlyComponent extends Component {
-    constructor(props) {
-      super(props);
+  return forwardRef(function PlotlyComponent(
+    {
+      data = DEFAULT_DATA,
+      layout,
+      config,
+      frames,
+      revision,
+      onInitialized,
+      onUpdate,
+      onPurge,
+      onError,
+      debug = false,
+      style = DEFAULT_STYLE,
+      className,
+      useResizeHandler = false,
+      divId,
+      ...eventProps
+    },
+    forwardedRef
+  ) {
+    const elRef = useRef(null);
+    const promiseRef = useRef(Promise.resolve());
+    const handlersRef = useRef({});
+    const resizeHandlerRef = useRef(null);
+    const unmountingRef = useRef(false);
+    const prevRef = useRef(null);
 
-      this.p = Promise.resolve();
-      this.resizeHandler = null;
-      this.handlers = {};
+    // Refs that mirror the latest values of callbacks consumed by listeners
+    // attached during mount (which must keep stable identity across renders).
+    const onUpdateRef = useRef(onUpdate);
+    onUpdateRef.current = onUpdate;
+    const onPurgeRef = useRef(onPurge);
+    onPurgeRef.current = onPurge;
 
-      this.syncWindowResize = this.syncWindowResize.bind(this);
-      this.syncEventHandlers = this.syncEventHandlers.bind(this);
-      this.attachUpdateEvents = this.attachUpdateEvents.bind(this);
-      this.getRef = this.getRef.bind(this);
-      this.handleUpdate = this.handleUpdate.bind(this);
-      this.figureCallback = this.figureCallback.bind(this);
-      this.updatePlotly = this.updatePlotly.bind(this);
-    }
+    // Stable closure for plotly update events. Reads latest `onUpdate` via the
+    // ref so the listener identity stays the same across renders — we need the
+    // same function reference for both `.on(...)` and `.removeListener(...)`.
+    const handleUpdate = useRef(() => {
+      const cb = onUpdateRef.current;
+      if (typeof cb !== 'function' || !elRef.current) {
+        return;
+      }
+      const el = elRef.current;
+      const frames = el._transitionData ? el._transitionData._frames : null;
+      cb({data: el.data, layout: el.layout, frames}, el);
+    }).current;
 
-    updatePlotly(shouldInvokeResizeHandler, figureCallbackFunction, shouldAttachUpdateEvents) {
-      this.p = this.p
-        .then(() => {
-          if (this.unmounting) {
-            return;
+    const setRef = useCallback(
+      (el) => {
+        elRef.current = el;
+        if (typeof forwardedRef === 'function') {
+          forwardedRef(el);
+        } else if (forwardedRef) {
+          forwardedRef.current = el;
+        }
+        if (debug && isBrowser && el) {
+          window.gd = el;
+        }
+      },
+      [forwardedRef, debug]
+    );
+
+    // Mount + update effect: no deps array, so it runs after every render —
+    // mirroring the original componentDidMount + componentDidUpdate flow.
+    useEffect(() => {
+      unmountingRef.current = false;
+
+      if (prevRef.current === null) {
+        prevRef.current = {data, layout, config, frames, revision};
+        runPlotlyReact(true, onInitialized, true);
+        return;
+      }
+
+      const prev = prevRef.current;
+      const numPrev = prev.frames && prev.frames.length ? prev.frames.length : 0;
+      const numNext = frames && frames.length ? frames.length : 0;
+
+      const figureChanged = !(
+        prev.layout === layout &&
+        prev.data === data &&
+        prev.config === config &&
+        numPrev === numNext
+      );
+      const revisionWasDefined = prev.revision !== void 0;
+      const revisionChanged = prev.revision !== revision;
+
+      prevRef.current = {data, layout, config, frames, revision};
+
+      if (!figureChanged && (!revisionWasDefined || !revisionChanged)) {
+        return;
+      }
+
+      runPlotlyReact(false, onUpdate, false);
+    });
+
+    // Cleanup effect — runs on unmount only.
+    useEffect(() => {
+      return () => {
+        unmountingRef.current = true;
+        const el = elRef.current;
+        if (el) {
+          if (typeof onPurgeRef.current === 'function') {
+            const frames = el._transitionData ? el._transitionData._frames : null;
+            onPurgeRef.current({data: el.data, layout: el.layout, frames}, el);
           }
-          if (!this.el) {
+          if (el.removeListener) {
+            updateEvents.forEach((evt) => el.removeListener(evt, handleUpdate));
+          }
+          Plotly.purge(el);
+        }
+        if (resizeHandlerRef.current && isBrowser) {
+          window.removeEventListener('resize', resizeHandlerRef.current);
+          resizeHandlerRef.current = null;
+        }
+      };
+    }, []);
+
+    function runPlotlyReact(shouldInvokeResize, figureCallback, shouldAttachUpdateEvents) {
+      promiseRef.current = promiseRef.current
+        .then(() => {
+          if (unmountingRef.current) {
+            return void 0;
+          }
+          if (!elRef.current) {
             throw new Error('Missing element reference');
           }
-          // eslint-disable-next-line consistent-return
-          return Plotly.react(this.el, {
-            data: this.props.data,
-            layout: this.props.layout,
-            config: this.props.config,
-            frames: this.props.frames,
-          });
+          return Plotly.react(elRef.current, {data, layout, config, frames});
         })
         .then(() => {
-          if (this.unmounting) {
+          if (unmountingRef.current) {
             return;
           }
-          this.syncWindowResize(shouldInvokeResizeHandler);
-          this.syncEventHandlers();
-          this.figureCallback(figureCallbackFunction);
+          syncWindowResize(shouldInvokeResize);
+          syncEventHandlers();
+          invokeFigureCallback(figureCallback);
           if (shouldAttachUpdateEvents) {
-            this.attachUpdateEvents();
+            attachUpdateEvents();
           }
         })
         .catch((err) => {
-          if (this.props.onError) {
-            this.props.onError(err);
+          if (typeof onError === 'function') {
+            onError(err);
           }
         });
     }
 
-    componentDidMount() {
-      this.unmounting = false;
-
-      this.updatePlotly(true, this.props.onInitialized, true);
-    }
-
-    componentDidUpdate(prevProps) {
-      this.unmounting = false;
-
-      // frames *always* changes identity so fall back to check length only :(
-      const numPrevFrames =
-        prevProps.frames && prevProps.frames.length ? prevProps.frames.length : 0;
-      const numNextFrames =
-        this.props.frames && this.props.frames.length ? this.props.frames.length : 0;
-
-      const figureChanged = !(
-        prevProps.layout === this.props.layout &&
-        prevProps.data === this.props.data &&
-        prevProps.config === this.props.config &&
-        numNextFrames === numPrevFrames
-      );
-      const revisionDefined = prevProps.revision !== void 0;
-      const revisionChanged = prevProps.revision !== this.props.revision;
-
-      if (!figureChanged && (!revisionDefined || (revisionDefined && !revisionChanged))) {
+    function invokeFigureCallback(callback) {
+      if (typeof callback !== 'function' || !elRef.current) {
         return;
       }
-
-      this.updatePlotly(false, this.props.onUpdate, false);
+      const el = elRef.current;
+      const f = el._transitionData ? el._transitionData._frames : null;
+      callback({data: el.data, layout: el.layout, frames: f}, el);
     }
 
-    componentWillUnmount() {
-      this.unmounting = true;
-
-      this.figureCallback(this.props.onPurge);
-
-      if (this.resizeHandler && isBrowser) {
-        window.removeEventListener('resize', this.resizeHandler);
-        this.resizeHandler = null;
-      }
-
-      this.removeUpdateEvents();
-
-      Plotly.purge(this.el);
-    }
-
-    attachUpdateEvents() {
-      if (!this.el || !this.el.removeListener) {
+    function attachUpdateEvents() {
+      if (!elRef.current || !elRef.current.removeListener) {
         return;
       }
-
-      updateEvents.forEach((updateEvent) => {
-        this.el.on(updateEvent, this.handleUpdate);
-      });
+      updateEvents.forEach((evt) => elRef.current.on(evt, handleUpdate));
     }
 
-    removeUpdateEvents() {
-      if (!this.el || !this.el.removeListener) {
-        return;
-      }
-
-      updateEvents.forEach((updateEvent) => {
-        this.el.removeListener(updateEvent, this.handleUpdate);
-      });
-    }
-
-    handleUpdate() {
-      this.figureCallback(this.props.onUpdate);
-    }
-
-    figureCallback(callback) {
-      if (typeof callback === 'function') {
-        const {data, layout} = this.el;
-        const frames = this.el._transitionData ? this.el._transitionData._frames : null;
-        const figure = {data, layout, frames};
-        callback(figure, this.el);
-      }
-    }
-
-    syncWindowResize(invoke) {
+    function syncWindowResize(invoke) {
       if (!isBrowser) {
         return;
       }
-
-      if (this.props.useResizeHandler && !this.resizeHandler) {
-        this.resizeHandler = () => Plotly.Plots.resize(this.el);
-        window.addEventListener('resize', this.resizeHandler);
+      if (useResizeHandler && !resizeHandlerRef.current) {
+        resizeHandlerRef.current = () => Plotly.Plots.resize(elRef.current);
+        window.addEventListener('resize', resizeHandlerRef.current);
         if (invoke) {
-          this.resizeHandler();
+          resizeHandlerRef.current();
         }
-      } else if (!this.props.useResizeHandler && this.resizeHandler) {
-        window.removeEventListener('resize', this.resizeHandler);
-        this.resizeHandler = null;
+      } else if (!useResizeHandler && resizeHandlerRef.current) {
+        window.removeEventListener('resize', resizeHandlerRef.current);
+        resizeHandlerRef.current = null;
       }
     }
 
-    getRef(el) {
-      this.el = el;
-
-      if (this.props.debug && isBrowser) {
-        window.gd = this.el;
-      }
-    }
-
-    // Attach and remove event handlers as they're added or removed from props:
-    syncEventHandlers() {
+    function syncEventHandlers() {
       eventNames.forEach((eventName) => {
-        const prop = this.props['on' + eventName];
-        const handler = this.handlers[eventName];
+        const prop = eventProps['on' + eventName];
+        const handler = handlersRef.current[eventName];
         const hasHandler = Boolean(handler);
-
         if (prop && !hasHandler) {
-          this.addEventHandler(eventName, prop);
+          addEventHandler(eventName, prop);
         } else if (!prop && hasHandler) {
-          // Needs to be removed:
-          this.removeEventHandler(eventName);
+          removeEventHandler(eventName);
         } else if (prop && hasHandler && prop !== handler) {
-          // replace the handler
-          this.removeEventHandler(eventName);
-          this.addEventHandler(eventName, prop);
+          removeEventHandler(eventName);
+          addEventHandler(eventName, prop);
         }
       });
     }
 
-    addEventHandler(eventName, prop) {
-      this.handlers[eventName] = prop;
-      this.el.on(this.getPlotlyEventName(eventName), this.handlers[eventName]);
+    function addEventHandler(eventName, prop) {
+      handlersRef.current[eventName] = prop;
+      elRef.current.on(getPlotlyEventName(eventName), prop);
     }
 
-    removeEventHandler(eventName) {
-      this.el.removeListener(this.getPlotlyEventName(eventName), this.handlers[eventName]);
-      delete this.handlers[eventName];
+    function removeEventHandler(eventName) {
+      elRef.current.removeListener(getPlotlyEventName(eventName), handlersRef.current[eventName]);
+      delete handlersRef.current[eventName];
     }
 
-    getPlotlyEventName(eventName) {
-      return 'plotly_' + eventName.toLowerCase();
-    }
-
-    render() {
-      return (
-        <div
-          id={this.props.divId}
-          style={this.props.style}
-          ref={this.getRef}
-          className={this.props.className}
-        />
-      );
-    }
-  }
-
-  PlotlyComponent.defaultProps = {
-    debug: false,
-    useResizeHandler: false,
-    data: [],
-    style: {position: 'relative', display: 'inline-block'},
-  };
-
-  return PlotlyComponent;
+    return <div id={divId} style={style} ref={setRef} className={className} />;
+  });
 }

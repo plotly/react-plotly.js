@@ -7,27 +7,27 @@ import once from 'onetime';
 describe('<Plotly/>', () => {
   let Plotly, PlotComponent;
 
-  // Mirrors enzyme's `mount(...).setProps(...)` / `.instance()` interface so the
-  // existing tests can keep their shape. `setProps` re-renders via a hook-driven
-  // wrapper; `instance` exposes the class component via a ref.
+  // `setProps` re-renders via a hook-driven wrapper; `gd` exposes the rendered
+  // DOM element (which the mocked Plotly.react augments to an EventEmitter,
+  // so tests can simulate plotly events directly).
   function createPlot(props) {
     return new Promise((resolve, reject) => {
       let setProps;
-      let instance;
+      let gd;
       const Wrapper = () => {
         const [currentProps, setCurrentProps] = useState(props);
         setProps = (next) => act(() => setCurrentProps((prev) => ({...prev, ...next})));
         return (
           <PlotComponent
             {...currentProps}
-            ref={(r) => {
-              instance = r;
+            ref={(el) => {
+              gd = el;
             }}
             onInitialized={() =>
               resolve({
                 setProps,
-                get instance() {
-                  return instance;
+                get gd() {
+                  return gd;
                 },
                 get props() {
                   return currentProps;
@@ -61,12 +61,6 @@ describe('<Plotly/>', () => {
     beforeEach(() => {
       Plotly = jest.requireMock('../__mocks__/plotly.js').default;
       PlotComponent = createComponent(Plotly);
-
-      // Override the parent element size:
-      PlotComponent.prototype.getParentSize = () => ({
-        width: 123,
-        height: 456,
-      });
     });
 
     describe('initialization', function () {
@@ -193,16 +187,21 @@ describe('<Plotly/>', () => {
 
     describe('manging event handlers', () => {
       test('should add an event handler when one does not already exist', (done) => {
-        const onRelayout = () => {};
+        let received;
+        const onRelayout = (evt) => {
+          received = evt;
+        };
 
-        createPlot({onRelayout}).then((plot) => {
-          const {handlers} = plot.instance;
-
-          expect(plot.props.onRelayout).toBe(onRelayout);
-          expect(handlers.Relayout).toBe(onRelayout);
-
-          done();
-        });
+        createPlot({onRelayout})
+          .then((plot) => {
+            expect(plot.props.onRelayout).toBe(onRelayout);
+            // The mocked Plotly.react makes gd an EventEmitter. Fire the
+            // event and verify the handler was wired through.
+            plot.gd.emit('plotly_relayout', {hello: 'world'});
+            expect(received).toEqual({hello: 'world'});
+            done();
+          })
+          .catch((err) => done(err));
       });
     });
   });
