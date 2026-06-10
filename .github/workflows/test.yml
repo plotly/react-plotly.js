@@ -8,6 +8,12 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        react-version: [18, 19]
+
     steps:
       - uses: actions/checkout@v4
 
@@ -19,11 +25,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install React ${{ matrix.react-version }}
+        run: npm install --no-save react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
+
       - name: List dependency versions
         run: |
           echo "npm: $(npm --version)"
           echo "node: $(node --version)"
-          npm ls || true
+          npm ls react react-dom || true
 
       - name: Run tests
         run: npm run test
