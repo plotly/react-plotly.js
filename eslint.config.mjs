@@ -107,7 +107,7 @@ export default [
       'react/no-is-mounted': ['error'],
       'react/no-unknown-property': ['error'],
       'react/prefer-es6-class': ['error', 'always'],
-      'react/prop-types': 'error',
+      'react/prop-types': 'off',
       yoda: ['error'],
       'spaced-comment': [
         'error',

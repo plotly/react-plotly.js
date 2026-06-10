@@ -1,3 +1,4 @@
+import {copyFile} from 'node:fs/promises';
 import {defineConfig} from 'tsup';
 
 // Mirror browserify-global-shim: rewrite `import React from 'react'` as
@@ -31,9 +32,17 @@ export default defineConfig([
     },
     sourcemap: true,
     clean: true,
-    external: ['react', 'plotly.js', 'prop-types'],
+    external: ['react', 'plotly.js'],
     outDir: 'dist',
     loader: {'.js': 'jsx'},
+    onSuccess: async () => {
+      // Ship the same declarations under both .d.ts (CJS interp) and .d.mts (ESM interp)
+      // so the exports map's per-condition types entries resolve unambiguously.
+      for (const name of ['index', 'factory']) {
+        await copyFile(`src/${name}.d.ts`, `dist/${name}.d.ts`);
+        await copyFile(`src/${name}.d.ts`, `dist/${name}.d.mts`);
+      }
+    },
   },
   // UMD / IIFE for <script>-tag consumers. React is taken from window.React
   // via the plugin above; plotly.js still external (consumer loads it the

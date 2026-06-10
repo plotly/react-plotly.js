@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 
 // The naming convention is:
 //   - events are attached as `'plotly_' + eventName.toLowerCase()`
@@ -256,27 +255,6 @@ export default function plotComponentFactory(Plotly) {
       );
     }
   }
-
-  PlotlyComponent.propTypes = {
-    data: PropTypes.arrayOf(PropTypes.object),
-    config: PropTypes.object,
-    layout: PropTypes.object,
-    frames: PropTypes.arrayOf(PropTypes.object),
-    revision: PropTypes.number,
-    onInitialized: PropTypes.func,
-    onPurge: PropTypes.func,
-    onError: PropTypes.func,
-    onUpdate: PropTypes.func,
-    debug: PropTypes.bool,
-    style: PropTypes.object,
-    className: PropTypes.string,
-    useResizeHandler: PropTypes.bool,
-    divId: PropTypes.string,
-  };
-
-  eventNames.forEach((eventName) => {
-    PlotlyComponent.propTypes['on' + eventName] = PropTypes.func;
-  });
 
   PlotlyComponent.defaultProps = {
     debug: false,
