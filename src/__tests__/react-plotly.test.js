@@ -1,5 +1,5 @@
 /** @jest-environment jsdom */
-import React, {useState} from 'react';
+import React, {StrictMode, useState} from 'react';
 import {act, render} from '@testing-library/react';
 import createComponent from '../factory';
 import once from 'onetime';
@@ -202,6 +202,43 @@ describe('<Plotly/>', () => {
             done();
           })
           .catch((err) => done(err));
+      });
+    });
+
+    describe('StrictMode', () => {
+      // Regression: in dev StrictMode, React runs effects setup-cleanup-setup
+      // to surface missing cleanup. Our cleanup calls Plotly.purge, so the
+      // simulated re-setup must re-initialize. Without resetting prevRef in
+      // cleanup, the mount/update effect skips re-init and the chart is dead.
+      test('re-initializes plot after simulated remount', (done) => {
+        Plotly.react.mockClear();
+        Plotly.purge.mockClear();
+
+        let initCount = 0;
+        render(
+          <StrictMode>
+            <PlotComponent
+              data={[{x: [1, 2, 3]}]}
+              onInitialized={() => {
+                initCount++;
+              }}
+              onError={(err) => done(err)}
+            />
+          </StrictMode>
+        );
+
+        setTimeout(() => {
+          try {
+            // Purge ran (StrictMode simulated unmount). React must run again
+            // afterwards to bring the plot back.
+            expect(Plotly.purge).toHaveBeenCalledTimes(1);
+            expect(Plotly.react.mock.calls.length).toBeGreaterThan(Plotly.purge.mock.calls.length);
+            expect(initCount).toBeGreaterThanOrEqual(1);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        }, 50);
       });
     });
 

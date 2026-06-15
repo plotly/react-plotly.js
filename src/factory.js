@@ -178,6 +178,10 @@ export default function plotComponentFactory(Plotly) {
           window.removeEventListener('resize', resizeHandlerRef.current);
           resizeHandlerRef.current = null;
         }
+        // Reset refs so StrictMode's re-setup looks like a fresh mount
+        prevRef.current = null;
+        promiseRef.current = Promise.resolve();
+        handlersRef.current = {};
       };
     }, []);
 
