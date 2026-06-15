@@ -161,9 +161,9 @@ export default function plotComponentFactory(Plotly) {
 
     // Cleanup effect — runs on unmount only.
     useEffect(() => {
+      const el = elRef.current;
       return () => {
         unmountingRef.current = true;
-        const el = elRef.current;
         if (el) {
           if (typeof onPurgeRef.current === 'function') {
             const frames = el._transitionData ? el._transitionData._frames : null;
@@ -178,6 +178,10 @@ export default function plotComponentFactory(Plotly) {
           window.removeEventListener('resize', resizeHandlerRef.current);
           resizeHandlerRef.current = null;
         }
+        // Reset refs so StrictMode's re-setup looks like a fresh mount
+        prevRef.current = null;
+        promiseRef.current = Promise.resolve();
+        handlersRef.current = {};
       };
     }, []);
 
