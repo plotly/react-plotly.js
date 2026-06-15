@@ -204,5 +204,43 @@ describe('<Plotly/>', () => {
           .catch((err) => done(err));
       });
     });
+
+    describe('unmount', () => {
+      // Regression: React detaches callback refs before useEffect cleanups run,
+      // so reading the ref from cleanup sees `null`. The cleanup effect must
+      // capture the element at setup time so onPurge/Plotly.purge still fire.
+      test('fires onPurge and Plotly.purge on unmount', (done) => {
+        const purgeCalls = [];
+        let gd;
+        let resolveInit;
+        const initialized = new Promise((resolve) => {
+          resolveInit = resolve;
+        });
+
+        const result = render(
+          <PlotComponent
+            data={[{x: [1, 2, 3]}]}
+            ref={(el) => {
+              gd = el;
+            }}
+            onPurge={(figure, el) => purgeCalls.push({figure, gd: el})}
+            onInitialized={once(resolveInit)}
+            onError={(err) => done(err)}
+          />
+        );
+
+        initialized
+          .then(() => {
+            // Capture before unmount — our ref callback nulls `gd` on detach.
+            const capturedGd = gd;
+            act(() => result.unmount());
+            expect(Plotly.purge).toHaveBeenCalledWith(capturedGd);
+            expect(purgeCalls).toHaveLength(1);
+            expect(purgeCalls[0].gd).toBe(capturedGd);
+            done();
+          })
+          .catch(done);
+      });
+    });
   });
 });

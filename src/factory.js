@@ -161,9 +161,9 @@ export default function plotComponentFactory(Plotly) {
 
     // Cleanup effect — runs on unmount only.
     useEffect(() => {
+      const el = elRef.current;
       return () => {
         unmountingRef.current = true;
-        const el = elRef.current;
         if (el) {
           if (typeof onPurgeRef.current === 'function') {
             const frames = el._transitionData ? el._transitionData._frames : null;
