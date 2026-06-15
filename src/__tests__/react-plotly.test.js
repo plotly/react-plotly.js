@@ -1,5 +1,5 @@
 /** @jest-environment jsdom */
-import React, {useState} from 'react';
+import React, {StrictMode, useState} from 'react';
 import {act, render} from '@testing-library/react';
 import createComponent from '../factory';
 import once from 'onetime';
@@ -202,6 +202,81 @@ describe('<Plotly/>', () => {
             done();
           })
           .catch((err) => done(err));
+      });
+    });
+
+    describe('StrictMode', () => {
+      // Regression: in dev StrictMode, React runs effects setup-cleanup-setup
+      // to surface missing cleanup. Our cleanup calls Plotly.purge, so the
+      // simulated re-setup must re-initialize. Without resetting prevRef in
+      // cleanup, the mount/update effect skips re-init and the chart is dead.
+      test('re-initializes plot after simulated remount', (done) => {
+        Plotly.react.mockClear();
+        Plotly.purge.mockClear();
+
+        let initCount = 0;
+        render(
+          <StrictMode>
+            <PlotComponent
+              data={[{x: [1, 2, 3]}]}
+              onInitialized={() => {
+                initCount++;
+              }}
+              onError={(err) => done(err)}
+            />
+          </StrictMode>
+        );
+
+        setTimeout(() => {
+          try {
+            // Purge ran (StrictMode simulated unmount). React must run again
+            // afterwards to bring the plot back.
+            expect(Plotly.purge).toHaveBeenCalledTimes(1);
+            expect(Plotly.react.mock.calls.length).toBeGreaterThan(Plotly.purge.mock.calls.length);
+            expect(initCount).toBeGreaterThanOrEqual(1);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        }, 50);
+      });
+    });
+
+    describe('unmount', () => {
+      // Regression: React detaches callback refs before useEffect cleanups run,
+      // so reading the ref from cleanup sees `null`. The cleanup effect must
+      // capture the element at setup time so onPurge/Plotly.purge still fire.
+      test('fires onPurge and Plotly.purge on unmount', (done) => {
+        const purgeCalls = [];
+        let gd;
+        let resolveInit;
+        const initialized = new Promise((resolve) => {
+          resolveInit = resolve;
+        });
+
+        const result = render(
+          <PlotComponent
+            data={[{x: [1, 2, 3]}]}
+            ref={(el) => {
+              gd = el;
+            }}
+            onPurge={(figure, el) => purgeCalls.push({figure, gd: el})}
+            onInitialized={once(resolveInit)}
+            onError={(err) => done(err)}
+          />
+        );
+
+        initialized
+          .then(() => {
+            // Capture before unmount — our ref callback nulls `gd` on detach.
+            const capturedGd = gd;
+            act(() => result.unmount());
+            expect(Plotly.purge).toHaveBeenCalledWith(capturedGd);
+            expect(purgeCalls).toHaveLength(1);
+            expect(purgeCalls[0].gd).toBe(capturedGd);
+            done();
+          })
+          .catch(done);
       });
     });
   });
