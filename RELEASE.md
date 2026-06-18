@@ -9,13 +9,13 @@ and `vX.Y.Z` with the git tag (e.g. `v3.0.0`).
 - npm publish access to the [`react-plotly.js`](https://www.npmjs.com/package/react-plotly.js) package. Granted by an existing maintainer via the npm `plotly` org.
 - npm two-factor authentication configured (`npm profile get`). Publishes require an OTP.
 - Push access to `plotly/react-plotly.js` on GitHub, including tag-creation permission.
-- A clean local clone of the repo, ideally with `node_modules` reinstalled fresh against `master`.
+- A clean local clone of the repo, ideally with `node_modules` reinstalled fresh against `main`.
 
 ## Release sequence
 
 ### 1. Pre-flight checks
 
-From the branch that will become the release and in a clean state (typically `master`, or an integration branch like `vN` that's about to merge into `master`):
+From the branch that will become the release and in a clean state (typically `main`, or an integration branch like `vN` that's about to merge into `main`):
 
 ```bash
 npm install              # fresh install against the current lockfile
@@ -45,16 +45,16 @@ npm version X.Y.Z --no-git-tag-version
 
 ### 4. Open the release PR
 
-Branch the release off the appropriate parent — the integration branch (e.g. `vN`) for a major cumulative release, or `master` for a minor/patch. Branch name convention: `release-X.Y.Z`.
+Branch the release off the appropriate parent — the integration branch (e.g. `vN`) for a major cumulative release, or `main` for a minor/patch. Branch name convention: `release-X.Y.Z`.
 
 ```bash
-git checkout vN    # or master, depending on the release type
+git checkout vN    # or main, depending on the release type
 git pull
 git checkout -b release-X.Y.Z
 git add *
 git commit -m "chore: release X.Y.Z"
 git push -u origin release-X.Y.Z
-gh pr create --base master --title "chore: release X.Y.Z" \
+gh pr create --base main --title "chore: release X.Y.Z" \
   --body "See CHANGELOG.md entry for [$X.Y.Z]."
 ```
 
@@ -62,16 +62,16 @@ When branching from an integration branch, the PR carries all of that branch's c
 
 ### 5. Merge and tag
 
-Once the PR is reviewed, CI is green, and merged into `master`:
+Once the PR is reviewed, CI is green, and merged into `main`:
 
 ```bash
-git checkout master
+git checkout main
 git pull
 git tag vX.Y.Z
 git push origin vX.Y.Z
 ```
 
-The tag must point at the merge commit on `master`.
+The tag must point at the merge commit on `main`.
 
 ### 6. Publish to npm
 

@@ -5,7 +5,7 @@ For more context information, please read through the
 
 To see all merged commits on the default branch that will be part of the next plotly.js release, go to:
 
-<https://github.com/plotly/react-plotly.js/compare/vX.Y.Z...master>
+<https://github.com/plotly/react-plotly.js/compare/vX.Y.Z...main>
 
 where X.Y.Z is the semver of most recent react-plotly.js release.
 
