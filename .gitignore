@@ -7,18 +7,9 @@ npm-debug.log*
 !.github
 !.gitignore
 !.gitattributes
-!.npmignore
-!.eslintrc
-!.babelrc
-!.eslintignore
 
 dist
-!example/dist
 
 package-lock.json.*
 
-factory.js
-factory.js.map
-react-plotly.js
-react-plotly.js.map
 yarn.lock

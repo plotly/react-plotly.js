@@ -1,0 +1,11 @@
+{
+  "include": ["src/**/*.d.ts"],
+  "compilerOptions": {
+    "noEmit": true,
+    "strict": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "moduleResolution": "bundler",
+    "target": "es2022"
+  }
+}

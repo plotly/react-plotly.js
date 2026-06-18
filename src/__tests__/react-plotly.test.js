@@ -1,5 +1,5 @@
 /** @jest-environment jsdom */
-import React, {useState} from 'react';
+import React, {StrictMode, useState} from 'react';
 import {act, render} from '@testing-library/react';
 import createComponent from '../factory';
 import once from 'onetime';
@@ -7,27 +7,27 @@ import once from 'onetime';
 describe('<Plotly/>', () => {
   let Plotly, PlotComponent;
 
-  // Mirrors enzyme's `mount(...).setProps(...)` / `.instance()` interface so the
-  // existing tests can keep their shape. `setProps` re-renders via a hook-driven
-  // wrapper; `instance` exposes the class component via a ref.
+  // `setProps` re-renders via a hook-driven wrapper; `gd` exposes the rendered
+  // DOM element (which the mocked Plotly.react augments to an EventEmitter,
+  // so tests can simulate plotly events directly).
   function createPlot(props) {
     return new Promise((resolve, reject) => {
       let setProps;
-      let instance;
+      let gd;
       const Wrapper = () => {
         const [currentProps, setCurrentProps] = useState(props);
         setProps = (next) => act(() => setCurrentProps((prev) => ({...prev, ...next})));
         return (
           <PlotComponent
             {...currentProps}
-            ref={(r) => {
-              instance = r;
+            ref={(el) => {
+              gd = el;
             }}
             onInitialized={() =>
               resolve({
                 setProps,
-                get instance() {
-                  return instance;
+                get gd() {
+                  return gd;
                 },
                 get props() {
                   return currentProps;
@@ -61,12 +61,6 @@ describe('<Plotly/>', () => {
     beforeEach(() => {
       Plotly = jest.requireMock('../__mocks__/plotly.js').default;
       PlotComponent = createComponent(Plotly);
-
-      // Override the parent element size:
-      PlotComponent.prototype.getParentSize = () => ({
-        width: 123,
-        height: 456,
-      });
     });
 
     describe('initialization', function () {
@@ -193,16 +187,96 @@ describe('<Plotly/>', () => {
 
     describe('manging event handlers', () => {
       test('should add an event handler when one does not already exist', (done) => {
-        const onRelayout = () => {};
+        let received;
+        const onRelayout = (evt) => {
+          received = evt;
+        };
 
-        createPlot({onRelayout}).then((plot) => {
-          const {handlers} = plot.instance;
+        createPlot({onRelayout})
+          .then((plot) => {
+            expect(plot.props.onRelayout).toBe(onRelayout);
+            // The mocked Plotly.react makes gd an EventEmitter. Fire the
+            // event and verify the handler was wired through.
+            plot.gd.emit('plotly_relayout', {hello: 'world'});
+            expect(received).toEqual({hello: 'world'});
+            done();
+          })
+          .catch((err) => done(err));
+      });
+    });
 
-          expect(plot.props.onRelayout).toBe(onRelayout);
-          expect(handlers.Relayout).toBe(onRelayout);
+    describe('StrictMode', () => {
+      // Regression: in dev StrictMode, React runs effects setup-cleanup-setup
+      // to surface missing cleanup. Our cleanup calls Plotly.purge, so the
+      // simulated re-setup must re-initialize. Without resetting prevRef in
+      // cleanup, the mount/update effect skips re-init and the chart is dead.
+      test('re-initializes plot after simulated remount', (done) => {
+        Plotly.react.mockClear();
+        Plotly.purge.mockClear();
 
-          done();
+        let initCount = 0;
+        render(
+          <StrictMode>
+            <PlotComponent
+              data={[{x: [1, 2, 3]}]}
+              onInitialized={() => {
+                initCount++;
+              }}
+              onError={(err) => done(err)}
+            />
+          </StrictMode>
+        );
+
+        setTimeout(() => {
+          try {
+            // Purge ran (StrictMode simulated unmount). React must run again
+            // afterwards to bring the plot back.
+            expect(Plotly.purge).toHaveBeenCalledTimes(1);
+            expect(Plotly.react.mock.calls.length).toBeGreaterThan(Plotly.purge.mock.calls.length);
+            expect(initCount).toBeGreaterThanOrEqual(1);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        }, 50);
+      });
+    });
+
+    describe('unmount', () => {
+      // Regression: React detaches callback refs before useEffect cleanups run,
+      // so reading the ref from cleanup sees `null`. The cleanup effect must
+      // capture the element at setup time so onPurge/Plotly.purge still fire.
+      test('fires onPurge and Plotly.purge on unmount', (done) => {
+        const purgeCalls = [];
+        let gd;
+        let resolveInit;
+        const initialized = new Promise((resolve) => {
+          resolveInit = resolve;
         });
+
+        const result = render(
+          <PlotComponent
+            data={[{x: [1, 2, 3]}]}
+            ref={(el) => {
+              gd = el;
+            }}
+            onPurge={(figure, el) => purgeCalls.push({figure, gd: el})}
+            onInitialized={once(resolveInit)}
+            onError={(err) => done(err)}
+          />
+        );
+
+        initialized
+          .then(() => {
+            // Capture before unmount — our ref callback nulls `gd` on detach.
+            const capturedGd = gd;
+            act(() => result.unmount());
+            expect(Plotly.purge).toHaveBeenCalledWith(capturedGd);
+            expect(purgeCalls).toHaveLength(1);
+            expect(purgeCalls[0].gd).toBe(capturedGd);
+            done();
+          })
+          .catch(done);
       });
     });
   });

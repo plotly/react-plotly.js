@@ -11,6 +11,29 @@ where X.Y.Z is the semver of most recent react-plotly.js release.
 
 ## [Unreleased]
 
+## [4.0.0] - 2026-06-18
+
+### Added
+
+- Added native ESM output alongside CJS [[#367](https://github.com/plotly/react-plotly.js/pull/367)]
+  - Published artifacts now live under `dist/` instead of at the repo root; the `main` entry moved from `react-plotly.js` to `./dist/index.cjs`
+  - Dropped the unminified UMD bundle
+  - `import Plot from 'react-plotly.js'` now resolves correctly in Rolldown and any other strict ESM environment
+- Added TypeScript declaration files (`index.d.ts` / `factory.d.ts`) [[#368](https://github.com/plotly/react-plotly.js/pull/368)]
+
+### Changed
+
+- Update linting dependencies [[#366](https://github.com/plotly/react-plotly.js/pull/366)]
+- Refactored the wrapper from a class component to a functional component using hooks [[#369](https://github.com/plotly/react-plotly.js/pull/369)]
+  - Refs forwarded to `<Plot>` now resolve to the rendered `<div>` element (the plotly graph div) directly via `forwardRef`, instead of to the class instance
+  - **Migration:** replace `ref.current.el` with `ref.current`
+
+### Fixed
+
+- `onPurge` now fires and `Plotly.purge` runs on unmount [[#372](https://github.com/plotly/react-plotly.js/pull/372)]
+- Plot is re-initialized correctly after React StrictMode's dev-only simulated unmount/remount [[#372](https://github.com/plotly/react-plotly.js/pull/372)]
+- TypeScript declarations now expose ref forwarding so consumers can attach a typed `ref` prop without a TS error [[#373](https://github.com/plotly/react-plotly.js/pull/373)]
+
 ## [3.0.0] - 2026-06-09
 
 ### Added
