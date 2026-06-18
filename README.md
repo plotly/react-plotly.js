@@ -333,7 +333,7 @@ To watch source files and rebuild on change:
 $ npm run watch
 ```
 
-Releases are cut from `master` per the steps in [`RELEASE.md`](./RELEASE.md).
+Releases are cut from `main` per the steps in [`RELEASE.md`](./RELEASE.md).
 
 ## License
 
