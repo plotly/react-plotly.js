@@ -71,7 +71,15 @@ export interface PlotParams {
  * Build a Plot component bound to a specific plotly.js instance. Use this
  * when shipping a custom plotly.js bundle (e.g. the basic, cartesian, or
  * a custom partial bundle) instead of the full library.
+ *
+ * The returned component is `forwardRef`-wrapped, so consumers can attach a
+ * ref to access the underlying graph div (e.g. for `Plotly.animate` calls
+ * outside the React update cycle).
  */
-declare function createPlotlyComponent(Plotly: unknown): React.ComponentType<PlotParams>;
+declare function createPlotlyComponent(
+  Plotly: unknown
+): React.ForwardRefExoticComponent<
+  PlotParams & React.RefAttributes<HTMLDivElement>
+>;
 
 export default createPlotlyComponent;
