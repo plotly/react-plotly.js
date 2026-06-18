@@ -11,7 +11,7 @@ where X.Y.Z is the semver of most recent react-plotly.js release.
 
 ## [Unreleased]
 
-## [4.0.0] - 2026-06-11
+## [4.0.0] - 2026-06-18
 
 ### Added
 
@@ -27,6 +27,12 @@ where X.Y.Z is the semver of most recent react-plotly.js release.
 - Refactored the wrapper from a class component to a functional component using hooks [[#369](https://github.com/plotly/react-plotly.js/pull/369)]
   - Refs forwarded to `<Plot>` now resolve to the rendered `<div>` element (the plotly graph div) directly via `forwardRef`, instead of to the class instance
   - **Migration:** replace `ref.current.el` with `ref.current`
+
+### Fixed
+
+- `onPurge` now fires and `Plotly.purge` runs on unmount [[#372](https://github.com/plotly/react-plotly.js/pull/372)]
+- Plot is re-initialized correctly after React StrictMode's dev-only simulated unmount/remount [[#372](https://github.com/plotly/react-plotly.js/pull/372)]
+- TypeScript declarations now expose ref forwarding so consumers can attach a typed `ref` prop without a TS error [[#373](https://github.com/plotly/react-plotly.js/pull/373)]
 
 ## [3.0.0] - 2026-06-09
 
