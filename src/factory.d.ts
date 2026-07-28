@@ -35,23 +35,25 @@ export interface PlotParams {
   onAfterExport?: EventCallback;
   onAfterPlot?: EventCallback;
   onAnimated?: EventCallback;
+  onAnimating?: EventCallback;
   onAnimatingFrame?: EventCallback;
   onAnimationInterrupted?: EventCallback;
   onAutoSize?: EventCallback;
   onBeforeExport?: EventCallback;
   onBeforeHover?: EventCallback;
+  onBeforePlot?: EventCallback;
   onButtonClicked?: EventCallback;
   onClick?: EventCallback;
   onClickAnnotation?: EventCallback;
-  onClickAnywhere?: EventCallback;
   onDeselect?: EventCallback;
   onDoubleClick?: EventCallback;
   onFramework?: EventCallback;
   onHover?: EventCallback;
-  onHoverAnywhere?: EventCallback;
   onIcicleClick?: EventCallback;
   onLegendClick?: EventCallback;
   onLegendDoubleClick?: EventCallback;
+  onLegendTitleClick?: EventCallback;
+  onLegendTitleDoubleClick?: EventCallback;
   onRelayout?: EventCallback;
   onRelayouting?: EventCallback;
   onRestyle?: EventCallback;
@@ -62,6 +64,7 @@ export interface PlotParams {
   onSliderEnd?: EventCallback;
   onSliderStart?: EventCallback;
   onSunburstClick?: EventCallback;
+  onTransitioned?: EventCallback;
   onTransitioning?: EventCallback;
   onTransitionInterrupted?: EventCallback;
   onTreemapClick?: EventCallback;
@@ -80,8 +83,6 @@ export interface PlotParams {
  */
 declare function createPlotlyComponent(
   Plotly: unknown
-): React.ForwardRefExoticComponent<
-  PlotParams & React.RefAttributes<HTMLDivElement>
->;
+): React.ForwardRefExoticComponent<PlotParams & React.RefAttributes<HTMLDivElement>>;
 
 export default createPlotlyComponent;
