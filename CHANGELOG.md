@@ -11,6 +11,22 @@ where X.Y.Z is the semver of most recent react-plotly.js release.
 
 ## [Unreleased]
 
+### Added
+
+- Added missing `onTreemapClick` and `onIcicleClick` event props for the `plotly_treemapclick` and `plotly_icicleclick` events [[#376](https://github.com/plotly/react-plotly.js/pull/376)]
+- Added additional missing events: `onLegendTitleClick`, `onLegendTitleDoubleClick`, `onBeforePlot`, `onAnimating`, and `onTransitioned` [[#376](https://github.com/plotly/react-plotly.js/pull/376)]
+
+### Fixed
+
+- Returning `false` from `onSunburstClick`, `onTreemapClick`, or `onIcicleClick` now prevents the drill-down [[#376](https://github.com/plotly/react-plotly.js/pull/376)]
+  - `onUpdate` now fires for these via `plotly_animated`, so it reports the figure after the new `level` is applied and no longer fires when the drill-down is cancelled
+
+### Removed
+
+- Removed the errantly added `onClickAnywhere` and `onHoverAnywhere` props [[#376](https://github.com/plotly/react-plotly.js/pull/376)]
+  - plotly.js has no `plotly_clickanywhere` or `plotly_hoveranywhere` events, so these never fired
+  - `clickanywhere` and `hoveranywhere` are **layout attributes** that widen the ordinary `plotly_click` / `plotly_hover`, so the feature is reached through `onClick` / `onHover` with the layout flag set — see the README
+
 ## [4.0.0] - 2026-06-18
 
 ### Added
@@ -38,7 +54,8 @@ where X.Y.Z is the semver of most recent react-plotly.js release.
 
 ### Added
 
-- `onClickAnywhere` and `onHoverAnywhere` event props for the corresponding `plotly_clickanywhere` and `plotly_hoveranywhere` events introduced in plotly.js v3 [[#360](https://github.com/plotly/react-plotly.js/pull/360)]
+- `onClickAnywhere` and `onHoverAnywhere` event props [[#360](https://github.com/plotly/react-plotly.js/pull/360)]
+  - **Correction:** plotly.js v3 introduced `clickanywhere` / `hoveranywhere` as _layout attributes_, not as events, so these props never fired. They are removed in the next release.
 
 ### Changed
 
