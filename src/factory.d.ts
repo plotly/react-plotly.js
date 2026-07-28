@@ -49,6 +49,7 @@ export interface PlotParams {
   onFramework?: EventCallback;
   onHover?: EventCallback;
   onHoverAnywhere?: EventCallback;
+  onIcicleClick?: EventCallback;
   onLegendClick?: EventCallback;
   onLegendDoubleClick?: EventCallback;
   onRelayout?: EventCallback;
@@ -63,6 +64,7 @@ export interface PlotParams {
   onSunburstClick?: EventCallback;
   onTransitioning?: EventCallback;
   onTransitionInterrupted?: EventCallback;
+  onTreemapClick?: EventCallback;
   onUnhover?: EventCallback;
   onWebGlContextLost?: EventCallback;
 }
