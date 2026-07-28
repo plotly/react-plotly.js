@@ -186,7 +186,7 @@ describe('<Plotly/>', () => {
       });
     });
 
-    describe('manging event handlers', () => {
+    describe('managing event handlers', () => {
       test('should add an event handler when one does not already exist', (done) => {
         let received;
         const onRelayout = (evt) => {
