@@ -1,53 +1,6 @@
 import React, {forwardRef, useCallback, useEffect, useRef} from 'react';
 
-// The naming convention is:
-//   - events are attached as `'plotly_' + eventName.toLowerCase()`
-//   - react props are `'on' + eventName`
-const eventNames = [
-  'AfterExport',
-  'AfterPlot',
-  'Animated',
-  'AnimatingFrame',
-  'AnimationInterrupted',
-  'AutoSize',
-  'BeforeExport',
-  'BeforeHover',
-  'ButtonClicked',
-  'Click',
-  'ClickAnnotation',
-  'ClickAnywhere',
-  'Deselect',
-  'DoubleClick',
-  'Framework',
-  'Hover',
-  'HoverAnywhere',
-  'LegendClick',
-  'LegendDoubleClick',
-  'Relayout',
-  'Relayouting',
-  'Restyle',
-  'Redraw',
-  'Selected',
-  'Selecting',
-  'SliderChange',
-  'SliderEnd',
-  'SliderStart',
-  'SunburstClick',
-  'Transitioning',
-  'TransitionInterrupted',
-  'Unhover',
-  'WebGlContextLost',
-];
-
-const updateEvents = [
-  'plotly_restyle',
-  'plotly_redraw',
-  'plotly_relayout',
-  'plotly_relayouting',
-  'plotly_doubleclick',
-  'plotly_animated',
-  'plotly_sunburstclick',
-];
+import {eventNames, getPlotlyEventName, getPropName, updateEvents} from './events.js';
 
 // Check if a window is available since SSR (server-side rendering)
 // breaks unnecessarily if you try to use it server-side.
@@ -58,10 +11,6 @@ const isBrowser = typeof window !== 'undefined';
 // effect would always see "changed" and trigger a needless Plotly.react.
 const DEFAULT_DATA = Object.freeze([]);
 const DEFAULT_STYLE = Object.freeze({position: 'relative', display: 'inline-block'});
-
-function getPlotlyEventName(eventName) {
-  return 'plotly_' + eventName.toLowerCase();
-}
 
 export default function plotComponentFactory(Plotly) {
   return forwardRef(function PlotlyComponent(
@@ -248,7 +197,7 @@ export default function plotComponentFactory(Plotly) {
 
     function syncEventHandlers() {
       eventNames.forEach((eventName) => {
-        const prop = eventProps['on' + eventName];
+        const prop = eventProps[getPropName(eventName)];
         const handler = handlersRef.current[eventName];
         const hasHandler = Boolean(handler);
         if (prop && !hasHandler) {
