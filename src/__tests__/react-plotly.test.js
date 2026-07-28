@@ -2,6 +2,7 @@
 import React, {StrictMode, useState} from 'react';
 import {act, render} from '@testing-library/react';
 import createComponent from '../factory';
+import {eventNames, getPlotlyEventName, getPropName} from '../events';
 import once from 'onetime';
 
 describe('<Plotly/>', () => {
@@ -203,6 +204,35 @@ describe('<Plotly/>', () => {
           })
           .catch((err) => done(err));
       });
+
+      // Every forwarded event should reach its `on*` prop. Driving this from
+      // the event list means a new entry is covered without touching the test.
+      test.each(eventNames)('forwards plotly_%s to its prop', (eventName) => {
+        let received;
+        const handler = (evt) => {
+          received = evt;
+        };
+
+        return createPlot({[getPropName(eventName)]: handler}).then((plot) => {
+          plot.gd.emit(getPlotlyEventName(eventName), {eventName});
+          expect(received).toEqual({eventName});
+        });
+      });
+
+      // The drill-down traces all share plotly.js' sunburst click handler,
+      // which mutates `trace.level` — so onUpdate has to fire for each of them
+      // or consumers never see the new level. See issue #375.
+      test.each(['SunburstClick', 'TreemapClick', 'IcicleClick'])(
+        'fires onUpdate for %s drill-downs',
+        (eventName) => {
+          const onUpdate = jest.fn();
+
+          return createPlot({onUpdate}).then((plot) => {
+            plot.gd.emit(getPlotlyEventName(eventName));
+            expect(onUpdate).toHaveBeenCalled();
+          });
+        }
+      );
     });
 
     describe('StrictMode', () => {
