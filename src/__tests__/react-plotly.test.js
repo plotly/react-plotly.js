@@ -219,20 +219,30 @@ describe('<Plotly/>', () => {
         });
       });
 
-      // The drill-down traces all share plotly.js' sunburst click handler,
-      // which mutates `trace.level` — so onUpdate has to fire for each of them
-      // or consumers never see the new level. See issue #375.
+      // Cancelable — the consumer's handler must be the only listener or
+      // plotly could drop its `return false`. See the note in `events.js`.
       test.each(['SunburstClick', 'TreemapClick', 'IcicleClick'])(
-        'fires onUpdate for %s drill-downs',
+        'attaches only the consumer handler to %s',
         (eventName) => {
-          const onUpdate = jest.fn();
+          const handler = () => false;
 
-          return createPlot({onUpdate}).then((plot) => {
-            plot.gd.emit(getPlotlyEventName(eventName));
-            expect(onUpdate).toHaveBeenCalled();
-          });
+          return createPlot({[getPropName(eventName)]: handler, onUpdate: () => {}}).then(
+            (plot) => {
+              const listeners = [].concat(plot.gd.__ee__[getPlotlyEventName(eventName)] || []);
+              expect(listeners).toEqual([handler]);
+            }
+          );
         }
       );
+
+      test('fires onUpdate when a drill-down animation completes', () => {
+        const onUpdate = jest.fn();
+
+        return createPlot({onUpdate}).then((plot) => {
+          plot.gd.emit('plotly_animated');
+          expect(onUpdate).toHaveBeenCalled();
+        });
+      });
     });
 
     describe('StrictMode', () => {

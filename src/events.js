@@ -4,11 +4,12 @@
 //   - events are attached as `'plotly_' + name.toLowerCase()`
 //   - react props are `'on' + name`
 //
-// `triggersUpdate` marks events that plotly.js emits *after* mutating the
-// figure itself (drill-downs, zooms, restyles). For those the wrapper has to
-// re-read the graph div and fire `onUpdate`. Keeping the flag on the same
-// record as the name is deliberate: a new drill-down event cannot be added
-// without deciding whether it updates the figure.
+// `triggersUpdate` marks events plotly.js emits *after* changing the figure;
+// the wrapper listens to those and fires `onUpdate`. Never set it on a
+// cancelable event — that adds a second listener alongside the consumer's,
+// and plotly keeps only the last listener's return value, so a consumer's
+// `return false` could be discarded. The drill-down clicks rely on
+// `plotly_animated` instead.
 //
 // The `on*` prop types in `factory.d.ts` are maintained by hand against this list
 export const events = [
@@ -29,7 +30,7 @@ export const events = [
   {name: 'Framework'},
   {name: 'Hover'},
   {name: 'HoverAnywhere'},
-  {name: 'IcicleClick', triggersUpdate: true},
+  {name: 'IcicleClick'},
   {name: 'LegendClick'},
   {name: 'LegendDoubleClick'},
   {name: 'Relayout', triggersUpdate: true},
@@ -41,10 +42,10 @@ export const events = [
   {name: 'SliderChange'},
   {name: 'SliderEnd'},
   {name: 'SliderStart'},
-  {name: 'SunburstClick', triggersUpdate: true},
+  {name: 'SunburstClick'},
   {name: 'Transitioning'},
   {name: 'TransitionInterrupted'},
-  {name: 'TreemapClick', triggersUpdate: true},
+  {name: 'TreemapClick'},
   {name: 'Unhover'},
   {name: 'WebGlContextLost'},
 ];
