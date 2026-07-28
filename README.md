@@ -152,41 +152,60 @@ The `onInitialized`, `onUpdate` and `onPurge` props are all functions which will
 
 Event handlers for specific [`plotly.js` events](https://plotly.com/javascript/plotlyjs-events/) may be attached through the following props:
 
-| Prop                      | Type       | Plotly Event                   |
-| ------------------------- | ---------- | ------------------------------ |
-| `onAfterExport`           | `Function` | `plotly_afterexport`           |
-| `onAfterPlot`             | `Function` | `plotly_afterplot`             |
-| `onAnimated`              | `Function` | `plotly_animated`              |
-| `onAnimatingFrame`        | `Function` | `plotly_animatingframe`        |
-| `onAnimationInterrupted`  | `Function` | `plotly_animationinterrupted`  |
-| `onAutoSize`              | `Function` | `plotly_autosize`              |
-| `onBeforeExport`          | `Function` | `plotly_beforeexport`          |
-| `onBeforeHover`           | `Function` | `plotly_beforehover`           |
-| `onButtonClicked`         | `Function` | `plotly_buttonclicked`         |
-| `onClick`                 | `Function` | `plotly_click`                 |
-| `onClickAnnotation`       | `Function` | `plotly_clickannotation`       |
-| `onClickAnywhere`         | `Function` | `plotly_clickanywhere`         |
-| `onDeselect`              | `Function` | `plotly_deselect`              |
-| `onDoubleClick`           | `Function` | `plotly_doubleclick`           |
-| `onFramework`             | `Function` | `plotly_framework`             |
-| `onHover`                 | `Function` | `plotly_hover`                 |
-| `onHoverAnywhere`         | `Function` | `plotly_hoveranywhere`         |
-| `onLegendClick`           | `Function` | `plotly_legendclick`           |
-| `onLegendDoubleClick`     | `Function` | `plotly_legenddoubleclick`     |
-| `onRelayout`              | `Function` | `plotly_relayout`              |
-| `onRelayouting`           | `Function` | `plotly_relayouting`           |
-| `onRestyle`               | `Function` | `plotly_restyle`               |
-| `onRedraw`                | `Function` | `plotly_redraw`                |
-| `onSelected`              | `Function` | `plotly_selected`              |
-| `onSelecting`             | `Function` | `plotly_selecting`             |
-| `onSliderChange`          | `Function` | `plotly_sliderchange`          |
-| `onSliderEnd`             | `Function` | `plotly_sliderend`             |
-| `onSliderStart`           | `Function` | `plotly_sliderstart`           |
-| `onSunburstClick`         | `Function` | `plotly_sunburstclick`         |
-| `onTransitioning`         | `Function` | `plotly_transitioning`         |
-| `onTransitionInterrupted` | `Function` | `plotly_transitioninterrupted` |
-| `onUnhover`               | `Function` | `plotly_unhover`               |
-| `onWebGlContextLost`      | `Function` | `plotly_webglcontextlost`      |
+| Prop                       | Type       | Plotly Event                    |
+| -------------------------- | ---------- | ------------------------------- |
+| `onAfterExport`            | `Function` | `plotly_afterexport`            |
+| `onAfterPlot`              | `Function` | `plotly_afterplot`              |
+| `onAnimated`               | `Function` | `plotly_animated`               |
+| `onAnimating`              | `Function` | `plotly_animating`              |
+| `onAnimatingFrame`         | `Function` | `plotly_animatingframe`         |
+| `onAnimationInterrupted`   | `Function` | `plotly_animationinterrupted`   |
+| `onAutoSize`               | `Function` | `plotly_autosize`               |
+| `onBeforeExport`           | `Function` | `plotly_beforeexport`           |
+| `onBeforeHover`            | `Function` | `plotly_beforehover`            |
+| `onBeforePlot`             | `Function` | `plotly_beforeplot`             |
+| `onButtonClicked`          | `Function` | `plotly_buttonclicked`          |
+| `onClick`                  | `Function` | `plotly_click`                  |
+| `onClickAnnotation`        | `Function` | `plotly_clickannotation`        |
+| `onDeselect`               | `Function` | `plotly_deselect`               |
+| `onDoubleClick`            | `Function` | `plotly_doubleclick`            |
+| `onFramework`              | `Function` | `plotly_framework`              |
+| `onHover`                  | `Function` | `plotly_hover`                  |
+| `onIcicleClick`            | `Function` | `plotly_icicleclick`            |
+| `onLegendClick`            | `Function` | `plotly_legendclick`            |
+| `onLegendDoubleClick`      | `Function` | `plotly_legenddoubleclick`      |
+| `onLegendTitleClick`       | `Function` | `plotly_legendtitleclick`       |
+| `onLegendTitleDoubleClick` | `Function` | `plotly_legendtitledoubleclick` |
+| `onRelayout`               | `Function` | `plotly_relayout`               |
+| `onRelayouting`            | `Function` | `plotly_relayouting`            |
+| `onRestyle`                | `Function` | `plotly_restyle`                |
+| `onRedraw`                 | `Function` | `plotly_redraw`                 |
+| `onSelected`               | `Function` | `plotly_selected`               |
+| `onSelecting`              | `Function` | `plotly_selecting`              |
+| `onSliderChange`           | `Function` | `plotly_sliderchange`           |
+| `onSliderEnd`              | `Function` | `plotly_sliderend`              |
+| `onSliderStart`            | `Function` | `plotly_sliderstart`            |
+| `onSunburstClick`          | `Function` | `plotly_sunburstclick`          |
+| `onTransitioned`           | `Function` | `plotly_transitioned`           |
+| `onTransitioning`          | `Function` | `plotly_transitioning`          |
+| `onTransitionInterrupted`  | `Function` | `plotly_transitioninterrupted`  |
+| `onTreemapClick`           | `Function` | `plotly_treemapclick`           |
+| `onUnhover`                | `Function` | `plotly_unhover`                |
+| `onWebGlContextLost`       | `Function` | `plotly_webglcontextlost`       |
+
+To receive `onClick` or `onHover` for positions that are not over a trace, set
+`clickanywhere` or `hoveranywhere` in your `layout`. These are layout attributes
+rather than distinct events: the ordinary `plotly_click` / `plotly_hover` fire
+with an empty `points` array, plus `xvals` / `yvals` — arrays of the cursor
+position in data space, one entry per axis.
+
+```javascript
+<Plot
+  data={data}
+  layout={{clickanywhere: true}}
+  onClick={(e) => console.log(e.points, e.xvals, e.yvals)}
+/>
+```
 
 ## Examples
 
