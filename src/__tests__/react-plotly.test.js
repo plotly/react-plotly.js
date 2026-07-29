@@ -2,6 +2,7 @@
 import React, {StrictMode, useState} from 'react';
 import {act, render} from '@testing-library/react';
 import createComponent from '../factory';
+import {eventNames, getPlotlyEventName, getPropName} from '../events';
 import once from 'onetime';
 
 describe('<Plotly/>', () => {
@@ -185,7 +186,7 @@ describe('<Plotly/>', () => {
       });
     });
 
-    describe('manging event handlers', () => {
+    describe('managing event handlers', () => {
       test('should add an event handler when one does not already exist', (done) => {
         let received;
         const onRelayout = (evt) => {
@@ -202,6 +203,45 @@ describe('<Plotly/>', () => {
             done();
           })
           .catch((err) => done(err));
+      });
+
+      // Every forwarded event should reach its `on*` prop. Driving this from
+      // the event list means a new entry is covered without touching the test.
+      test.each(eventNames)('forwards plotly_%s to its prop', (eventName) => {
+        let received;
+        const handler = (evt) => {
+          received = evt;
+        };
+
+        return createPlot({[getPropName(eventName)]: handler}).then((plot) => {
+          plot.gd.emit(getPlotlyEventName(eventName), {eventName});
+          expect(received).toEqual({eventName});
+        });
+      });
+
+      // Cancelable — the consumer's handler must be the only listener or
+      // plotly could drop its `return false`. See the note in `events.js`.
+      test.each(['SunburstClick', 'TreemapClick', 'IcicleClick'])(
+        'attaches only the consumer handler to %s',
+        (eventName) => {
+          const handler = () => false;
+
+          return createPlot({[getPropName(eventName)]: handler, onUpdate: () => {}}).then(
+            (plot) => {
+              const listeners = [].concat(plot.gd.__ee__[getPlotlyEventName(eventName)] || []);
+              expect(listeners).toEqual([handler]);
+            }
+          );
+        }
+      );
+
+      test('fires onUpdate when a drill-down animation completes', () => {
+        const onUpdate = jest.fn();
+
+        return createPlot({onUpdate}).then((plot) => {
+          plot.gd.emit('plotly_animated');
+          expect(onUpdate).toHaveBeenCalled();
+        });
       });
     });
 
