@@ -11,6 +11,8 @@ where X.Y.Z is the semver of most recent react-plotly.js release.
 
 ## [Unreleased]
 
+## [4.1.0] - 2026-07-29
+
 ### Added
 
 - Added missing `onTreemapClick` and `onIcicleClick` event props for the `plotly_treemapclick` and `plotly_icicleclick` events [[#376](https://github.com/plotly/react-plotly.js/pull/376)]
