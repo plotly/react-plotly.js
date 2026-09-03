@@ -132,7 +132,7 @@ In short, this means that simply adding data points to a trace in `data` or chan
 | `className`        | `string`                     | `undefined`                                       | applied to the `<div>` into which the plot is rendered                                                                                                 |
 | `style`            | `Object`                     | `{position: 'relative', display: 'inline-block'}` | used to style the `<div>` into which the plot is rendered                                                                                              |
 | `debug`            | `Boolean`                    | `false`                                           | Assign the graph div to `window.gd` for debugging                                                                                                      |
-| `useResizeHandler` | `Boolean`                    | `false`                                           | When true, adds a call to `Plotly.Plots.resize()` using `ResizeObserver`. Falls back to a `window.resize` event when `ResizeObserver` is unavailable |
+| `useResizeHandler` | `Boolean`                    | `false`                                           | When true, adds a call to `Plotly.Plots.resize()` using `ResizeObserver`. |
 
 **Refs**: a `ref` attached to `<Plot>` resolves to the rendered `<div>` element (the plotly graph div), so you can call low-level plotly.js APIs against it directly (e.g. `Plotly.toImage(ref.current)`).
 

@@ -181,8 +181,6 @@ export default function plotComponentFactory(Plotly) {
       if (resizeObserverRef.current) {
         resizeObserverRef.current.disconnect();
         resizeObserverRef.current = null;
-      } else if (resizeHandlerRef.current && isBrowser) {
-        window.removeEventListener('resize', resizeHandlerRef.current);
       }
 
       resizeHandlerRef.current = null;
@@ -194,14 +192,8 @@ export default function plotComponentFactory(Plotly) {
       }
       if (useResizeHandler && !resizeHandlerRef.current) {
         resizeHandlerRef.current = () => Plotly.Plots.resize(elRef.current);
-
-        if (typeof window.ResizeObserver === 'function') {
-          resizeObserverRef.current = new window.ResizeObserver(resizeHandlerRef.current);
-          resizeObserverRef.current.observe(elRef.current);
-        } else {
-          window.addEventListener('resize', resizeHandlerRef.current);
-        }
-
+        resizeObserverRef.current = new window.ResizeObserver(resizeHandlerRef.current);
+        resizeObserverRef.current.observe(elRef.current);
         if (invoke) {
           resizeHandlerRef.current();
         }
