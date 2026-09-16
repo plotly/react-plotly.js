@@ -132,13 +132,13 @@ In short, this means that simply adding data points to a trace in `data` or chan
 | `className`        | `string`                     | `undefined`                                       | applied to the `<div>` into which the plot is rendered                                                                                                 |
 | `style`            | `Object`                     | `{position: 'relative', display: 'inline-block'}` | used to style the `<div>` into which the plot is rendered                                                                                              |
 | `debug`            | `Boolean`                    | `false`                                           | Assign the graph div to `window.gd` for debugging                                                                                                      |
-| `useResizeHandler` | `Boolean`                    | `false`                                           | When true, adds a call to `Plotly.Plot.resize()` as a `window.resize` event handler                                                                    |
+| `useResizeHandler` | `Boolean`                    | `false`                                           | When true, adds a call to `Plotly.Plots.resize()` using `ResizeObserver`. |
 
 **Refs**: a `ref` attached to `<Plot>` resolves to the rendered `<div>` element (the plotly graph div), so you can call low-level plotly.js APIs against it directly (e.g. `Plotly.toImage(ref.current)`).
 
 **TypeScript**: this package ships its own declaration files. Trace and layout shapes are typed as `unknown` since the wrapper does not bind to a specific plotly.js type surface; consumers wanting tighter typing on the `data` / `layout` props can re-declare them locally.
 
-**Note**: To make a plot responsive, i.e. to fill its containing element and resize when the window is resized, use `style` or `className` to set the dimensions of the element (i.e. using `width: 100%; height: 100%` or some similar values) and set `useResizeHandler` to `true` while setting `layout.autosize` to `true` and leaving `layout.height` and `layout.width` undefined. A short example is in the [Responsive plot](#responsive-plot) section below. See also the [responsive layout reference](https://plotly.com/javascript/responsive-fluid-layout/).
+**Note**: To make a plot responsive, i.e. to fill its containing element and resize with the window or other layout changes, use `style` or `className` to set the dimensions of the element (i.e. using `width: 100%; height: 100%` or some similar values) and set `useResizeHandler` to `true` while setting `layout.autosize` to `true` and leaving `layout.height` and `layout.width` undefined. A short example is in the [Responsive plot](#responsive-plot) section below. See also the [responsive layout reference](https://plotly.com/javascript/responsive-fluid-layout/).
 
 #### Callback signature: `Function(figure, graphDiv)`
 
@@ -211,7 +211,7 @@ position in data space, one entry per axis.
 
 ### Responsive plot
 
-To make the plot fill its container and resize with the window, leave the layout's `width`/`height` unset, enable `autosize`, and turn on `useResizeHandler`. Size the wrapper `<div>` with `style` or `className`:
+To make the plot fill its container and resize with the window or other layout changes, leave the layout's `width`/`height` unset, enable `autosize`, and turn on `useResizeHandler`. Size the wrapper `<div>` with `style` or `className`:
 
 ```javascript
 <Plot

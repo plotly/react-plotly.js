@@ -37,6 +37,7 @@ export default function plotComponentFactory(Plotly) {
     const promiseRef = useRef(Promise.resolve());
     const handlersRef = useRef({});
     const resizeHandlerRef = useRef(null);
+    const resizeObserverRef = useRef(null);
     const unmountingRef = useRef(false);
     const prevRef = useRef(null);
 
@@ -123,10 +124,7 @@ export default function plotComponentFactory(Plotly) {
           }
           Plotly.purge(el);
         }
-        if (resizeHandlerRef.current && isBrowser) {
-          window.removeEventListener('resize', resizeHandlerRef.current);
-          resizeHandlerRef.current = null;
-        }
+        removeResizeHandler();
         // Reset refs so StrictMode's re-setup looks like a fresh mount
         prevRef.current = null;
         promiseRef.current = Promise.resolve();
@@ -149,7 +147,7 @@ export default function plotComponentFactory(Plotly) {
           if (unmountingRef.current) {
             return;
           }
-          syncWindowResize(shouldInvokeResize);
+          syncResizeHandler(shouldInvokeResize);
           syncEventHandlers();
           invokeFigureCallback(figureCallback);
           if (shouldAttachUpdateEvents) {
@@ -179,19 +177,28 @@ export default function plotComponentFactory(Plotly) {
       updateEvents.forEach((evt) => elRef.current.on(evt, handleUpdate));
     }
 
-    function syncWindowResize(invoke) {
+    function removeResizeHandler() {
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
+        resizeObserverRef.current = null;
+      }
+
+      resizeHandlerRef.current = null;
+    }
+
+    function syncResizeHandler(invoke) {
       if (!isBrowser) {
         return;
       }
       if (useResizeHandler && !resizeHandlerRef.current) {
         resizeHandlerRef.current = () => Plotly.Plots.resize(elRef.current);
-        window.addEventListener('resize', resizeHandlerRef.current);
+        resizeObserverRef.current = new window.ResizeObserver(resizeHandlerRef.current);
+        resizeObserverRef.current.observe(elRef.current);
         if (invoke) {
           resizeHandlerRef.current();
         }
       } else if (!useResizeHandler && resizeHandlerRef.current) {
-        window.removeEventListener('resize', resizeHandlerRef.current);
-        resizeHandlerRef.current = null;
+        removeResizeHandler();
       }
     }
 
